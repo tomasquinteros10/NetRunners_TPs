@@ -392,167 +392,157 @@ es nula:
 \par\vspace{\baselineskip}
 \noindent\textbf{3.9}\par
 
-La Figura 3.4 muestra el efecto de eliminar las componentes de alta
-frecuencia de un pulso cuadrado, conservando únicamente las componentes
-de baja frecuencia.
+\subsection*{3.9}
 
-En la Figura 3.4 se observa una señal compuesta por una frecuencia
-fundamental $f$ y su tercer armónico $3f$. La frecuencia $3f$ es un
-múltiplo entero de la frecuencia fundamental $f$.
+En la Figura 3.4 se observa una señal formada por la suma de una
+frecuencia fundamental $f$ y su tercer armónico $3f$.
 
-La componente fundamental puede expresarse como:
+La componente fundamental es:
 
 \[
-s_1(t)=\sen(2\pi f t)
+s_1(t)=\operatorname{sen}(2\pi ft)
 \]
 
-mientras que el tercer armónico es:
+y el tercer armónico:
 
 \[
-s_3(t)=\frac{1}{3}\sen(2\pi(3f)t)
+s_3(t)=\frac{1}{3}\operatorname{sen}(2\pi(3f)t)
 \]
 
-La suma de ambas componentes es:
+La señal resultante es:
 
 \[
 s(t)=\frac{4}{\pi}
 \left[
-\sen(2\pi f t)
-+\frac{1}{3}\sen(2\pi(3f)t)
+\operatorname{sen}(2\pi ft)
++\frac{1}{3}\operatorname{sen}(2\pi(3f)t)
 \right]
 \]
 
-Para representar los gráficos, se utiliza el período de la frecuencia
-fundamental como unidad de tiempo, es decir, $x=t/T$, donde
-$T=1/f$.
+En los siguientes gráficos se muestran las dos componentes y la señal
+resultante.
 
 \begin{figure}[H]
 \centering
 
-% Componente fundamental
+% Frecuencia fundamental
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.85\textwidth,
-  height=5cm,
-  xmin=0, xmax=2,
-  ymin=-1.1, ymax=1.1,
-  axis lines=middle,
-  xlabel={$t/T$},
-  ylabel={$s(t)$},
-  xtick={0,0.5,1,1.5,2},
-  ytick={-1,0,1},
-  grid=both,
-  title={Componente fundamental $f$}
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-1.1, ymax=1.1,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-1,0,1},
+    grid=both,
+    title={Frecuencia fundamental $f$}
 ]
 \addplot[
-  domain=0:2,
-  samples=300
+    domain=0:2,
+    samples=300
 ]
 {sin(deg(2*pi*x))};
 \end{axis}
 \end{tikzpicture}
 
-\vspace{0.5cm}
+\vspace{0.4cm}
 
 % Tercer armónico
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.85\textwidth,
-  height=5cm,
-  xmin=0, xmax=2,
-  ymin=-0.4, ymax=0.4,
-  axis lines=middle,
-  xlabel={$t/T$},
-  ylabel={$s(t)$},
-  xtick={0,0.5,1,1.5,2},
-  ytick={-0.333,0,0.333},
-  grid=both,
-  title={Tercer armónico $3f$}
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-0.4, ymax=0.4,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-0.333,0,0.333},
+    grid=both,
+    title={Tercer armónico $3f$}
 ]
 \addplot[
-  domain=0:2,
-  samples=600
+    domain=0:2,
+    samples=600
 ]
 {(1/3)*sin(deg(6*pi*x))};
 \end{axis}
 \end{tikzpicture}
 
-\vspace{0.5cm}
+\vspace{0.4cm}
 
-% Suma
+% Suma de las componentes
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.85\textwidth,
-  height=5cm,
-  xmin=0, xmax=2,
-  ymin=-1.5, ymax=1.5,
-  axis lines=middle,
-  xlabel={$t/T$},
-  ylabel={$s(t)$},
-  xtick={0,0.5,1,1.5,2},
-  ytick={-1,0,1},
-  grid=both,
-  title={Suma de las componentes $f$ y $3f$}
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-1.5, ymax=1.5,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-1,0,1},
+    grid=both,
+    title={Suma de las componentes}
 ]
 \addplot[
-  domain=0:2,
-  samples=600
+    domain=0:2,
+    samples=600
 ]
 {(4/pi)*(sin(deg(2*pi*x))+(1/3)*sin(deg(6*pi*x)))};
 \end{axis}
 \end{tikzpicture}
 
-\caption{Componentes en frecuencia y suma de la señal, siguiendo
-la Figura 3.4 de Stallings.}
+\caption{Componentes de la señal y su suma.}
 \end{figure}
 
-Si se realiza el proceso contrario al mostrado en la Figura 3.4, es
-decir, se eliminan las componentes de baja frecuencia y se conservan
-únicamente las componentes de alta frecuencia, la señal resultante queda
-dominada por oscilaciones rápidas.
+Si se hace lo contrario, eliminando las componentes de baja frecuencia
+y conservando las de alta frecuencia, la señal pierde la forma general
+del pulso cuadrado y queda formada por oscilaciones más rápidas.
 
-En el ejemplo de la Figura 3.4, si se elimina la frecuencia fundamental
-$f$ y se conserva únicamente el tercer armónico $3f$, queda:
+En el caso de la Figura 3.4, si se elimina la componente fundamental $f$
+y se conserva solamente el tercer armónico $3f$, queda:
 
 \[
-s(t)=\frac{4}{3\pi}\sen(2\pi(3f)t)
+s(t)=\frac{4}{3\pi}
+\operatorname{sen}(2\pi(3f)t)
 \]
 
-La señal resultante presenta tres veces la frecuencia de la componente
-fundamental y, por lo tanto, oscila tres veces más rápido.
+La señal resultante oscila tres veces más rápido que la frecuencia
+fundamental.
 
 \begin{figure}[H]
 \centering
 
-% Solo tercer armónico después de eliminar la fundamental
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.85\textwidth,
-  height=5cm,
-  xmin=0, xmax=2,
-  ymin=-0.5, ymax=0.5,
-  axis lines=middle,
-  xlabel={$t/T$},
-  ylabel={$s(t)$},
-  xtick={0,0.5,1,1.5,2},
-  ytick={-0.333,0,0.333},
-  grid=both,
-  title={Señal resultante al eliminar la componente $f$}
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-0.5, ymax=0.5,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-0.4,0,0.4},
+    grid=both,
+    title={Señal resultante al eliminar la componente $f$}
 ]
 \addplot[
-  domain=0:2,
-  samples=600
+    domain=0:2,
+    samples=600
 ]
 {(4/(3*pi))*sin(deg(6*pi*x))};
 \end{axis}
 \end{tikzpicture}
 
-\caption{Señal resultante al conservar únicamente el tercer armónico.}
+\caption{Señal resultante conservando únicamente el tercer armónico.}
 \end{figure}
-
-Por lo tanto, al eliminar las componentes de baja frecuencia y conservar
-las de alta frecuencia, se obtiene una señal con oscilaciones más rápidas
-y se pierde la forma general del pulso cuadrado.
 \noindent\textbf{3.10}\par\vspace{\baselineskip}
 \noindent\textbf{3.11}\par\vspace{\baselineskip}
 \noindent\textbf{3.12}\par\vspace{\baselineskip}
