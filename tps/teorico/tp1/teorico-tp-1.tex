@@ -133,8 +133,12 @@ En un medio no guiado la transmisión de las ondas se produce irradiándolas en 
 \noindent\textbf{3.4}\par\vspace{\baselineskip}
 \noindent\textbf{3.5}\par\vspace{\baselineskip}
 \noindent\textbf{3.6}\par\vspace{\baselineskip}
-\noindent\textbf{3.7}\par\vspace{\baselineskip}
-\noindent\textbf{3.8}\par\vspace{\baselineskip}
+\noindent\textbf{3.7}\par
+La atenuación es la pérdida progresiva de energía o potencia que sufre una señal a medida que viaja a través de un medio de transmisión. Ocurre tanto por un aumento de la distancia entre emisor y receptor como por un incremento de la frecuencia de la señal. Por lo tanto, puede ser necesario el uso de amplificadores o repetidores para recuperar la potencia y de ecualizadores para corregir la distorsión por frecuencia. 
+\noindent\textbf{3.8}\par
+
+Se denomina capacidad del canal a la velocidad máxima a la que se pueden transmitir los datos en un canal, o ruta de comunicación de datos, bajo unas condiciones dadas, expresada en bits por segundo (bps).
+
 \noindent\textbf{3.9}\par\vspace{\baselineskip}
 
 \section*{c)- Ejercicios:}
@@ -313,9 +317,276 @@ es nula:
 \noindent\textbf{3.16}\par\vspace{\baselineskip}
 \noindent\textbf{3.17}\par\vspace{\baselineskip}
 \noindent\textbf{3.18}\par\vspace{\baselineskip}
-\noindent\textbf{3.19}\par\vspace{\baselineskip}
-\noindent\textbf{3.20}\par\vspace{\baselineskip}
+\noindent\textbf{3.19}\par
 
+Sea un canal con una capacidad de $20\,\text{Mbps}$ y un ancho de banda de
+$3\,\text{MHz}$. ¿Cuál es la relación señal-ruido admisible para conseguir
+la mencionada capacidad?
+
+Utilizamos la \textbf{Ley de Capacidad de Shannon}:
+
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+donde:
+
+\begin{itemize}
+    \item $C$: capacidad del canal en bits por segundo (bps).
+    \item $B$: ancho de banda en Hz.
+    \item $\mathrm{SNR}$: relación señal-ruido en valor adimensional.
+\end{itemize}
+
+Datos:
+
+\[
+C = 20\,\text{Mbps} = 20\times10^6\,\text{bps}
+\]
+
+\[
+B = 3\,\text{MHz} = 3\times10^6\,\text{Hz}
+\]
+
+Partimos de la expresión de Shannon:
+
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+Dividiendo ambos lados por $B$:
+
+\[
+\frac{C}{B}
+=
+\log_2(1+\mathrm{SNR})
+\]
+
+Aplicando la función exponencial de base $2$:
+
+\[
+1+\mathrm{SNR}
+=
+2^{\frac{C}{B}}
+\]
+
+Por lo tanto:
+
+\[
+\mathrm{SNR}
+=
+2^{\frac{C}{B}}-1
+\]
+
+Reemplazando los valores:
+
+\[
+\mathrm{SNR}
+=
+2^{\frac{20\times10^6}{3\times10^6}}-1
+\]
+
+\[
+\mathrm{SNR}
+=
+2^{\frac{20}{3}}-1
+\]
+
+\[
+\mathrm{SNR}
+\approx
+100.59
+\]
+
+Por lo tanto, la relación señal-ruido admisible para conseguir una capacidad
+de $20\,\text{Mbps}$ con un ancho de banda de $3\,\text{MHz}$ es:
+
+\[
+\boxed{\mathrm{SNR}\approx100.59}
+\]
+\noindent\textbf{3.20}\par
+
+La onda cuadrada de la Figura 3.7c, con $T=1\,\text{ms}$, se transmite a
+través de un filtro paso bajo ideal de ganancia unidad con frecuencia de
+corte de $8\,\text{kHz}$.
+
+\textbf{a) Determine la potencia de la señal de salida.}
+
+Primero calculamos la frecuencia fundamental de la onda cuadrada:
+
+\[
+f=\frac{1}{T}
+\]
+
+Como:
+
+\[
+T=1\,\text{ms}=10^{-3}\,\text{s}
+\]
+
+entonces:
+
+\[
+f=\frac{1}{10^{-3}}
+=1000\,\text{Hz}
+=1\,\text{kHz}
+\]
+
+La onda cuadrada posee únicamente armónicas impares:
+
+\[
+k=1,3,5,7,9,\ldots
+\]
+
+El filtro tiene una frecuencia de corte:
+
+\[
+f_c=8\,\text{kHz}
+\]
+
+Por lo tanto, las armónicas que atraviesan el filtro son aquellas que
+cumplen:
+
+\[
+kf\leq f_c
+\]
+
+Como $f=1\,\text{kHz}$:
+
+\[
+k(1\,\text{kHz})\leq8\,\text{kHz}
+\]
+
+De las armónicas impares, se transmiten:
+
+\[
+k=1,3,5,7
+\]
+
+La potencia de una onda cuadrada puede expresarse mediante la suma de las
+potencias de sus armónicas. Para la señal de la figura:
+
+\[
+P_{\text{salida}}
+=
+\frac{8}{\pi^2}
+\left(
+\frac{1}{1^2}
++
+\frac{1}{3^2}
++
+\frac{1}{5^2}
++
+\frac{1}{7^2}
+\right)
+\]
+
+Entonces:
+
+\[
+P_{\text{salida}}
+=
+\frac{8}{\pi^2}
+\left(
+1+\frac{1}{9}+\frac{1}{25}+\frac{1}{49}
+\right)
+\]
+
+\[
+P_{\text{salida}}
+\approx0.95\,\text{W}
+\]
+
+Por lo tanto:
+
+\[
+\boxed{P_{\text{salida}}\approx0.95\,\text{W}}
+\]
+
+\bigskip
+
+\textbf{b) Suponiendo que a la entrada del filtro hay un ruido térmico con
+$N_0=0.1\,\mu\text{W}/\text{Hz}$, encuentre la relación señal-ruido en dB
+a la salida.}
+
+La densidad espectral de potencia del ruido es:
+
+\[
+N_0=0.1\,\mu\text{W}/\text{Hz}
+\]
+
+El ancho de banda que deja pasar el filtro paso bajo ideal es:
+
+\[
+B=8\,\text{kHz}=8000\,\text{Hz}
+\]
+
+La potencia total del ruido a la salida es:
+
+\[
+P_n=N_0B
+\]
+
+Reemplazando:
+
+\[
+P_n=
+(0.1\,\mu\text{W}/\text{Hz})(8000\,\text{Hz})
+\]
+
+\[
+P_n=800\,\mu\text{W}
+\]
+
+Como:
+
+\[
+800\,\mu\text{W}=0.0008\,\text{W}
+\]
+
+la relación señal-ruido es:
+
+\[
+\mathrm{SNR}
+=
+\frac{P_{\text{señal}}}{P_n}
+\]
+
+\[
+\mathrm{SNR}
+=
+\frac{0.95}{0.0008}
+\]
+
+\[
+\mathrm{SNR}=1187.5
+\]
+
+Para expresar la relación señal-ruido en decibelios:
+
+\[
+\mathrm{SNR}_{dB}
+=
+10\log_{10}(\mathrm{SNR})
+\]
+
+Por lo tanto:
+
+\[
+\mathrm{SNR}_{dB}
+=
+10\log_{10}(1187.5)
+\]
+
+\[
+\mathrm{SNR}_{dB}
+\approx30.74\,\text{dB}
+\]
+
+Por lo tanto, la relación señal-ruido a la salida es:
+
+\[
+\boxed{\mathrm{SNR}_{dB}\approx30.74\,\text{dB}}
+\]
 \section*{d)- Modulacion de AM en Python}
 
 \end{document}
