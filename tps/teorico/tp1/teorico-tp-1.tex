@@ -132,7 +132,9 @@ En un medio no guiado la transmisión de las ondas se produce irradiándolas en 
 \noindent\textbf{3.3}\par\vspace{\baselineskip}
 \noindent\textbf{3.4}\par\vspace{\baselineskip}
 \noindent\textbf{3.5}\par\vspace{\baselineskip}
-\noindent\textbf{3.6}\par\vspace{\baselineskip}
+\noindent\textbf{3.6}\par
+La relación es que el espectro es el conjunto de todas las frecuencias que componen una señal, mientras que el ancho de banda es la diferencia entre la frecuencia más alta y la más baja que la componen, es decir, la anchura de dicho espectro.
+
 \noindent\textbf{3.7}\par\vspace{\baselineskip}
 \noindent\textbf{3.8}\par\vspace{\baselineskip}
 \noindent\textbf{3.9}\par\vspace{\baselineskip}
@@ -310,9 +312,131 @@ es nula:
 \noindent\textbf{3.13}\par\vspace{\baselineskip}
 \noindent\textbf{3.14}\par\vspace{\baselineskip}
 \noindent\textbf{3.15}\par\vspace{\baselineskip}
-\noindent\textbf{3.16}\par\vspace{\baselineskip}
-\noindent\textbf{3.17}\par\vspace{\baselineskip}
-\noindent\textbf{3.18}\par\vspace{\baselineskip}
+\noindent\textbf{3.16}\par
+
+\noindent\textbf{a)} Si cada elemento de señal codifica una palabra de 4 bits, ¿cuál es el ancho de banda mínimo necesario?
+
+La fórmula de Nyquist es:
+\[
+R = 2B\log_2 M
+\]
+
+donde:
+\begin{itemize}
+  \item \(R\): tasa de bits, en bps.
+  \item \(B\): ancho de banda, en Hz.
+  \item \(M\): cantidad de niveles de señal.
+\end{itemize}
+
+Cada elemento de señal codifica \(n\) bits, por lo que:
+\[
+M = 2^n = 2^4 = 16
+\]
+
+Entonces:
+\[
+9600 = 2B\log_2(16)
+\]
+
+Como \(\log_2(16)=4\):
+\[
+9600 = 8B
+\]
+
+Por lo tanto:
+\[
+B = \frac{9600}{8} = 1200\,\mathrm{Hz}
+\]
+
+El ancho de banda mínimo necesario es de \(1200\,\mathrm{Hz}\).
+
+\noindent\textbf{b)} ¿Y para palabras de 8 bits?
+
+En este caso:
+\[
+M = 2^8 = 256
+\]
+
+Entonces:
+\[
+9600 = 2B\log_2(256)
+\]
+
+Como \(\log_2(256)=8\):
+\[
+9600 = 16B
+\]
+
+Por lo tanto:
+\[
+B = \frac{9600}{16} = 600\,\mathrm{Hz}
+\]
+
+El ancho de banda mínimo necesario es de \(600\,\mathrm{Hz}\).
+
+
+\noindent\textbf{3.17}\par
+
+¿Cuál es el nivel de ruido térmico para un canal de ancho de banda de \(10\,\mathrm{kHz}\) y \(1000\,\mathrm{W}\) de potencia operando a \(50\,^\circ\mathrm{C}\)?
+
+La fórmula del ruido térmico es:
+\[
+N = kTB
+\]
+
+donde:
+\begin{itemize}
+  \item \(N\): potencia del ruido térmico, en watts.
+  \item \(k\): constante de Boltzmann, \(k=1.38\times10^{-23}\,\mathrm{J/K}\).
+  \item \(T\): temperatura absoluta, en Kelvin.
+  \item \(B\): ancho de banda, en Hz.
+\end{itemize}
+
+La temperatura es:
+\[
+T = 50 + 273 = 323\,\mathrm{K}
+\]
+
+Y el ancho de banda:
+\[
+B = 10\,\mathrm{kHz} = 10\,000\,\mathrm{Hz}
+\]
+
+Por lo tanto:
+\[
+N = (1.38\times10^{-23})(323)(10\,000)
+\]
+
+\[
+N \approx 4.46\times10^{-17}\,\mathrm{W}
+\]
+
+Por lo tanto, el nivel de ruido térmico es aproximadamente
+\(4.46\times10^{-17}\,\mathrm{W}\).
+
+
+\noindent\textbf{3.18}\par
+
+Considérense los trabajos de Shannon y Nyquist sobre la capacidad del canal. Cada uno de ellos estableció un límite superior para la razón de bits del canal basándose en dos aproximaciones diferentes. ¿Cómo se pueden relacionar ambas aproximaciones?
+
+\textbf{Límite de Nyquist (canal sin ruido):} establece que, incluso en condiciones ideales, la tasa de datos está limitada por el ancho de banda. Su fórmula es:
+\[
+C = 2B\log_2(V)
+\]
+
+donde \(C\) es la capacidad en bps, \(B\) es el ancho de banda en Hz y \(V\) es el número de niveles de la señal.
+
+\textbf{Límite de Shannon (canal con ruido):} considera que el ruido térmico es un factor limitante. Su fórmula es:
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+donde SNR es la relación señal-ruido, sin unidades.
+
+La relación entre ambas aproximaciones es que las dos establecen un límite superior para la capacidad de un canal, pero consideran factores diferentes. La fórmula de Nyquist determina la velocidad máxima de transmisión en función del ancho de banda y del número de niveles de señal, suponiendo un canal ideal sin ruido. La fórmula de Shannon, en cambio, incorpora el efecto del ruido mediante la relación señal/ruido (SNR) y establece el límite máximo de transmisión en un canal real.
+
+Por lo tanto, la capacidad efectiva de un canal estará limitada simultáneamente por ambos criterios.
+
 \noindent\textbf{3.19}\par\vspace{\baselineskip}
 \noindent\textbf{3.20}\par\vspace{\baselineskip}
 
