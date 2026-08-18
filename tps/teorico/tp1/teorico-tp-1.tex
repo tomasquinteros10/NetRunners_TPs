@@ -130,7 +130,10 @@ En un medio no guiado la transmisión de las ondas se produce irradiándolas en 
 
 \noindent\textbf{3.2}\par\vspace{\baselineskip}
 \noindent\textbf{3.3}\par\vspace{\baselineskip}
-\noindent\textbf{3.4}\par\vspace{\baselineskip}
+
+\noindent\textbf{3.4}\par
+En 360° hay 2π radianes.
+
 \noindent\textbf{3.5}\par\vspace{\baselineskip}
 \noindent\textbf{3.6}\par\vspace{\baselineskip}
 \noindent\textbf{3.7}\par\vspace{\baselineskip}
@@ -304,9 +307,91 @@ es nula:
 \noindent\textbf{3.7}\par\vspace{\baselineskip}
 \noindent\textbf{3.8}\par\vspace{\baselineskip}
 \noindent\textbf{3.9}\par\vspace{\baselineskip}
-\noindent\textbf{3.10}\par\vspace{\baselineskip}
-\noindent\textbf{3.11}\par\vspace{\baselineskip}
-\noindent\textbf{3.12}\par\vspace{\baselineskip}
+
+\noindent\textbf{3.10}\par
+La figura 3.5b representa un pulso cuadrado, el cual tiene un ancho de banda absoluto infinito. La fuente confirma que, cuanto mayor sea el ancho de banda transmitido, mayor será el coste de transmisión, por lo que ningún medio real podría transmitir una cantidad infinita de frecuencias. Por esta razón, para poder transmitir esta señal, su ancho de banda debería ser limitado por mecanismos externos. Esta limitación del ancho de banda introduce distorsiones en el pulso original, las cuales hacen que la interpretación de la señal recibida sea más difícil.
+
+Aunque el ancho de banda absoluto sea infinito, la mayor parte de la energía de la señal se concentra en una banda de frecuencias estrecha. Esto permite que, al transmitir solo esa porción principal, el receptor pueda recuperar la información con una tasa de error aceptable, logrando un compromiso entre costo y fidelidad.
+
+\noindent\textbf{3.11}\par
+Para conseguir representar aproximadamente 100 caracteres utilizando
+únicamente un código de 6 bits (que teóricamente solo permite
+$2^{6}=64$ combinaciones únicas), se recurre al uso de caracteres de
+control u órdenes de control.
+
+Dado que 64 combinaciones no son suficientes para cubrir mayúsculas,
+minúsculas, números y símbolos simultáneamente, se reservan una o más
+de esas 64 combinaciones como caracteres de control: un carácter de
+control específico indica al receptor que los siguientes bits deben
+interpretarse como letras minúsculas, otro carácter de control indica
+que los siguientes bits corresponden a mayúsculas o caracteres
+especiales, etc. De esta forma, una misma combinación de 6 bits puede
+representar dos caracteres distintos dependiendo del último carácter
+de control recibido. Esto permite prácticamente duplicar la capacidad
+del código, pasando de 64 a casi 120 posibilidades teóricas, lo cual
+cubre de sobra 100 caracteres.
+
+\noindent\textbf{3.12}\par
+Para determinar los incrementos posibles en la resolución de una señal
+de vídeo al aumentar el ancho de banda a 5 MHz, es necesario partir de
+los parámetros estándar para una señal de 4,2 MHz:
+
+\begin{itemize}
+  \item 525 líneas totales por barrido (483 líneas activas).
+  \item 30 barridos por segundo.
+  \item Tiempo total por línea: 63,5 $\mu$s.
+  \item Tiempo de retroceso horizontal: 11 $\mu$s.
+\end{itemize}
+
+Dejando 52,5 $\mu$s de tiempo activo por línea.
+
+\vspace{\baselineskip}
+
+\noindent\underline{\textbf{Incremento de resolución horizontal:}}
+
+\begin{enumerate}
+  \item Se mantiene constante la resolución vertical (483 líneas
+    activas) y el tiempo activo por línea (52,5 $\mu$s).
+  \item Con un ancho de banda de 5 MHz, el número de ciclos que se
+    pueden transmitir en el tiempo activo de una línea es:
+    $5\times10^{6}\,\mathrm{Hz} \cdot 52{,}5\times10^{-6}\,\mathrm{s} = 262{,}5$
+    ciclos.
+  \item Dado que cada ciclo completo de la onda permite representar
+    dos elementos (uno blanco y uno negro), la nueva resolución
+    horizontal es de $262{,}5\times2=525$ elementos.
+  \item Si la resolución horizontal estándar es de 450 elementos, el
+    incremento posible es de $525-450=75$ elementos adicionales.
+\end{enumerate}
+
+\vspace{\baselineskip}
+
+\noindent\underline{\textbf{Incremento de resolución vertical}}
+
+\begin{enumerate}
+  \item Se mantiene constante la resolución horizontal en 450
+    elementos, pero se permite el incremento de ancho de banda se
+    utilice para aumentar el número de líneas.
+  \item Para transmitir 450 elementos (225 ciclos) con un ancho de
+    banda de 5 MHz, el tiempo activo por línea debe reducirse a:
+    \[
+      T_{activo} = \frac{225}{5\times10^{6}\,\mathrm{Hz}} = 45\,\mu\mathrm{s}.
+    \]
+  \item Sumando el tiempo de retroceso horizontal constante de
+    11 $\mu$s, el nuevo tiempo total por línea es de
+    $45\,\mu\mathrm{s} + 11\,\mu\mathrm{s} = 56\,\mu\mathrm{s}$.
+  \item A una velocidad de 30 cuadros por segundo, el número total de
+    líneas por cuadro sería:
+    \[
+      N_{total} = \frac{1}{56\times10^{-6}\,\mathrm{s} \cdot 30} \approx 595{,}2 \text{ líneas.}
+    \]
+  \item Manteniendo la proporción original de líneas activas (483 de
+    525), la nueva resolución vertical es:
+    $595{,}2 \cdot \dfrac{483}{525} \approx 547{,}6$ líneas.
+  \item Comparado con las 483 líneas originales, el incremento es de:
+    $547{,}6-483=64{,}6$ líneas (aproximadamente 65 líneas
+    adicionales).
+\end{enumerate}
+
 \noindent\textbf{3.13}\par\vspace{\baselineskip}
 \noindent\textbf{3.14}\par\vspace{\baselineskip}
 \noindent\textbf{3.15}\par\vspace{\baselineskip}
