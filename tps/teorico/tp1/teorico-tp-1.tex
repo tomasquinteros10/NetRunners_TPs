@@ -128,7 +128,9 @@ En un medio guiado las ondas electromagnéticas que se usan para transmitir los 
 
 En un medio no guiado la transmisión de las ondas se produce irradiándolas en un medio, manipulando el campo electromagnético. Su propagación se produce en múltiples direcciones (aunque pudiendo lograr cierta direccionalidad mediante diseños específicos de transmisores). Esto permite al receptor estar en cualquier punto dentro del radio de potencia de transmisión del emisor e incluso que ambos actores puedan estar en movimiento.
 
-\noindent\textbf{3.2}\par\vspace{\baselineskip}
+\noindent\textbf{3.2}\par
+Lo que distingue a una señal analógica de una digital es cuántos valores puede tomar el parámetro representado por dicha señal. En una señal analógica, puede tomar cualquier valor dentro de un rango continuo, reproduciendo fielmente la variación de la información original (por ejemplo, la voz). En una señal digital, en cambio, sólo existe un conjunto finito de estados con significado (típicamente 0 y 1, aunque técnicas avanzadas usan más), y el receptor sólo necesita identificar a cuál de esos estados corresponde lo recibido; no reproduce la señal original, sino que la reconstruye, generalmente a partir de pulsos (toma valores discretos).
+
 \noindent\textbf{3.3}\par\vspace{\baselineskip}
 \noindent\textbf{3.4}\par\vspace{\baselineskip}
 \noindent\textbf{3.5}\par\vspace{\baselineskip}
@@ -298,9 +300,43 @@ es nula:
     \end{scope}
   \end{tikzpicture}
 \end{center}
-\noindent\textbf{3.4}\par\vspace{\baselineskip}
-\noindent\textbf{3.5}\par\vspace{\baselineskip}
-\noindent\textbf{3.6}\par\vspace{\baselineskip}
+\noindent\textbf{3.4}\par
+Primero, calculamos la longitud de onda usando la relación $v = f \cdot \lambda$, y la frecuencia relativa de cada nota respecto al DO grave (primero):
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{tabla-notas.png}
+\end{center}
+Al observar las frecuencias relativas y longitudes de onda comparadas en una misma tabla, observamos que el DO agudo tiene el doble de frecuencia que el DO grave (el primero), esta es la famosa ``octava'' en música; y además su longitud de onda es exactamente la mitad, lo que confirma la relación inversa entre frecuencia y longitud de onda existente.
+
+\noindent\textbf{3.5}\par
+Observando el gráfico, podemos describir los tres parámetros de la función que representa a la línea discontinua como:\par
+\noindent $A$ (Amplitud): observando los picos, $A = 2$.\par
+\noindent $f$ (Frecuencia): $2f$ (el doble de la frecuencia de la línea continua).\par
+\noindent $\varphi$ (Fase): se ve que la discontinua está adelantada respecto de la continua, desfasada $\pi$.
+
+\noindent\textbf{3.6}\par
+Para encontrar los tres parámetros, primero distribuimos la multiplicación para poder usar la identidad dada como sugerencia:
+\[
+  (1 + 0,1\cos 5t)\cos 100t = \cos 100t + 0,1\cos 5t \cdot \cos 100t
+\]
+Luego, tomando $a = 5t$ y $b = 100t$, y aplicando la identidad:
+\[
+  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos(5t-100t) + \cos(5t+100t)\right] = \frac{1}{2}\left[\cos(-95t) + \cos(105t)\right]
+\]
+\[
+  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos 95t + \cos 105t\right]
+\]
+Esto teniendo en cuenta que $\cos(-x) = \cos(x)$.
+
+Como último paso, juntamos todo y nos queda:
+\[
+  (1 + 0,1\cos 5t)\cos 100t = \cos 100t + 0,05\cos 95t + 0,05\cos 105t
+\]
+Es decir, la señal expresada como combinación lineal de cosenos. Ahora solo queda identificar los parámetros:\par
+\noindent $\cos 100t$: Amplitud $= 1$, frecuencia $= 15,915\ \mathrm{Hz}$, fase $\varphi = 0$.\par
+\noindent $0,05\cos 95t$: Amplitud $= 0,5$ (relativa), frecuencia $= 15,12\ \mathrm{Hz}$, fase $\varphi = 0$.\par
+\noindent $0,05\cos 105t$: Amplitud $= 0,5$ (relativa), frecuencia $= 16,711\ \mathrm{Hz}$, fase $\varphi = 0$.\par
+Aclaración: la frecuencia en Hz se calcula a partir de la frecuencia angular $\omega$ (rad/s) dividida por $2\pi$, es decir $f = \omega/2\pi$.
+
 \noindent\textbf{3.7}\par\vspace{\baselineskip}
 \noindent\textbf{3.8}\par\vspace{\baselineskip}
 \noindent\textbf{3.9}\par\vspace{\baselineskip}
