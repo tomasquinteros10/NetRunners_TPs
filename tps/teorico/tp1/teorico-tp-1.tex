@@ -1,0 +1,445 @@
+\documentclass[11pt,a4paper]{article}
+
+% -----------------------------------------------------------------------------
+% Paquetes: todos forman parte de una instalación estándar de LaTeX.
+% -----------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% Fecha en español sin depender de babel ni de spanish.ldf.
+\newcommand{\FechaEnEspanol}{%
+  \number\day\space de\space
+  \ifcase\month
+    \or enero\or febrero\or marzo\or abril\or mayo\or junio\or
+    julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
+  \fi\space de\space\number\year
+}
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={teorico-tp-1}}
+
+% lastpage no es necesario para compilar, pero permite mostrar "página de N".
+\newif\ifHayUltimaPagina
+\IfFileExists{lastpage.sty}{
+  \usepackage{lastpage}
+  \HayUltimaPaginatrue
+}{
+  \HayUltimaPaginafalse
+}
+
+% -----------------------------------------------------------------------------
+% CONFIGURACIÓN DEL TRABAJO: editar solamente este bloque para reutilizarlo.
+% -----------------------------------------------------------------------------
+\newcommand{\NombreMateria}{Redes de Computadoras}
+\newcommand{\TipoTrabajo}{Trabajo Práctico}
+\newcommand{\NumeroTrabajo}{1}
+% Cambiar por "Teórico" o "Práctico" según corresponda.
+\newcommand{\TipoTP}{Teórico}
+\newcommand{\NombreTrabajo}{Introducción a los Sistemas de Comunicaciones}
+\newcommand{\NombreGrupo}{NetRunners}
+\newcommand{\Docente}{FACUNDO NICOLAS OLIVA CUNEO}
+\newcommand{\LogoArchivo}{logo.png}
+\newcommand{\LogoRuta}{\LogoArchivo}
+
+% Una línea por integrante. Se pueden agregar o quitar filas.
+\newcommand{\Integrantes}{%
+  \begin{tabular}{ll}
+    Bastida, Lucas Ramiro & DNI 39444511 \\
+    Contessi, Ruben Andres & DNI 33315235 \\
+    Garay, Ignacio Hernan & DNI 44191925 \\
+    Giraudo, Juan Pablo & DNI 34970089 \\
+    Peñaloza, Gonzalo Adrian & DNI 40441355 \\
+    Quinteros del Castillo, Tomás Agustín & DNI 46169739 \\
+    Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
+  \end{tabular}%
+}
+
+% -----------------------------------------------------------------------------
+% Elementos comunes de carátula y encabezado.
+% -----------------------------------------------------------------------------
+\newcommand{\InsertarLogo}[1][0.24\textwidth]{%
+  \ifx\LogoRuta\empty
+    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
+  \else
+    \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
+  \fi
+}
+
+\newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
+
+% Eje temporal normalizado: una unidad horizontal representa un período T.
+\newcommand{\EjeTiempo}[1]{%
+  \draw[->] (-1.15,0) -- (1.25,0) node[right] {\small Tiempo};
+  \draw[->] (0,-#1) -- (0,#1) node[above] {\small Amplitud};
+  \foreach \x/\etiqueta in {-1/-T,-0.5/{-\frac{T}{2}},0.5/{\frac{T}{2}},1/T} {
+    \draw (\x,0.10) -- (\x,-0.10) node[below=2pt] {\scriptsize $\etiqueta$};
+  }
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\InsertarLogo[1.4cm]}
+\fancyhead[C]{\small\textbf{\TituloCorto}}
+\fancyhead[R]{\small\NombreGrupo}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[C]{\small Página \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    \InsertarLogo[0.32\textwidth]
+
+    \vfill
+    {\Large\textsc{\NombreMateria}\par}
+    \vspace{1.5cm}
+    {\Huge\bfseries \TipoTrabajo\par}
+    \vspace{0.35cm}
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
+    \vspace{0.8cm}
+    {\Large\NombreTrabajo\par}
+
+    \vfill
+    \begin{tabular}{rl}
+      \textbf{Grupo:} & \NombreGrupo \\
+      \textbf{Docente:} & \Docente
+    \end{tabular}
+
+    \vspace{1cm}
+    \begin{center}
+      \textbf{Integrantes}\\[0.2cm]
+      \Integrantes
+    \end{center}
+
+    \vfill
+    {\large \FechaEnEspanol\par}
+  \end{center}
+\end{titlepage}
+
+\section*{b) - Preguntas:}
+
+\noindent\textbf{3.1}\par
+En un medio guiado las ondas electromagnéticas que se usan para transmitir los datos se propagan confinadas en un camino físico o material, por ejemplo, cables metálicos o fibras ópticas. Es direccional: la información llegará allá donde llegue el material físico, por lo que este debe conectarse entre emisor y receptor para que la comunicación pueda realizarse.
+
+En un medio no guiado la transmisión de las ondas se produce irradiándolas en un medio, manipulando el campo electromagnético. Su propagación se produce en múltiples direcciones (aunque pudiendo lograr cierta direccionalidad mediante diseños específicos de transmisores). Esto permite al receptor estar en cualquier punto dentro del radio de potencia de transmisión del emisor e incluso que ambos actores puedan estar en movimiento.
+
+\noindent\textbf{3.2}\par\vspace{\baselineskip}
+\noindent\textbf{3.3}\par\vspace{\baselineskip}
+\noindent\textbf{3.4}\par\vspace{\baselineskip}
+\noindent\textbf{3.5}\par\vspace{\baselineskip}
+\noindent\textbf{3.6}\par
+La relación es que el espectro es el conjunto de todas las frecuencias que componen una señal, mientras que el ancho de banda es la diferencia entre la frecuencia más alta y la más baja que la componen, es decir, la anchura de dicho espectro.
+
+\noindent\textbf{3.7}\par\vspace{\baselineskip}
+\noindent\textbf{3.8}\par\vspace{\baselineskip}
+\noindent\textbf{3.9}\par\vspace{\baselineskip}
+
+\section*{c)- Ejercicios:}
+
+\noindent\textbf{3.1}\par
+\noindent a). En una configuración multipunto múltiples dispositivos comparten el mismo medio de transmisión, por lo que si más de uno transmite al mismo tiempo, las señales se solaparían y los mensajes serían indistinguibles.\par
+\noindent b).  \par
+\begin{center}
+  \begin{tabular}{|l|p{0.32\textwidth}|p{0.32\textwidth}|}
+    \hline
+    & \textbf{Centralizado} & \textbf{Descentralizado} \\
+    \hline
+    \textbf{Ventajas} &
+    El coordinador puede asignar tiempo solo a quien lo requiere y establecer prioridades.
+    &
+    Si un nodo falla, la comunicación entre el resto no se ve afectada.\newline
+    \\
+    \hline
+    \textbf{Desventajas} &
+    Sin coordinador no hay transmisión.\newline
+    Parte del tiempo del canal se pierde en coordinación de quien transmite.
+    &
+    Al estar repartido el tiempo en turnos, se puede asignar tiempo a quien no lo necesite\newline
+    \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\noindent\textbf{3.2}\par
+Dado que el período es la inversa de la frecuencia:
+\[
+  T = \frac{1}{f}
+\]
+\[
+  T = \frac{1}{1000\,\mathrm{Hz}}
+\]
+\[
+  T = 0,001\,\mathrm{s}
+\]
+\[
+  T = 1\,\mathrm{ms}
+\]
+
+\noindent\textbf{3.3}\par
+\noindent a).\par
+Sea \(x(t)=\sin(2\pi ft)\) la señal de referencia. Su amplitud máxima es
+\(1\) y su amplitud mínima es \(-1\).
+
+Un desfase de \(\pm\pi\) invierte la señal, ya que
+\[
+  \sin(2\pi ft \pm \pi)=-\sin(2\pi ft).
+\]
+Por lo tanto, ambas señales desfasadas son iguales y su suma duplica la
+amplitud:
+\[
+  x_+(t)=x_-(t)=-\sin(2\pi ft), \qquad
+  x_R(t)=x_+(t)+x_-(t)=-2\sin(2\pi ft).
+\]
+
+\begin{center}
+  \begin{tikzpicture}[x=2.4cm,y=0.55cm]
+    \begin{scope}
+      \EjeTiempo{1.35}
+      \draw[blue,thick,domain=-1:1,samples=100,smooth]
+        plot (\x,{sin(360*\x)});
+      \node[blue,anchor=west] at (0.15,1.18) {\small $x(t)=\sin(2\pi ft)$};
+      \draw (-0.06,1) -- (0.06,1);
+      \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-3.3cm]
+      \EjeTiempo{1.35}
+      \draw[red!70!black,thick,domain=-1:1,samples=100,smooth]
+        plot (\x,{-sin(360*\x)});
+      \node[red!70!black,anchor=west] at (0.15,1.18)
+        {\small $x_+(t)=\sin(2\pi ft+\pi)$};
+      \draw (-0.06,1) -- (0.06,1);
+      \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-6.6cm]
+      \EjeTiempo{1.35}
+      \draw[red!70!black,thick,domain=-1:1,samples=100,smooth]
+        plot (\x,{-sin(360*\x)});
+      \node[red!70!black,anchor=west] at (0.15,1.18)
+        {\small $x_-(t)=\sin(2\pi ft-\pi)$};
+      \draw (-0.06,1) -- (0.06,1);
+      \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-10.7cm]
+      \EjeTiempo{2.35}
+      \draw[blue!70!black,thick,domain=-1:1,samples=100,smooth]
+        plot (\x,{-2*sin(360*\x)});
+      \node[blue!70!black,anchor=west] at (0.15,2.18)
+        {\small $x_R(t)=2\sin(2\pi ft\pm\pi)=-2\sin(2\pi ft)$};
+      \draw (-0.06,2) -- (0.06,2);
+      \draw (-0.06,-2) -- (0.06,-2);
+      \node[anchor=east,xshift=-2pt] at (0,2) {\scriptsize $2$};
+      \node[anchor=east,xshift=-2pt] at (0,-2) {\scriptsize $-2$};
+    \end{scope}
+  \end{tikzpicture}
+\end{center}
+
+\noindent b).\par\vspace{\baselineskip}
+Sean las señales
+\[
+  x_1(t)=\sin(2\pi ft), \qquad
+  x_2(t)=\sin(2\pi ft-\pi)=-\sin(2\pi ft).
+\]
+El desfase de \(\pi\) hace que \(x_2(t)\) sea la inversa de \(x_1(t)\).
+Por ello, para cada instante sus amplitudes se cancelan y la señal resultante
+es nula:
+\[
+  x_R(t)=x_1(t)+x_2(t)
+  =\sin(2\pi ft)+\sin(2\pi ft-\pi)=0.
+\]
+
+\begin{center}
+  \begin{tikzpicture}[x=2.4cm,y=0.55cm]
+    \begin{scope}
+      \EjeTiempo{1.35}
+      \draw[blue,thick,domain=-1:1,samples=100,smooth]
+        plot (\x,{sin(360*\x)});
+      \node[blue,anchor=west] at (0.15,1.18)
+        {\small $x_1(t)=\sin(2\pi ft)$};
+      \draw (-0.06,1) -- (0.06,1);
+      \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-3.3cm]
+      \EjeTiempo{1.35}
+      \draw[red!70!black,thick,domain=-1:1,samples=100,smooth]
+        plot (\x,{-sin(360*\x)});
+      \node[red!70!black,anchor=west] at (0.15,1.18)
+        {\small $x_2(t)=\sin(2\pi ft-\pi)=-\sin(2\pi ft)$};
+      \draw (-0.06,1) -- (0.06,1);
+      \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-6.6cm]
+      \EjeTiempo{1.35}
+      \draw[green!50!black,very thick] (-1.15,0) -- (1.12,0);
+      \node[green!50!black,anchor=west] at (0.15,0.45)
+        {\small $x_R(t)=0$ (se\~nal nula)};
+      \draw (-0.06,1) -- (0.06,1);
+      \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+      \node[anchor=east,xshift=-2pt] at (0,0) {\scriptsize $0$};
+    \end{scope}
+  \end{tikzpicture}
+\end{center}
+\noindent\textbf{3.4}\par\vspace{\baselineskip}
+\noindent\textbf{3.5}\par\vspace{\baselineskip}
+\noindent\textbf{3.6}\par\vspace{\baselineskip}
+\noindent\textbf{3.7}\par\vspace{\baselineskip}
+\noindent\textbf{3.8}\par\vspace{\baselineskip}
+\noindent\textbf{3.9}\par\vspace{\baselineskip}
+\noindent\textbf{3.10}\par\vspace{\baselineskip}
+\noindent\textbf{3.11}\par\vspace{\baselineskip}
+\noindent\textbf{3.12}\par\vspace{\baselineskip}
+\noindent\textbf{3.13}\par\vspace{\baselineskip}
+\noindent\textbf{3.14}\par\vspace{\baselineskip}
+\noindent\textbf{3.15}\par\vspace{\baselineskip}
+\noindent\textbf{3.16}\par
+
+\noindent\textbf{a)} Si cada elemento de señal codifica una palabra de 4 bits, ¿cuál es el ancho de banda mínimo necesario?
+
+La fórmula de Nyquist es:
+\[
+R = 2B\log_2 M
+\]
+
+donde:
+\begin{itemize}
+  \item \(R\): tasa de bits, en bps.
+  \item \(B\): ancho de banda, en Hz.
+  \item \(M\): cantidad de niveles de señal.
+\end{itemize}
+
+Cada elemento de señal codifica \(n\) bits, por lo que:
+\[
+M = 2^n = 2^4 = 16
+\]
+
+Entonces:
+\[
+9600 = 2B\log_2(16)
+\]
+
+Como \(\log_2(16)=4\):
+\[
+9600 = 8B
+\]
+
+Por lo tanto:
+\[
+B = \frac{9600}{8} = 1200\,\mathrm{Hz}
+\]
+
+El ancho de banda mínimo necesario es de \(1200\,\mathrm{Hz}\).
+
+\noindent\textbf{b)} ¿Y para palabras de 8 bits?
+
+En este caso:
+\[
+M = 2^8 = 256
+\]
+
+Entonces:
+\[
+9600 = 2B\log_2(256)
+\]
+
+Como \(\log_2(256)=8\):
+\[
+9600 = 16B
+\]
+
+Por lo tanto:
+\[
+B = \frac{9600}{16} = 600\,\mathrm{Hz}
+\]
+
+El ancho de banda mínimo necesario es de \(600\,\mathrm{Hz}\).
+
+
+\noindent\textbf{3.17}\par
+
+¿Cuál es el nivel de ruido térmico para un canal de ancho de banda de \(10\,\mathrm{kHz}\) y \(1000\,\mathrm{W}\) de potencia operando a \(50\,^\circ\mathrm{C}\)?
+
+La fórmula del ruido térmico es:
+\[
+N = kTB
+\]
+
+donde:
+\begin{itemize}
+  \item \(N\): potencia del ruido térmico, en watts.
+  \item \(k\): constante de Boltzmann, \(k=1.38\times10^{-23}\,\mathrm{J/K}\).
+  \item \(T\): temperatura absoluta, en Kelvin.
+  \item \(B\): ancho de banda, en Hz.
+\end{itemize}
+
+La temperatura es:
+\[
+T = 50 + 273 = 323\,\mathrm{K}
+\]
+
+Y el ancho de banda:
+\[
+B = 10\,\mathrm{kHz} = 10\,000\,\mathrm{Hz}
+\]
+
+Por lo tanto:
+\[
+N = (1.38\times10^{-23})(323)(10\,000)
+\]
+
+\[
+N \approx 4.46\times10^{-17}\,\mathrm{W}
+\]
+
+Por lo tanto, el nivel de ruido térmico es aproximadamente
+\(4.46\times10^{-17}\,\mathrm{W}\).
+
+
+\noindent\textbf{3.18}\par
+
+Considérense los trabajos de Shannon y Nyquist sobre la capacidad del canal. Cada uno de ellos estableció un límite superior para la razón de bits del canal basándose en dos aproximaciones diferentes. ¿Cómo se pueden relacionar ambas aproximaciones?
+
+\textbf{Límite de Nyquist (canal sin ruido):} establece que, incluso en condiciones ideales, la tasa de datos está limitada por el ancho de banda. Su fórmula es:
+\[
+C = 2B\log_2(V)
+\]
+
+donde \(C\) es la capacidad en bps, \(B\) es el ancho de banda en Hz y \(V\) es el número de niveles de la señal.
+
+\textbf{Límite de Shannon (canal con ruido):} considera que el ruido térmico es un factor limitante. Su fórmula es:
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+donde SNR es la relación señal-ruido, sin unidades.
+
+La relación entre ambas aproximaciones es que las dos establecen un límite superior para la capacidad de un canal, pero consideran factores diferentes. La fórmula de Nyquist determina la velocidad máxima de transmisión en función del ancho de banda y del número de niveles de señal, suponiendo un canal ideal sin ruido. La fórmula de Shannon, en cambio, incorpora el efecto del ruido mediante la relación señal/ruido (SNR) y establece el límite máximo de transmisión en un canal real.
+
+Por lo tanto, la capacidad efectiva de un canal estará limitada simultáneamente por ambos criterios.
+
+\noindent\textbf{3.19}\par\vspace{\baselineskip}
+\noindent\textbf{3.20}\par\vspace{\baselineskip}
+
+\section*{d)- Modulacion de AM en Python}
+
+\end{document}
