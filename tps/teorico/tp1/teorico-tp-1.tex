@@ -15,7 +15,11 @@
 }
 \usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
 \usepackage{graphicx}
+\usepackage{amsmath,amssymb}
 \usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{float}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 \usepackage[hidelinks]{hyperref}
@@ -43,6 +47,7 @@
 \newcommand{\Docente}{FACUNDO NICOLAS OLIVA CUNEO}
 \newcommand{\LogoArchivo}{logo.png}
 \newcommand{\LogoRuta}{\LogoArchivo}
+\newcommand{\sen}{\operatorname{sen}}
 
 % Una línea por integrante. Se pueden agregar o quitar filas.
 \newcommand{\Integrantes}{%
@@ -134,8 +139,29 @@ En un medio no guiado la transmisión de las ondas se produce irradiándolas en 
 \noindent\textbf{3.4}\par
 En 360° hay 2π radianes.
 
+=======
+
+\noindent\textbf{3.2}\par
+Lo que distingue a una señal analógica de una digital es cuántos valores puede tomar el parámetro representado por dicha señal. En una señal analógica, puede tomar cualquier valor dentro de un rango continuo, reproduciendo fielmente la variación de la información original (por ejemplo, la voz). En una señal digital, en cambio, sólo existe un conjunto finito de estados con significado (típicamente 0 y 1, aunque técnicas avanzadas usan más), y el receptor sólo necesita identificar a cuál de esos estados corresponde lo recibido; no reproduce la señal original, sino que la reconstruye, generalmente a partir de pulsos (toma valores discretos).
+
+
+\noindent\textbf{3.3. ¿Cuáles son las tres características más importantes de una señal periódica?}\par
+\noindent a - La amplitud de pico es el valor máximo de la señal en el tiempo; normalmente, este valor se mide en voltios.\par
+\noindent b - La frecuencia es la razón (en ciclos por segundo o Hercios (Hz)) a la que la señal se repite. Un parámetro equivalente es el periodo (T), definido como la cantidad de tiempo transcurrido entre dos repeticiones consecutivas de la señal; por tanto, se verifica que $T = \frac{1}{f}$.\par
+\noindent c - La fase es una medida de la posición relativa de la señal dentro de un período. Representa el desplazamiento de la señal respecto de un origen arbitrario y suele expresarse en grados o radianes.\par\vspace{\baselineskip}
+
+\noindent\textbf{3.4}\par\vspace{\baselineskip}
 \noindent\textbf{3.5}\par\vspace{\baselineskip}
 \noindent\textbf{3.6}\par\vspace{\baselineskip}
+\noindent\textbf{3.7}\par
+La atenuación es la pérdida progresiva de energía o potencia que sufre una señal a medida que viaja a través de un medio de transmisión. Ocurre tanto por un aumento de la distancia entre emisor y receptor como por un incremento de la frecuencia de la señal. Por lo tanto, puede ser necesario el uso de amplificadores o repetidores para recuperar la potencia y de ecualizadores para corregir la distorsión por frecuencia. 
+\noindent\textbf{3.8}\par
+
+Se denomina capacidad del canal a la velocidad máxima a la que se pueden transmitir los datos en un canal, o ruta de comunicación de datos, bajo unas condiciones dadas, expresada en bits por segundo (bps).
+
+\noindent\textbf{3.6}\par
+La relación es que el espectro es el conjunto de todas las frecuencias que componen una señal, mientras que el ancho de banda es la diferencia entre la frecuencia más alta y la más baja que la componen, es decir, la anchura de dicho espectro.
+
 \noindent\textbf{3.7}\par\vspace{\baselineskip}
 \noindent\textbf{3.8}\par\vspace{\baselineskip}
 \noindent\textbf{3.9}\par\vspace{\baselineskip}
@@ -392,15 +418,687 @@ Dejando 52,5 $\mu$s de tiempo activo por línea.
     adicionales).
 \end{enumerate}
 
+=======
+
+\noindent\textbf{3.4}\par
+Primero, calculamos la longitud de onda usando la relación $v = f \cdot \lambda$, y la frecuencia relativa de cada nota respecto al DO grave (primero):
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{tabla-notas.png}
+\end{center}
+Al observar las frecuencias relativas y longitudes de onda comparadas en una misma tabla, observamos que el DO agudo tiene el doble de frecuencia que el DO grave (el primero), esta es la famosa ``octava'' en música; y además su longitud de onda es exactamente la mitad, lo que confirma la relación inversa entre frecuencia y longitud de onda existente.
+
+\noindent\textbf{3.5}\par
+Observando el gráfico, podemos describir los tres parámetros de la función que representa a la línea discontinua como:\par
+\noindent $A$ (Amplitud): observando los picos, $A = 2$.\par
+\noindent $f$ (Frecuencia): $2f$ (el doble de la frecuencia de la línea continua).\par
+\noindent $\varphi$ (Fase): se ve que la discontinua está adelantada respecto de la continua, desfasada $\pi$.
+
+\noindent\textbf{3.6}\par
+Para encontrar los tres parámetros, primero distribuimos la multiplicación para poder usar la identidad dada como sugerencia:
+\[
+  (1 + 0,1\cos 5t)\cos 100t = \cos 100t + 0,1\cos 5t \cdot \cos 100t
+\]
+Luego, tomando $a = 5t$ y $b = 100t$, y aplicando la identidad:
+\[
+  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos(5t-100t) + \cos(5t+100t)\right] = \frac{1}{2}\left[\cos(-95t) + \cos(105t)\right]
+\]
+\[
+  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos 95t + \cos 105t\right]
+\]
+Esto teniendo en cuenta que $\cos(-x) = \cos(x)$.
+
+Como último paso, juntamos todo y nos queda:
+\[
+  (1 + 0,1\cos 5t)\cos 100t = \cos 100t + 0,05\cos 95t + 0,05\cos 105t
+\]
+Es decir, la señal expresada como combinación lineal de cosenos. Ahora solo queda identificar los parámetros:\par
+\noindent $\cos 100t$: Amplitud $= 1$, frecuencia $= 15,915\ \mathrm{Hz}$, fase $\varphi = 0$.\par
+\noindent $0,05\cos 95t$: Amplitud $= 0,5$ (relativa), frecuencia $= 15,12\ \mathrm{Hz}$, fase $\varphi = 0$.\par
+\noindent $0,05\cos 105t$: Amplitud $= 0,5$ (relativa), frecuencia $= 16,711\ \mathrm{Hz}$, fase $\varphi = 0$.\par
+Aclaración: la frecuencia en Hz se calcula a partir de la frecuencia angular $\omega$ (rad/s) dividida por $2\pi$, es decir $f = \omega/2\pi$.
+
+
+\noindent\textbf{3.7. Encuentre el período de la función } $f(t) = (10\cos t)^2$.\par
+\noindent Primero desarrollamos la función:
+\[
+  f(t)=100\cos^2(t)
+\]
+\noindent Para verificar si es periódica, comprobamos si existe un $T$ tal que:
+\[
+  f(t+T)=f(t)
+\]
+\[
+  100\cos^2(t+T)=100\cos^2(t)
+\]
+\noindent Probemos con $T=\pi$:
+\[
+  100\cos^2(t+\pi)=100\cos^2(t)
+\]
+\noindent Usando la identidad trigonométrica
+\[
+  \cos(t+\pi)=-\cos(t)
+\]
+\[
+  100\bigl[-\cos(t)\bigr]^2=100\cos^2(t)
+\]
+\[
+  100\cdot(-1)^2\cos^2(t)=100\cos^2(t)
+\]
+\[
+  100\cos^2(t)=100\cos^2(t)
+\]
+\noindent Como $\pi$ es el menor período positivo que cumple $f(t+T)=f(t)$, el período de la función es:
+\[
+  T=\pi
+\]
+\par\vspace{\baselineskip}
+\noindent\textbf{3.8. Sean dos funciones periódicas: } $f_1(t)$ y $f_2(t)$, con períodos $T_1$ y $T_2$. ¿Es periódica $f(t)=f_1(t)+f_2(t)$? Si es así, demuéstralo. Si no, ¿bajo qué condiciones $f(t)$ será periódica?\par
+\noindent La suma de dos señales periódicas es periódica si existe un período común $T$ tal que:
+\[
+  f(t+T)=f(t)
+\]
+\[
+  f_1(t+T)+f_2(t+T)=f_1(t)+f_2(t)
+\]
+\noindent Si $T$ es múltiplo entero de ambos períodos, esto es,
+\[
+  T = nT_1 = mT_2
+\]
+\noindent con $n,m \in \mathbb{Z}^+$, entonces:
+\[
+  f_1(t+T)=f_1(t), \qquad f_2(t+T)=f_2(t)
+\]
+\noindent y por lo tanto
+\[
+  f(t+T)=f_1(t)+f_2(t)=f(t).
+\]
+\noindent Por consiguiente, la suma es periódica cuando la razón entre los períodos es racional, es decir, cuando existe una relación de la forma
+\[
+  \frac{T_1}{T_2} = \frac{m}{n}
+\]
+\noindent o equivalentemente,
+\[
+  T_1 n = T_2 m.
+\]
+\noindent Ejemplo 1:
+\[
+  T_1=4, \qquad T_2=2
+\]
+\[
+  T=4=1\cdot T_1=2\cdot T_2
+\]
+\noindent Luego, existe un período común $T=4$, por lo que $f(t)=f_1(t)+f_2(t)$ es periódica.
+
+\noindent Ejemplo 2:
+\[
+  T_1=1, \qquad T_2=\sqrt{2}
+\]
+\noindent En este caso, la relación $\frac{T_1}{T_2}=\frac{1}{\sqrt{2}}$ es irracional, por lo que no existen enteros positivos $n,m$ tales que
+\[
+  T=nT_1=mT_2.
+\]
+\noindent Por lo tanto, no existe un período común y la suma no es periódica.
+\par\vspace{\baselineskip}
+\noindent\textbf{3.9}\par
+
+\subsection*{3.9}
+
+En la Figura 3.4 se observa una señal formada por la suma de una
+frecuencia fundamental $f$ y su tercer armónico $3f$.
+
+La componente fundamental es:
+
+\[
+s_1(t)=\operatorname{sen}(2\pi ft)
+\]
+
+y el tercer armónico:
+
+\[
+s_3(t)=\frac{1}{3}\operatorname{sen}(2\pi(3f)t)
+\]
+
+La señal resultante es:
+
+\[
+s(t)=\frac{4}{\pi}
+\left[
+\operatorname{sen}(2\pi ft)
++\frac{1}{3}\operatorname{sen}(2\pi(3f)t)
+\right]
+\]
+
+En los siguientes gráficos se muestran las dos componentes y la señal
+resultante.
+
+\begin{figure}[H]
+\centering
+
+% Frecuencia fundamental
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-1.1, ymax=1.1,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-1,0,1},
+    grid=both,
+    title={Frecuencia fundamental $f$}
+]
+\addplot[
+    domain=0:2,
+    samples=300
+]
+{sin(deg(2*pi*x))};
+\end{axis}
+\end{tikzpicture}
+
+\vspace{0.4cm}
+
+% Tercer armónico
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-0.4, ymax=0.4,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-0.333,0,0.333},
+    grid=both,
+    title={Tercer armónico $3f$}
+]
+\addplot[
+    domain=0:2,
+    samples=600
+]
+{(1/3)*sin(deg(6*pi*x))};
+\end{axis}
+\end{tikzpicture}
+
+\vspace{0.4cm}
+
+% Suma de las componentes
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-1.5, ymax=1.5,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-1,0,1},
+    grid=both,
+    title={Suma de las componentes}
+]
+\addplot[
+    domain=0:2,
+    samples=600
+]
+{(4/pi)*(sin(deg(2*pi*x))+(1/3)*sin(deg(6*pi*x)))};
+\end{axis}
+\end{tikzpicture}
+
+\caption{Componentes de la señal y su suma.}
+\end{figure}
+
+Si se hace lo contrario, eliminando las componentes de baja frecuencia
+y conservando las de alta frecuencia, la señal pierde la forma general
+del pulso cuadrado y queda formada por oscilaciones más rápidas.
+
+En el caso de la Figura 3.4, si se elimina la componente fundamental $f$
+y se conserva solamente el tercer armónico $3f$, queda:
+
+\[
+s(t)=\frac{4}{3\pi}
+\operatorname{sen}(2\pi(3f)t)
+\]
+
+La señal resultante oscila tres veces más rápido que la frecuencia
+fundamental.
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.75\textwidth,
+    height=4.5cm,
+    xmin=0, xmax=2,
+    ymin=-0.5, ymax=0.5,
+    axis lines=middle,
+    xlabel={$t/T$},
+    ylabel={$s(t)$},
+    xtick={0,0.5,1,1.5,2},
+    ytick={-0.4,0,0.4},
+    grid=both,
+    title={Señal resultante al eliminar la componente $f$}
+]
+\addplot[
+    domain=0:2,
+    samples=600
+]
+{(4/(3*pi))*sin(deg(6*pi*x))};
+\end{axis}
+\end{tikzpicture}
+
+\caption{Señal resultante conservando únicamente el tercer armónico.}
+\end{figure}
+
+\noindent\textbf{3.10}\par\vspace{\baselineskip}
+\noindent\textbf{3.11}\par\vspace{\baselineskip}
+\noindent\textbf{3.12}\par\vspace{\baselineskip}
 \noindent\textbf{3.13}\par\vspace{\baselineskip}
 \noindent\textbf{3.14}\par\vspace{\baselineskip}
 \noindent\textbf{3.15}\par\vspace{\baselineskip}
 \noindent\textbf{3.16}\par\vspace{\baselineskip}
 \noindent\textbf{3.17}\par\vspace{\baselineskip}
 \noindent\textbf{3.18}\par\vspace{\baselineskip}
+\noindent\textbf{3.19}\par
+
+Sea un canal con una capacidad de $20\,\text{Mbps}$ y un ancho de banda de
+$3\,\text{MHz}$. ¿Cuál es la relación señal-ruido admisible para conseguir
+la mencionada capacidad?
+
+Utilizamos la \textbf{Ley de Capacidad de Shannon}:
+
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+donde:
+
+\begin{itemize}
+    \item $C$: capacidad del canal en bits por segundo (bps).
+    \item $B$: ancho de banda en Hz.
+    \item $\mathrm{SNR}$: relación señal-ruido en valor adimensional.
+\end{itemize}
+
+Datos:
+
+\[
+C = 20\,\text{Mbps} = 20\times10^6\,\text{bps}
+\]
+
+\[
+B = 3\,\text{MHz} = 3\times10^6\,\text{Hz}
+\]
+
+Partimos de la expresión de Shannon:
+
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+Dividiendo ambos lados por $B$:
+
+\[
+\frac{C}{B}
+=
+\log_2(1+\mathrm{SNR})
+\]
+
+Aplicando la función exponencial de base $2$:
+
+\[
+1+\mathrm{SNR}
+=
+2^{\frac{C}{B}}
+\]
+
+Por lo tanto:
+
+\[
+\mathrm{SNR}
+=
+2^{\frac{C}{B}}-1
+\]
+
+Reemplazando los valores:
+
+\[
+\mathrm{SNR}
+=
+2^{\frac{20\times10^6}{3\times10^6}}-1
+\]
+
+\[
+\mathrm{SNR}
+=
+2^{\frac{20}{3}}-1
+\]
+
+\[
+\mathrm{SNR}
+\approx
+100.59
+\]
+
+Por lo tanto, la relación señal-ruido admisible para conseguir una capacidad
+de $20\,\text{Mbps}$ con un ancho de banda de $3\,\text{MHz}$ es:
+
+\[
+\boxed{\mathrm{SNR}\approx100.59}
+\]
+\noindent\textbf{3.20}\par
+
+La onda cuadrada de la Figura 3.7c, con $T=1\,\text{ms}$, se transmite a
+través de un filtro paso bajo ideal de ganancia unidad con frecuencia de
+corte de $8\,\text{kHz}$.
+
+\textbf{a) Determine la potencia de la señal de salida.}
+
+Primero calculamos la frecuencia fundamental de la onda cuadrada:
+
+\[
+f=\frac{1}{T}
+\]
+
+Como:
+
+\[
+T=1\,\text{ms}=10^{-3}\,\text{s}
+\]
+
+entonces:
+
+\[
+f=\frac{1}{10^{-3}}
+=1000\,\text{Hz}
+=1\,\text{kHz}
+\]
+
+La onda cuadrada posee únicamente armónicas impares:
+
+\[
+k=1,3,5,7,9,\ldots
+\]
+
+El filtro tiene una frecuencia de corte:
+
+\[
+f_c=8\,\text{kHz}
+\]
+
+Por lo tanto, las armónicas que atraviesan el filtro son aquellas que
+cumplen:
+
+\[
+kf\leq f_c
+\]
+
+Como $f=1\,\text{kHz}$:
+
+\[
+k(1\,\text{kHz})\leq8\,\text{kHz}
+\]
+
+De las armónicas impares, se transmiten:
+
+\[
+k=1,3,5,7
+\]
+
+La potencia de una onda cuadrada puede expresarse mediante la suma de las
+potencias de sus armónicas. Para la señal de la figura:
+\noindent\textbf{3.16}\par
+
+\noindent\textbf{a)} Si cada elemento de señal codifica una palabra de 4 bits, ¿cuál es el ancho de banda mínimo necesario?
+
+La fórmula de Nyquist es:
+\[
+R = 2B\log_2 M
+\]
+
+donde:
+\begin{itemize}
+  \item \(R\): tasa de bits, en bps.
+  \item \(B\): ancho de banda, en Hz.
+  \item \(M\): cantidad de niveles de señal.
+\end{itemize}
+
+Cada elemento de señal codifica \(n\) bits, por lo que:
+\[
+M = 2^n = 2^4 = 16
+\]
+
+Entonces:
+\[
+9600 = 2B\log_2(16)
+\]
+
+Como \(\log_2(16)=4\):
+\[
+9600 = 8B
+\]
+
+Por lo tanto:
+\[
+B = \frac{9600}{8} = 1200\,\mathrm{Hz}
+\]
+
+El ancho de banda mínimo necesario es de \(1200\,\mathrm{Hz}\).
+
+\noindent\textbf{b)} ¿Y para palabras de 8 bits?
+
+En este caso:
+\[
+M = 2^8 = 256
+\]
+
+Entonces:
+\[
+9600 = 2B\log_2(256)
+\]
+
+Como \(\log_2(256)=8\):
+\[
+9600 = 16B
+\]
+
+Por lo tanto:
+\[
+B = \frac{9600}{16} = 600\,\mathrm{Hz}
+\]
+
+El ancho de banda mínimo necesario es de \(600\,\mathrm{Hz}\).
+
+
+\noindent\textbf{3.17}\par
+
+¿Cuál es el nivel de ruido térmico para un canal de ancho de banda de \(10\,\mathrm{kHz}\) y \(1000\,\mathrm{W}\) de potencia operando a \(50\,^\circ\mathrm{C}\)?
+
+La fórmula del ruido térmico es:
+\[
+N = kTB
+\]
+
+donde:
+\begin{itemize}
+  \item \(N\): potencia del ruido térmico, en watts.
+  \item \(k\): constante de Boltzmann, \(k=1.38\times10^{-23}\,\mathrm{J/K}\).
+  \item \(T\): temperatura absoluta, en Kelvin.
+  \item \(B\): ancho de banda, en Hz.
+\end{itemize}
+
+La temperatura es:
+\[
+T = 50 + 273 = 323\,\mathrm{K}
+\]
+
+Y el ancho de banda:
+\[
+B = 10\,\mathrm{kHz} = 10\,000\,\mathrm{Hz}
+\]
+
+Por lo tanto:
+\[
+N = (1.38\times10^{-23})(323)(10\,000)
+\]
+
+\[
+N \approx 4.46\times10^{-17}\,\mathrm{W}
+\]
+
+Por lo tanto, el nivel de ruido térmico es aproximadamente
+\(4.46\times10^{-17}\,\mathrm{W}\).
+
+
+\noindent\textbf{3.18}\par
+
+Considérense los trabajos de Shannon y Nyquist sobre la capacidad del canal. Cada uno de ellos estableció un límite superior para la razón de bits del canal basándose en dos aproximaciones diferentes. ¿Cómo se pueden relacionar ambas aproximaciones?
+
+\textbf{Límite de Nyquist (canal sin ruido):} establece que, incluso en condiciones ideales, la tasa de datos está limitada por el ancho de banda. Su fórmula es:
+\[
+C = 2B\log_2(V)
+\]
+
+donde \(C\) es la capacidad en bps, \(B\) es el ancho de banda en Hz y \(V\) es el número de niveles de la señal.
+
+\textbf{Límite de Shannon (canal con ruido):} considera que el ruido térmico es un factor limitante. Su fórmula es:
+\[
+C = B\log_2(1+\mathrm{SNR})
+\]
+
+donde SNR es la relación señal-ruido, sin unidades.
+
+La relación entre ambas aproximaciones es que las dos establecen un límite superior para la capacidad de un canal, pero consideran factores diferentes. La fórmula de Nyquist determina la velocidad máxima de transmisión en función del ancho de banda y del número de niveles de señal, suponiendo un canal ideal sin ruido. La fórmula de Shannon, en cambio, incorpora el efecto del ruido mediante la relación señal/ruido (SNR) y establece el límite máximo de transmisión en un canal real.
+
+Por lo tanto, la capacidad efectiva de un canal estará limitada simultáneamente por ambos criterios.
+
 \noindent\textbf{3.19}\par\vspace{\baselineskip}
 \noindent\textbf{3.20}\par\vspace{\baselineskip}
 
+\[
+P_{\text{salida}}
+=
+\frac{8}{\pi^2}
+\left(
+\frac{1}{1^2}
++
+\frac{1}{3^2}
++
+\frac{1}{5^2}
++
+\frac{1}{7^2}
+\right)
+\]
+
+Entonces:
+
+\[
+P_{\text{salida}}
+=
+\frac{8}{\pi^2}
+\left(
+1+\frac{1}{9}+\frac{1}{25}+\frac{1}{49}
+\right)
+\]
+
+\[
+P_{\text{salida}}
+\approx0.95\,\text{W}
+\]
+
+Por lo tanto:
+
+\[
+\boxed{P_{\text{salida}}\approx0.95\,\text{W}}
+\]
+
+\bigskip
+
+\textbf{b) Suponiendo que a la entrada del filtro hay un ruido térmico con
+$N_0=0.1\,\mu\text{W}/\text{Hz}$, encuentre la relación señal-ruido en dB
+a la salida.}
+
+La densidad espectral de potencia del ruido es:
+
+\[
+N_0=0.1\,\mu\text{W}/\text{Hz}
+\]
+
+El ancho de banda que deja pasar el filtro paso bajo ideal es:
+
+\[
+B=8\,\text{kHz}=8000\,\text{Hz}
+\]
+
+La potencia total del ruido a la salida es:
+
+\[
+P_n=N_0B
+\]
+
+Reemplazando:
+
+\[
+P_n=
+(0.1\,\mu\text{W}/\text{Hz})(8000\,\text{Hz})
+\]
+
+\[
+P_n=800\,\mu\text{W}
+\]
+
+Como:
+
+\[
+800\,\mu\text{W}=0.0008\,\text{W}
+\]
+
+la relación señal-ruido es:
+
+\[
+\mathrm{SNR}
+=
+\frac{P_{\text{señal}}}{P_n}
+\]
+
+\[
+\mathrm{SNR}
+=
+\frac{0.95}{0.0008}
+\]
+
+\[
+\mathrm{SNR}=1187.5
+\]
+
+Para expresar la relación señal-ruido en decibelios:
+
+\[
+\mathrm{SNR}_{dB}
+=
+10\log_{10}(\mathrm{SNR})
+\]
+
+Por lo tanto:
+
+\[
+\mathrm{SNR}_{dB}
+=
+10\log_{10}(1187.5)
+\]
+
+\[
+\mathrm{SNR}_{dB}
+\approx30.74\,\text{dB}
+\]
+
+Por lo tanto, la relación señal-ruido a la salida es:
+
+\[
+\boxed{\mathrm{SNR}_{dB}\approx30.74\,\text{dB}}
+\]
 \section*{d)- Modulacion de AM en Python}
 
 \end{document}
