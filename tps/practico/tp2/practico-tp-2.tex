@@ -114,9 +114,13 @@
     \item
   \end{enumerate}
   \item
-  \item
+  Frente al ruido, lo más común es agregarle redundancia a lo que se transmite. Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete (esto es lo que se conoce como ARQ). El problema es que pedir reenvío no siempre es viable o conviene, sobre todo si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales, etc.), que directamente le permiten al receptor ubicar y arreglar los bits dañados sin tener que pedir nada de vuelta.
+
+  Para el tema de las variaciones de frecuencia el enfoque es distinto, porque ahí el problema no es que se pierda o corrompa un bit sino que el receptor pierde la sincronía con la señal. Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en particular) que van siguiendo de forma continua los corrimientos de frecuencia y fase de la portadora, algo fundamental cuando hay efecto Doppler de por medio o simplemente derivas por temperatura en el oscilador. Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros y ajustar el reloj antes de que llegue la información real.\item
+
   \begin{enumerate}[label=\alph*)]
     \item
+    
     \item
     \item
     \item
