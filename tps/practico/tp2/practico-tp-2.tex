@@ -1,5 +1,4 @@
 \documentclass[11pt,a4paper]{article}
-
 % -----------------------------------------------------------------------------
 % Paquetes: todos forman parte de una instalacion estandar de LaTeX.
 % -----------------------------------------------------------------------------
@@ -19,7 +18,6 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
-
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
 \IfFileExists{lastpage.sty}{
@@ -28,7 +26,6 @@
 }{
   \HayUltimaPaginafalse
 }
-
 % -----------------------------------------------------------------------------
 % CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
 % -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@
 \newcommand{\Docente}{SANTIAGO MARTIN HENN}
 \newcommand{\LogoArchivo}{logo.png}
 \newcommand{\LogoRuta}{\LogoArchivo}
-
 % Una linea por integrante. Se pueden agregar o quitar filas.
 \newcommand{\Integrantes}{%
   \begin{tabular}{ll}
@@ -55,7 +51,6 @@
     Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
   \end{tabular}%
 }
-
 % -----------------------------------------------------------------------------
 % Elementos comunes de caratula y encabezado.
 % -----------------------------------------------------------------------------
@@ -66,9 +61,7 @@
     \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
   \fi
 }
-
 \newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
-
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\InsertarLogo[1.4cm]}
@@ -77,14 +70,11 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
 \renewcommand{\footrulewidth}{0pt}
-
 \begin{document}
-
 \begin{titlepage}
   \thispagestyle{empty}
   \begin{center}
     \InsertarLogo[0.32\textwidth]
-
     \vfill
     {\Large\textsc{\NombreMateria}\par}
     \vspace{1.5cm}
@@ -93,24 +83,20 @@
     {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
     \vspace{0.8cm}
     {\Large\NombreTrabajo\par}
-
     \vfill
     \begin{tabular}{rl}
       \textbf{Grupo:} & \NombreGrupo \\
       \textbf{Docente:} & \Docente
     \end{tabular}
-
     \vspace{1cm}
     \begin{center}
       \textbf{Integrantes}\\[0.2cm]
       \Integrantes
     \end{center}
-
     \vfill
     {\large \FechaEnEspanol\par}
   \end{center}
 \end{titlepage}
-
 \section{Consignas}
 \begin{enumerate}[label=\arabic*)]
   \item
@@ -118,6 +104,9 @@
     \item
     \item
     \item
+    Típicamente, existen dos razones para esto; la primera es la interferencia que ocurre con los sistemas de comunicación y navegación de los aviones; y la más importante radica en la red celular: un avión tiene una velocidad promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy grande de antenas, las cuales están pensadas para las velocidades de los vehículos, por lo que se presenta una saturación de la red.
+
+    ¿Cómo se conecta esto último con lo visto sobre el efecto Doppler (fenómeno presentado en el ejercicio)? Observando la fórmula y los parámetros que entran en juego, resulta evidente que, al acercarse y alejarse el avión a una velocidad mucho mayor que la de un automóvil promedio, el efecto Doppler termina apareciendo dado este corrimiento de frecuencia tan alto y constante que se repite antena tras antena, algo que no está contemplado en la red, ya que no fue diseñada para esto.
   \end{enumerate}
 
   \item
@@ -138,17 +127,17 @@
     Este tipo de ruido puede provocar errores en los datos recibidos,
     siendo especialmente importante en las comunicaciones digitales.
   \end{enumerate}
-
   \item
   \begin{enumerate}[label=\alph*)]
     \item
     \item
     \item
   \end{enumerate}
-
   \item
+  Frente al ruido, lo más común es agregarle redundancia a lo que se transmite. Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete (esto es lo que se conoce como ARQ). El problema es que pedir reenvío no siempre es viable o conviene, sobre todo si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales, etc.), que directamente le permiten al receptor ubicar y arreglar los bits dañados sin tener que pedir nada de vuelta.
 
-  \item
+  Para el tema de las variaciones de frecuencia el enfoque es distinto, porque ahí el problema no es que se pierda o corrompa un bit sino que el receptor pierde la sincronía con la señal. Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en particular) que van siguiendo de forma continua los corrimientos de frecuencia y fase de la portadora, algo fundamental cuando hay efecto Doppler de por medio o simplemente derivas por temperatura en el oscilador. Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros y ajustar el reloj antes de que llegue la información real.\item
+
   \begin{enumerate}[label=\alph*)]
     \item
     Nuestro grupo es \textbf{NetRunners}. Para obtener el campo
@@ -262,6 +251,7 @@
     \boxed{\texttt{rts}}
     \]
 
+    
     \item
     Para este punto se realizó un pequeño programa en Python para analizar
     el archivo \texttt{frames.bin}. El programa recorre el archivo buscando
@@ -343,5 +333,4 @@ La dirección reconstruida fue comprobada y el enlace se encuentra
 disponible.
   \end{enumerate}
 \end{enumerate}
-
 \end{document}
