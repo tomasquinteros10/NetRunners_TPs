@@ -1,0 +1,158 @@
+\documentclass[11pt,a4paper]{article}
+% -----------------------------------------------------------------------------
+% Paquetes: todos forman parte de una instalacion estandar de LaTeX.
+% -----------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{enumitem}
+% Fecha en espanol sin depender de babel ni de spanish.ldf.
+\newcommand{\FechaEnEspanol}{%
+  \number\day\space de\space
+  \ifcase\month
+    \or enero\or febrero\or marzo\or abril\or mayo\or junio\or
+    julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
+  \fi\space de\space\number\year
+}
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+% lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
+\newif\ifHayUltimaPagina
+\IfFileExists{lastpage.sty}{
+  \usepackage{lastpage}
+  \HayUltimaPaginatrue
+}{
+  \HayUltimaPaginafalse
+}
+% -----------------------------------------------------------------------------
+% CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
+% -----------------------------------------------------------------------------
+\newcommand{\NombreMateria}{Redes de Computadoras}
+\newcommand{\TipoTrabajo}{Trabajo Práctico}
+\newcommand{\NumeroTrabajo}{2}
+% Cambiar por "Teórico" o "Práctico" según corresponda.
+\newcommand{\TipoTP}{Práctico}
+\newcommand{\NombreTrabajo}{Conceptos de capa física y capa de enlace de datos.}
+\newcommand{\NombreGrupo}{NetRunners}
+\newcommand{\Docente}{SANTIAGO MARTIN HENN}
+\newcommand{\LogoArchivo}{logo.png}
+\newcommand{\LogoRuta}{\LogoArchivo}
+% Una linea por integrante. Se pueden agregar o quitar filas.
+\newcommand{\Integrantes}{%
+  \begin{tabular}{ll}
+    Bastida, Lucas Ramiro & DNI 39444511 \\
+    Contessi, Ruben Andres & DNI 33315235 \\
+    Garay, Ignacio Hernan & DNI 44191925 \\
+    Giraudo, Juan Pablo & DNI 34970089 \\
+    Peñaloza, Gonzalo Adrian & DNI 40441355 \\
+    Quinteros del Castillo, Tomás Agustín & DNI 46169739 \\
+    Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
+  \end{tabular}%
+}
+% -----------------------------------------------------------------------------
+% Elementos comunes de caratula y encabezado.
+% -----------------------------------------------------------------------------
+\newcommand{\InsertarLogo}[1][0.24\textwidth]{%
+  \ifx\LogoRuta\empty
+    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
+  \else
+    \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
+  \fi
+}
+\newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\InsertarLogo[1.4cm]}
+\fancyhead[C]{\small\textbf{\TituloCorto}}
+\fancyhead[R]{\small\NombreGrupo}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+\renewcommand{\footrulewidth}{0pt}
+\begin{document}
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    \InsertarLogo[0.32\textwidth]
+    \vfill
+    {\Large\textsc{\NombreMateria}\par}
+    \vspace{1.5cm}
+    {\Huge\bfseries \TipoTrabajo\par}
+    \vspace{0.35cm}
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
+    \vspace{0.8cm}
+    {\Large\NombreTrabajo\par}
+    \vfill
+    \begin{tabular}{rl}
+      \textbf{Grupo:} & \NombreGrupo \\
+      \textbf{Docente:} & \Docente
+    \end{tabular}
+    \vspace{1cm}
+    \begin{center}
+      \textbf{Integrantes}\\[0.2cm]
+      \Integrantes
+    \end{center}
+    \vfill
+    {\large \FechaEnEspanol\par}
+  \end{center}
+\end{titlepage}
+\section{Consignas}
+\begin{enumerate}[label=\arabic*)]
+  \item
+  \begin{enumerate}[label=\alph*)]
+    \item
+    \item
+    \item
+    Típicamente, existen dos razones para esto; la primera es la interferencia que ocurre con los sistemas de comunicación y navegación de los aviones; y la más importante radica en la red celular: un avión tiene una velocidad promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy grande de antenas, las cuales están pensadas para las velocidades de los vehículos, por lo que se presenta una saturación de la red.
+
+    ¿Cómo se conecta esto último con lo visto sobre el efecto Doppler (fenómeno presentado en el ejercicio)? Observando la fórmula y los parámetros que entran en juego, resulta evidente que, al acercarse y alejarse el avión a una velocidad mucho mayor que la de un automóvil promedio, el efecto Doppler termina apareciendo dado este corrimiento de frecuencia tan alto y constante que se repite antena tras antena, algo que no está contemplado en la red, ya que no fue diseñada para esto.
+  \end{enumerate}
+  \item
+  \begin{enumerate}[label=\alph*)]
+    \item
+    \item
+    \item
+  \end{enumerate}
+  \item
+  \item
+  \begin{enumerate}[label=\alph*)]
+    \item
+    En las comunicaciones digitales la sincronización tiene un rol clave, permitiendo que el receptor sea capaz de determinar exactamente cuándo empieza y cuándo termina cada unidad de información (un bit, un byte, una trama). Sin sincronización, el receptor podría muestrear la señal en un momento equivocado y leer mal los datos.
+
+\textbf{Sincronización de bits:}
+
+El receptor necesita determinar exactamente cuánto dura cada bit y en qué instante debe ``muestrear'' la señal para decidir si es un 0 o un 1. El problema es que el emisor y el receptor tienen relojes físicos independientes que nunca son exactamente iguales, por lo que se debe utilizar codificadores de línea autosincronizantes que garantizan transiciones frecuentes en la señal de las que el receptor puede usar para recalibrarse constantemente.
+
+\textbf{Sincronización de trama:}
+
+Una vez que el receptor ya sabe leer bits correctamente, necesita saber dónde empieza y dónde termina una trama dentro del flujo continuo de bits (delimitación). Para esto se usan mecanismos como:
+
+\begin{itemize}
+    \item Un preámbulo o patrón de sincronismo conocido.
+    \item Campos de longitud fija o variable que indican el tamaño de la trama.
+    \item Caracteres o secuencias delimitadoras (flags) al inicio y fin de trama.
+\end{itemize}
+
+\textbf{Diferencia clave:} la sincronización de bits resuelve el problema de cuándo leer cada bit individual, mientras que la sincronización de trama resuelve el problema de dónde delimitar un conjunto de bits que forman un mensaje completo. Siendo la primera un requisito previo de la segunda: sin bits leídos correctamente, no hay forma de reconocer los delimitadores de una trama.
+    \item
+    \textbf{Trama (frame):} es la unidad básica de información que se transmite en la capa de Enlace de Datos. Encapsula los datos que vienen de capas superiores agregándoles la información de control necesaria para que puedan viajar correctamente por el medio físico y ser interpretados por el receptor.
+
+Una trama típica se estructura en tres partes:
+
+\begin{itemize}
+    \item \textbf{Encabezado (header):} Va al principio de la trama. Contiene metadatos de control: direcciones de origen/destino, número de secuencia, tipo de protocolo, longitud, flags de sincronización, etc.
+    \item \textbf{Carga útil (payload):} Es el contenido real que se quiere transmitir, siendo estos los datos provenientes de la capa superior.
+    \item \textbf{Tráiler (trailer):} Va al final de la trama. Normalmente contiene información para el control de errores, que permite al receptor verificar si la trama llegó íntegra. En algunos protocolos también puede incluir un delimitador de fin de trama.
+\end{itemize}
+
+\textbf{Diferencia clave:} el header y el trailer son información de control agregada por la capa de Enlace de Datos, mientras que el payload es el dato ``real'' que se está transportando y que en definitiva le interesa a la capa superior. El header suele enfocarse en identificación/direccionamiento/sincronización, y el trailer suele enfocarse en la detección de errores.
+    \item
+    \item
+  \end{enumerate}
+  \item
+  \begin{enumerate}[label=\alph*)]
+    \item
+    \item
+  \end{enumerate}
+\end{enumerate}
+\end{document}
