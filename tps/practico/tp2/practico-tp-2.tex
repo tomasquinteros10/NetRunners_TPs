@@ -117,7 +117,35 @@
   \item
   \begin{enumerate}[label=\alph*)]
     \item
+    En las comunicaciones digitales la sincronización tiene un rol clave, permitiendo que el receptor sea capaz de determinar exactamente cuándo empieza y cuándo termina cada unidad de información (un bit, un byte, una trama). Sin sincronización, el receptor podría muestrear la señal en un momento equivocado y leer mal los datos.
+
+\textbf{Sincronización de bits:}
+
+El receptor necesita determinar exactamente cuánto dura cada bit y en qué instante debe ``muestrear'' la señal para decidir si es un 0 o un 1. El problema es que el emisor y el receptor tienen relojes físicos independientes que nunca son exactamente iguales, por lo que se debe utilizar codificadores de línea autosincronizantes que garantizan transiciones frecuentes en la señal de las que el receptor puede usar para recalibrarse constantemente.
+
+\textbf{Sincronización de trama:}
+
+Una vez que el receptor ya sabe leer bits correctamente, necesita saber dónde empieza y dónde termina una trama dentro del flujo continuo de bits (delimitación). Para esto se usan mecanismos como:
+
+\begin{itemize}
+    \item Un preámbulo o patrón de sincronismo conocido.
+    \item Campos de longitud fija o variable que indican el tamaño de la trama.
+    \item Caracteres o secuencias delimitadoras (flags) al inicio y fin de trama.
+\end{itemize}
+
+\textbf{Diferencia clave:} la sincronización de bits resuelve el problema de cuándo leer cada bit individual, mientras que la sincronización de trama resuelve el problema de dónde delimitar un conjunto de bits que forman un mensaje completo. Siendo la primera un requisito previo de la segunda: sin bits leídos correctamente, no hay forma de reconocer los delimitadores de una trama.
     \item
+    \textbf{Trama (frame):} es la unidad básica de información que se transmite en la capa de Enlace de Datos. Encapsula los datos que vienen de capas superiores agregándoles la información de control necesaria para que puedan viajar correctamente por el medio físico y ser interpretados por el receptor.
+
+Una trama típica se estructura en tres partes:
+
+\begin{itemize}
+    \item \textbf{Encabezado (header):} Va al principio de la trama. Contiene metadatos de control: direcciones de origen/destino, número de secuencia, tipo de protocolo, longitud, flags de sincronización, etc.
+    \item \textbf{Carga útil (payload):} Es el contenido real que se quiere transmitir, siendo estos los datos provenientes de la capa superior.
+    \item \textbf{Tráiler (trailer):} Va al final de la trama. Normalmente contiene información para el control de errores, que permite al receptor verificar si la trama llegó íntegra. En algunos protocolos también puede incluir un delimitador de fin de trama.
+\end{itemize}
+
+\textbf{Diferencia clave:} el header y el trailer son información de control agregada por la capa de Enlace de Datos, mientras que el payload es el dato ``real'' que se está transportando y que en definitiva le interesa a la capa superior. El header suele enfocarse en identificación/direccionamiento/sincronización, y el trailer suele enfocarse en la detección de errores.
     \item
     \item
   \end{enumerate}
