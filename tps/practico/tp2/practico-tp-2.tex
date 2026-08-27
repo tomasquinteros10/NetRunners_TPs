@@ -122,6 +122,17 @@
     \item
     
     \item
+    \textbf{Trama (frame):} es la unidad básica de información que se transmite en la capa de Enlace de Datos. Encapsula los datos que vienen de capas superiores agregándoles la información de control necesaria para que puedan viajar correctamente por el medio físico y ser interpretados por el receptor.
+
+Una trama típica se estructura en tres partes:
+
+\begin{itemize}
+    \item \textbf{Encabezado (header):} Va al principio de la trama. Contiene metadatos de control: direcciones de origen/destino, número de secuencia, tipo de protocolo, longitud, flags de sincronización, etc.
+    \item \textbf{Carga útil (payload):} Es el contenido real que se quiere transmitir, siendo estos los datos provenientes de la capa superior.
+    \item \textbf{Tráiler (trailer):} Va al final de la trama. Normalmente contiene información para el control de errores, que permite al receptor verificar si la trama llegó íntegra. En algunos protocolos también puede incluir un delimitador de fin de trama.
+\end{itemize}
+
+\textbf{Diferencia clave:} el header y el trailer son información de control agregada por la capa de Enlace de Datos, mientras que el payload es el dato ``real'' que se está transportando y que en definitiva le interesa a la capa superior. El header suele enfocarse en identificación/direccionamiento/sincronización, y el trailer suele enfocarse en la detección de errores.
     \item
     \item
   \end{enumerate}
