@@ -6,6 +6,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{enumitem}
+\usepackage{amsmath}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
@@ -115,6 +116,13 @@
   \item
   \begin{enumerate}[label=\alph*)]
     \item
+    \item
+    \item
+  \end{enumerate}
+
+  \item
+  \begin{enumerate}[label=\alph*)]
+    \item
     El fenómeno físico representado en la figura es el \textbf{ruido},
     particularmente el \textbf{ruido impulsivo}. El ruido consiste en señales
     no deseadas que se insertan en algún punto entre el emisor y el receptor,
@@ -129,11 +137,8 @@
     o picos irregulares de corta duración y amplitud relativamente grande.
     Este tipo de ruido puede provocar errores en los datos recibidos,
     siendo especialmente importante en las comunicaciones digitales.
-    \item
-    \item
   \end{enumerate}
 
-  \item
   \item
   \begin{enumerate}[label=\alph*)]
     \item
@@ -146,15 +151,196 @@
   \item
   \begin{enumerate}[label=\alph*)]
     \item
-    \item
-    \item
-    \item
-  \end{enumerate}
+    Nuestro grupo es \textbf{NetRunners}. Para obtener el campo
+    \texttt{GROUP} se pasa el nombre a minúsculas y se toman los primeros
+    cinco caracteres:
 
-  \item
-  \begin{enumerate}[label=\alph*)]
+    \[
+    \text{NetRunners} \rightarrow \texttt{netru}
+    \]
+
+    Por lo tanto, el campo \texttt{GROUP} que buscamos en el archivo
+    binario es:
+
+    \[
+    \boxed{\texttt{netru}}
+    \]
+
+    En el archivo se encontraron dos paquetes correspondientes a nuestro
+    grupo:
+
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    GROUP & SEQ & LENGTH & PAYLOAD \\
+    \hline
+    \texttt{netru} & 18 & 1 & \texttt{r} \\
+    \hline
+    \texttt{netru} & 19 & 2 & \texttt{ts} \\
+    \hline
+    \end{tabular}
+    \end{center}
+
+    El primer paquete, expresado en hexadecimal, es:
+
+    \[
+    \texttt{6E\ 65\ 74\ 72\ 75\ 12\ 01\ 72}
+    \]
+
+    Separando los campos del paquete:
+
+    \[
+    \underbrace{\texttt{6E\ 65\ 74\ 72\ 75}}_{\texttt{GROUP}}
+    \quad
+    \underbrace{\texttt{12}}_{\texttt{SEQ}}
+    \quad
+    \underbrace{\texttt{01}}_{\texttt{LENGTH}}
+    \quad
+    \underbrace{\texttt{72}}_{\texttt{PAYLOAD}}
+    \]
+
+    El byte \texttt{12} corresponde al campo \texttt{SEQ}. Como está
+    expresado en hexadecimal, lo convertimos a decimal:
+
+    \[
+    \texttt{0x12}=1\cdot16+2=18
+    \]
+
+    Por lo tanto, este paquete tiene:
+
+    \[
+    \texttt{SEQ}=18
+    \]
+
+    El siguiente byte es \texttt{01}, que indica que el payload tiene una
+    longitud de un byte. El byte \texttt{72} corresponde al carácter
+    \texttt{r}.
+
+    El segundo paquete es:
+
+    \[
+    \texttt{6E\ 65\ 74\ 72\ 75\ 13\ 02\ 74\ 73}
+    \]
+
+    En este caso, el byte \texttt{13} corresponde al campo \texttt{SEQ}.
+    Realizando la misma conversión:
+
+    \[
+    \texttt{0x13}=1\cdot16+3=19
+    \]
+
+    por lo que:
+
+    \[
+    \texttt{SEQ}=19
+    \]
+
+    El valor \texttt{02} indica que el payload tiene una longitud de dos
+    bytes. Los bytes \texttt{74 73} corresponden a los caracteres
+    \texttt{ts}.
+
+    Entonces, ordenando los paquetes según su número de secuencia:
+
+    \[
+    \texttt{SEQ 18} \rightarrow \texttt{r}
+    \]
+
+    \[
+    \texttt{SEQ 19} \rightarrow \texttt{ts}
+    \]
+
+    Finalmente, concatenando los payloads:
+
+    \[
+    \texttt{r}+\texttt{ts}=\boxed{\texttt{rts}}
+    \]
+
+    Por lo tanto, la información recuperada para el grupo
+    \textbf{NetRunners} es:
+
+    \[
+    \boxed{\texttt{rts}}
+    \]
+
     \item
-    \item
+    Para este punto se realizó un pequeño programa en Python para analizar
+    el archivo \texttt{frames.bin}. El programa recorre el archivo buscando
+    los identificadores de los grupos y, cuando encuentra uno, toma los
+    bytes siguientes como \texttt{SEQ}, \texttt{LENGTH} y \texttt{PAYLOAD}.
+
+    Se utilizó este método porque dentro del archivo hay paquetes que
+    corresponden a ruido, por lo que no era conveniente asumir que todos
+    los bytes formaban parte de un paquete válido.
+
+    Los candidatos encontrados se fueron agrupando según su número de
+    secuencia. Algunos valores de \texttt{SEQ} no aparecen en el archivo y
+    en otros casos aparece más de un candidato, por lo que fue necesario
+    comparar los fragmentos obtenidos para distinguir los paquetes que
+    formaban parte de la información.
+
+    Al ordenar los fragmentos recuperados se obtuvieron, entre otros, los
+    siguientes:
+
+    \begin{center}
+    \begin{tabular}{|c|c|}
+    \hline
+    SEQ & PAYLOAD \\
+    \hline
+    1 & \texttt{ht} \\
+    2 & \texttt{t} \\
+    3 & \texttt{p} \\
+    4 & \texttt{s:} \\
+    5 & \texttt{/} \\
+    8 & \texttt{w} \\
+    9 & \texttt{w.} \\
+    11 & \texttt{ut} \\
+    14 & \texttt{c} \\
+    15 & \texttt{o} \\
+    16 & \texttt{m/s} \\
+    17 & \texttt{ho} \\
+    18 & \texttt{r} \\
+    19 & \texttt{ts} \\
+    20 & \texttt{/} \\
+    21 & \texttt{db} \\
+    22 & \texttt{be} \\
+    23 & \texttt{\_l} \\
+    24 & \texttt{n6} \\
+    25 & \texttt{Lnw} \\
+    32 & \texttt{w} \\
+    \hline
+    \end{tabular}
+    \end{center}
+
+    Por ejemplo, los primeros cinco paquetes permiten obtener:
+
+    \[
+    \texttt{ht}+\texttt{t}+\texttt{p}+\texttt{s:}+\texttt{/}
+    =
+    \texttt{https:/}
+    \]
+
+    Al realizar la concatenación automática de los resultados encontrados
+por el programa, se obtiene:
+
+\[
+\boxed{\texttt{https://ww.utcom/shorts/dbbe\_ln6Lnww}}
+\]
+
+Sin embargo, al revisar los paquetes encontrados se observa que
+existen paquetes de ruido y algunos números de secuencia faltantes.
+Por lo tanto, la cadena obtenida directamente por el programa no
+representa necesariamente la dirección original completa.
+
+A partir del análisis de los fragmentos y teniendo en cuenta los
+paquetes que corresponden al mensaje, se pudo reconstruir la dirección
+correcta como:
+
+\[
+\boxed{\texttt{https://www.youtube.com/shorts/dbbe\_ln6Lnw}}
+\]
+
+La dirección reconstruida fue comprobada y el enlace se encuentra
+disponible.
   \end{enumerate}
 \end{enumerate}
 
