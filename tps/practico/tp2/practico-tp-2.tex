@@ -1,11 +1,22 @@
 \documentclass[11pt,a4paper]{article}
+
 % -----------------------------------------------------------------------------
-% Paquetes: todos forman parte de una instalacion estandar de LaTeX.
+% PAQUETES
 % -----------------------------------------------------------------------------
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{enumitem}
-% Fecha en espanol sin depender de babel ni de spanish.ldf.
+\usepackage{amsmath}
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+% -----------------------------------------------------------------------------
+% FECHA EN ESPAÑOL
+% -----------------------------------------------------------------------------
+
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
   \ifcase\month
@@ -13,32 +24,38 @@
     julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
   \fi\space de\space\number\year
 }
-\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{fancyhdr}
-% lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
+
+% -----------------------------------------------------------------------------
+% PAGINA FINAL
+% -----------------------------------------------------------------------------
+
 \newif\ifHayUltimaPagina
+
 \IfFileExists{lastpage.sty}{
   \usepackage{lastpage}
   \HayUltimaPaginatrue
 }{
   \HayUltimaPaginafalse
 }
+
 % -----------------------------------------------------------------------------
-% CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
+% CONFIGURACION DEL TRABAJO
 % -----------------------------------------------------------------------------
+
 \newcommand{\NombreMateria}{Redes de Computadoras}
 \newcommand{\TipoTrabajo}{Trabajo Práctico}
 \newcommand{\NumeroTrabajo}{2}
-% Cambiar por "Teórico" o "Práctico" según corresponda.
 \newcommand{\TipoTP}{Práctico}
 \newcommand{\NombreTrabajo}{Conceptos de capa física y capa de enlace de datos.}
 \newcommand{\NombreGrupo}{NetRunners}
 \newcommand{\Docente}{SANTIAGO MARTIN HENN}
 \newcommand{\LogoArchivo}{logo.png}
 \newcommand{\LogoRuta}{\LogoArchivo}
-% Una linea por integrante. Se pueden agregar o quitar filas.
+
+% -----------------------------------------------------------------------------
+% INTEGRANTES
+% -----------------------------------------------------------------------------
+
 \newcommand{\Integrantes}{%
   \begin{tabular}{ll}
     Bastida, Lucas Ramiro & DNI 39444511 \\
@@ -50,96 +67,490 @@
     Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
   \end{tabular}%
 }
+
 % -----------------------------------------------------------------------------
-% Elementos comunes de caratula y encabezado.
+% CARATULA Y ENCABEZADO
 % -----------------------------------------------------------------------------
+
 \newcommand{\InsertarLogo}[1][0.24\textwidth]{%
   \ifx\LogoRuta\empty
-    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
+    \fbox{%
+      \parbox[c][1cm][c]{#1}{%
+        \centering Logo institucional\\
+        \small (colocar archivo)%
+      }%
+    }%
   \else
     \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
   \fi
 }
+
 \newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
+
 \pagestyle{fancy}
 \fancyhf{}
+
 \fancyhead[L]{\InsertarLogo[1.4cm]}
 \fancyhead[C]{\small\textbf{\TituloCorto}}
 \fancyhead[R]{\small\NombreGrupo}
+
 \renewcommand{\headrulewidth}{0.4pt}
-\fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+
+\fancyfoot[C]{%
+  \small Página \thepage
+  \ifHayUltimaPagina
+    \ de \pageref{LastPage}
+  \fi
+}
+
 \renewcommand{\footrulewidth}{0pt}
+
+% -----------------------------------------------------------------------------
+% DOCUMENTO
+% -----------------------------------------------------------------------------
+
 \begin{document}
+
+% -----------------------------------------------------------------------------
+% CARATULA
+% -----------------------------------------------------------------------------
+
 \begin{titlepage}
+
   \thispagestyle{empty}
+
   \begin{center}
+
     \InsertarLogo[0.32\textwidth]
+
     \vfill
+
     {\Large\textsc{\NombreMateria}\par}
+
     \vspace{1.5cm}
+
     {\Huge\bfseries \TipoTrabajo\par}
+
     \vspace{0.35cm}
-    {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
+
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo\ (\TipoTP)\par}
+
     \vspace{0.8cm}
+
     {\Large\NombreTrabajo\par}
+
     \vfill
+
     \begin{tabular}{rl}
       \textbf{Grupo:} & \NombreGrupo \\
       \textbf{Docente:} & \Docente
     \end{tabular}
+
     \vspace{1cm}
+
     \begin{center}
       \textbf{Integrantes}\\[0.2cm]
       \Integrantes
     \end{center}
+
     \vfill
+
     {\large \FechaEnEspanol\par}
+
   \end{center}
+
 \end{titlepage}
+
+% -----------------------------------------------------------------------------
+% CONSIGNAS
+% -----------------------------------------------------------------------------
+
 \section{Consignas}
+
 \begin{enumerate}[label=\arabic*)]
+
+% ============================================================================
+% PUNTO 1
+% ============================================================================
+
+\item
+
+\begin{enumerate}[label=\alph*)]
+
   \item
-  \begin{enumerate}[label=\alph*)]
-    \item
-    \item
-    \item
-    Típicamente, existen dos razones para esto; la primera es la interferencia que ocurre con los sistemas de comunicación y navegación de los aviones; y la más importante radica en la red celular: un avión tiene una velocidad promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy grande de antenas, las cuales están pensadas para las velocidades de los vehículos, por lo que se presenta una saturación de la red.
 
-    ¿Cómo se conecta esto último con lo visto sobre el efecto Doppler (fenómeno presentado en el ejercicio)? Observando la fórmula y los parámetros que entran en juego, resulta evidente que, al acercarse y alejarse el avión a una velocidad mucho mayor que la de un automóvil promedio, el efecto Doppler termina apareciendo dado este corrimiento de frecuencia tan alto y constante que se repite antena tras antena, algo que no está contemplado en la red, ya que no fue diseñada para esto.
-  \end{enumerate}
   \item
-  \begin{enumerate}[label=\alph*)]
-    \item
-    \item
-    \item
-  \end{enumerate}
+
   \item
-  Frente al ruido, lo más común es agregarle redundancia a lo que se transmite. Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete (esto es lo que se conoce como ARQ). El problema es que pedir reenvío no siempre es viable o conviene, sobre todo si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales, etc.), que directamente le permiten al receptor ubicar y arreglar los bits dañados sin tener que pedir nada de vuelta.
 
-  Para el tema de las variaciones de frecuencia el enfoque es distinto, porque ahí el problema no es que se pierda o corrompa un bit sino que el receptor pierde la sincronía con la señal. Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en particular) que van siguiendo de forma continua los corrimientos de frecuencia y fase de la portadora, algo fundamental cuando hay efecto Doppler de por medio o simplemente derivas por temperatura en el oscilador. Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros y ajustar el reloj antes de que llegue la información real.\item
+  Típicamente, existen dos razones para esto; la primera es la interferencia
+  que ocurre con los sistemas de comunicación y navegación de los aviones;
+  y la más importante radica en la red celular: un avión tiene una velocidad
+  promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy
+  grande de antenas, las cuales están pensadas para las velocidades de los
+  vehículos, por lo que se presenta una saturación de la red.
 
-  \begin{enumerate}[label=\alph*)]
-    \item
-    
-    \item
-    \textbf{Trama (frame):} es la unidad básica de información que se transmite en la capa de Enlace de Datos. Encapsula los datos que vienen de capas superiores agregándoles la información de control necesaria para que puedan viajar correctamente por el medio físico y ser interpretados por el receptor.
+  ¿Cómo se conecta esto último con lo visto sobre el efecto Doppler
+  (fenómeno presentado en el ejercicio)? Observando la fórmula y los
+  parámetros que entran en juego, resulta evidente que, al acercarse y
+  alejarse el avión a una velocidad mucho mayor que la de un automóvil
+  promedio, el efecto Doppler termina apareciendo dado este corrimiento de
+  frecuencia tan alto y constante que se repite antena tras antena, algo que
+  no está contemplado en la red, ya que no fue diseñada para esto.
 
-Una trama típica se estructura en tres partes:
-
-\begin{itemize}
-    \item \textbf{Encabezado (header):} Va al principio de la trama. Contiene metadatos de control: direcciones de origen/destino, número de secuencia, tipo de protocolo, longitud, flags de sincronización, etc.
-    \item \textbf{Carga útil (payload):} Es el contenido real que se quiere transmitir, siendo estos los datos provenientes de la capa superior.
-    \item \textbf{Tráiler (trailer):} Va al final de la trama. Normalmente contiene información para el control de errores, que permite al receptor verificar si la trama llegó íntegra. En algunos protocolos también puede incluir un delimitador de fin de trama.
-\end{itemize}
-
-\textbf{Diferencia clave:} el header y el trailer son información de control agregada por la capa de Enlace de Datos, mientras que el payload es el dato ``real'' que se está transportando y que en definitiva le interesa a la capa superior. El header suele enfocarse en identificación/direccionamiento/sincronización, y el trailer suele enfocarse en la detección de errores.
-    \item
-    \item
-  \end{enumerate}
-  \item
-  \begin{enumerate}[label=\alph*)]
-    \item
-    \item
-  \end{enumerate}
 \end{enumerate}
+
+% ============================================================================
+% PUNTO 2
+% ============================================================================
+
+\item
+
+\begin{enumerate}[label=\alph*)]
+
+  \item
+
+  \textbf{Ruido impulsivo.}
+
+  El fenómeno físico representado en la figura es el \textbf{ruido},
+  particularmente el \textbf{ruido impulsivo}. El ruido consiste en señales
+  no deseadas que se insertan en algún punto entre el emisor y el receptor,
+  modificando la señal transmitida.
+
+  En la figura se observa una señal sinusoidal que presenta una perturbación
+  en una parte de la transmisión. Esta perturbación está formada por
+  variaciones irregulares y de corta duración, características del ruido
+  impulsivo.
+
+  El ruido impulsivo es de carácter no continuo y está compuesto por pulsos
+  o picos irregulares de corta duración y amplitud relativamente grande.
+  Este tipo de ruido puede provocar errores en los datos recibidos,
+  siendo especialmente importante en las comunicaciones digitales.
+
+  \item
+
+  \item
+
+\end{enumerate}
+
+% ============================================================================
+% PUNTO 3
+% ============================================================================
+
+\item
+
+Frente al ruido, lo más común es agregarle redundancia a lo que se transmite.
+Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor
+se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete
+(esto es lo que se conoce como ARQ).
+
+El problema es que pedir reenvío no siempre es viable o conviene, sobre todo
+si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran
+los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales,
+etc.), que directamente le permiten al receptor ubicar y arreglar los bits
+dañados sin tener que pedir nada de vuelta.
+
+Para el tema de las variaciones de frecuencia el enfoque es distinto, porque
+ahí el problema no es que se pierda o corrompa un bit sino que el receptor
+pierde la sincronía con la señal.
+
+Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en
+particular) que van siguiendo de forma continua los corrimientos de frecuencia
+y fase de la portadora, algo fundamental cuando hay efecto Doppler de por
+medio o simplemente derivas por temperatura en el oscilador.
+
+Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits
+ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros
+y ajustar el reloj antes de que llegue la información real.
+
+% ============================================================================
+% PUNTO 4
+% ============================================================================
+
+\item
+
+\begin{enumerate}[label=\alph*)]
+
+  \item
+
+  \textbf{Trama (frame):} es la unidad básica de información que se transmite
+  en la capa de Enlace de Datos. Encapsula los datos que vienen de capas
+  superiores agregándoles la información de control necesaria para que puedan
+  viajar correctamente por el medio físico y ser interpretados por el receptor.
+
+  Una trama típica se estructura en tres partes:
+
+  \begin{itemize}
+
+    \item
+    \textbf{Encabezado (header):}
+    Va al principio de la trama. Contiene metadatos de control: direcciones
+    de origen/destino, número de secuencia, tipo de protocolo, longitud,
+    flags de sincronización, etc.
+
+    \item
+    \textbf{Carga útil (payload):}
+    Es el contenido real que se quiere transmitir, siendo estos los datos
+    provenientes de la capa superior.
+
+    \item
+    \textbf{Tráiler (trailer):}
+    Va al final de la trama. Normalmente contiene información para el control
+    de errores, que permite al receptor verificar si la trama llegó íntegra.
+    En algunos protocolos también puede incluir un delimitador de fin de trama.
+
+  \end{itemize}
+
+  \textbf{Diferencia clave:}
+  el header y el trailer son información de control agregada por la capa de
+  Enlace de Datos, mientras que el payload es el dato ``real'' que se está
+  transportando y que en definitiva le interesa a la capa superior.
+
+  El header suele enfocarse en identificación/direccionamiento/sincronización,
+  y el trailer suele enfocarse en la detección de errores.
+
+  \item
+
+  \item
+
+\end{enumerate}
+
+% ============================================================================
+% PUNTO 5
+% ============================================================================
+
+\item
+
+\begin{enumerate}[label=\alph*)]
+
+  % --------------------------------------------------------------------------
+  % 5.a
+  % --------------------------------------------------------------------------
+
+  \item
+
+  Nuestro grupo es \textbf{NetRunners}. Para obtener el campo
+  \texttt{GROUP} se pasa el nombre a minúsculas y se toman los primeros
+  cinco caracteres:
+
+  \[
+    \text{NetRunners} \rightarrow \texttt{netru}
+  \]
+
+  Por lo tanto, el campo \texttt{GROUP} que buscamos en el archivo
+  binario es:
+
+  \[
+    \boxed{\texttt{netru}}
+  \]
+
+  En el archivo se encontraron dos paquetes correspondientes a nuestro
+  grupo:
+
+  \begin{center}
+
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      GROUP & SEQ & LENGTH & PAYLOAD \\
+      \hline
+      \texttt{netru} & 18 & 1 & \texttt{r} \\
+      \hline
+      \texttt{netru} & 19 & 2 & \texttt{ts} \\
+      \hline
+    \end{tabular}
+
+  \end{center}
+
+  El primer paquete, expresado en hexadecimal, es:
+
+  \[
+    \texttt{6E\ 65\ 74\ 72\ 75\ 12\ 01\ 72}
+  \]
+
+  Separando los campos del paquete:
+
+  \[
+    \underbrace{\texttt{6E\ 65\ 74\ 72\ 75}}_{\texttt{GROUP}}
+    \quad
+    \underbrace{\texttt{12}}_{\texttt{SEQ}}
+    \quad
+    \underbrace{\texttt{01}}_{\texttt{LENGTH}}
+    \quad
+    \underbrace{\texttt{72}}_{\texttt{PAYLOAD}}
+  \]
+
+  El byte \texttt{12} corresponde al campo \texttt{SEQ}. Como está
+  expresado en hexadecimal, lo convertimos a decimal:
+
+  \[
+    \texttt{0x12}=1\cdot16+2=18
+  \]
+
+  Por lo tanto, este paquete tiene:
+
+  \[
+    \texttt{SEQ}=18
+  \]
+
+  El siguiente byte es \texttt{01}, que indica que el payload tiene una
+  longitud de un byte. El byte \texttt{72} corresponde al carácter
+  \texttt{r}.
+
+  El segundo paquete es:
+
+  \[
+    \texttt{6E\ 65\ 74\ 72\ 75\ 13\ 02\ 74\ 73}
+  \]
+
+  En este caso, el byte \texttt{13} corresponde al campo \texttt{SEQ}.
+  Realizando la misma conversión:
+
+  \[
+    \texttt{0x13}=1\cdot16+3=19
+  \]
+
+  por lo que:
+
+  \[
+    \texttt{SEQ}=19
+  \]
+
+  El valor \texttt{02} indica que el payload tiene una longitud de dos
+  bytes. Los bytes \texttt{74\ 73} corresponden a los caracteres
+  \texttt{ts}.
+
+  Entonces, ordenando los paquetes según su número de secuencia:
+
+  \[
+    \texttt{SEQ 18} \rightarrow \texttt{r}
+  \]
+
+  \[
+    \texttt{SEQ 19} \rightarrow \texttt{ts}
+  \]
+
+  Finalmente, concatenando los payloads:
+
+  \[
+    \texttt{r}+\texttt{ts}=\boxed{\texttt{rts}}
+  \]
+
+  Por lo tanto, la información recuperada para el grupo
+  \textbf{NetRunners} es:
+
+  \[
+    \boxed{\texttt{rts}}
+  \]
+
+  % --------------------------------------------------------------------------
+  % 5.b
+  % --------------------------------------------------------------------------
+
+  \item
+
+  Para este punto se realizó un pequeño programa en Python para analizar
+  el archivo \texttt{frames.bin}. El programa recorre el archivo buscando
+  los identificadores de los grupos y, cuando encuentra uno, toma los bytes
+  siguientes como \texttt{SEQ}, \texttt{LENGTH} y \texttt{PAYLOAD}.
+
+  Se utilizó este método porque dentro del archivo hay paquetes que
+  corresponden a ruido, por lo que no era conveniente asumir que todos los
+  bytes formaban parte de un paquete válido.
+
+  Los candidatos encontrados se fueron agrupando según su número de
+  secuencia. Algunos valores de \texttt{SEQ} no aparecen en el archivo y
+  en otros casos aparece más de un candidato, por lo que fue necesario
+  comparar los fragmentos obtenidos para distinguir los paquetes que
+  formaban parte de la información.
+
+  Al ordenar los fragmentos recuperados se obtuvieron, entre otros, los
+  siguientes:
+
+  \begin{center}
+
+    \begin{tabular}{|c|c|}
+      \hline
+      SEQ & PAYLOAD \\
+      \hline
+      1 & \texttt{ht} \\
+      \hline
+      2 & \texttt{t} \\
+      \hline
+      3 & \texttt{p} \\
+      \hline
+      4 & \texttt{s:} \\
+      \hline
+      5 & \texttt{/} \\
+      \hline
+      8 & \texttt{w} \\
+      \hline
+      9 & \texttt{w.} \\
+      \hline
+      11 & \texttt{ut} \\
+      \hline
+      14 & \texttt{c} \\
+      \hline
+      15 & \texttt{o} \\
+      \hline
+      16 & \texttt{m/s} \\
+      \hline
+      17 & \texttt{ho} \\
+      \hline
+      18 & \texttt{r} \\
+      \hline
+      19 & \texttt{ts} \\
+      \hline
+      20 & \texttt{/} \\
+      \hline
+      21 & \texttt{db} \\
+      \hline
+      22 & \texttt{be} \\
+      \hline
+      23 & \texttt{\_l} \\
+      \hline
+      24 & \texttt{n6} \\
+      \hline
+      25 & \texttt{Lnw} \\
+      \hline
+      32 & \texttt{w} \\
+      \hline
+    \end{tabular}
+
+  \end{center}
+
+  Por ejemplo, los primeros cinco paquetes permiten obtener:
+
+  \[
+    \texttt{ht}+\texttt{t}+\texttt{p}+\texttt{s:}+\texttt{/}
+    =
+    \texttt{https:/}
+  \]
+
+  Al realizar la concatenación automática de los resultados encontrados
+  por el programa, se obtiene:
+
+  \[
+    \boxed{\texttt{https://ww.utcom/shorts/dbbe\_ln6Lnww}}
+  \]
+
+  Sin embargo, al revisar los paquetes encontrados se observa que
+  existen paquetes de ruido y algunos números de secuencia faltantes.
+  Por lo tanto, la cadena obtenida directamente por el programa no
+  representa necesariamente la dirección original completa.
+
+  A partir del análisis de los fragmentos y teniendo en cuenta los
+  paquetes que corresponden al mensaje, se pudo reconstruir la dirección
+  correcta como:
+
+  \[
+    \boxed{\texttt{https://www.youtube.com/shorts/dbbe\_ln6Lnw}}
+  \]
+
+  La dirección reconstruida fue comprobada y el enlace se encuentra
+  disponible.
+
+\end{enumerate}
+
+\end{enumerate}
+
 \end{document}
