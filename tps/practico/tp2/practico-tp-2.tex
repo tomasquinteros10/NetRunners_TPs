@@ -4,6 +4,7 @@
 % -----------------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{amsmath}
 \usepackage{enumitem}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
@@ -114,6 +115,9 @@
                   \item \textbf{Aplicación en redes:} Permite la \textbf{compensación Doppler} en la capa física para ajustar el sintonizador del receptor y evitar la pérdida de datos por desincronización.
                 \end{itemize}
           \item
+          Las transmisiones que se ven más afectadas por el efecto Doppler son aquellas cuya frecuencia es más alta o cuya longitud de onda es más pequeña, ya que presentan un mayor desplazamiento Doppler absoluto. Dispositivos como celulares, transmisión satelital, Wi-Fi y radares, que funcionan en bandas superiores a la banda 9 de la ITU, son los más afectados. Aunque, debido a la relación entre la frecuencia percibida y la original, la afectación dependerá de la velocidad relativa entre emisor y receptor.
+
+          Las ondas más resilientes son aquellas con menor frecuencia debido a que presentan un menor desplazamiento Doppler absoluto. Pero esto no las hace inmunes al efecto, ya que velocidades relativas suficientemente altas podrían afectar la comunicación.
           \item
                 Típicamente, existen dos razones para esto; la primera es la interferencia que ocurre con los sistemas de comunicación y navegación de los aviones; y la más importante radica en la red celular: un avión tiene una velocidad promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy grande de antenas, las cuales están pensadas para las velocidades de los vehículos, por lo que se presenta una saturación de la red.
 
@@ -122,6 +126,23 @@
   \item
         \begin{enumerate}[label=\alph*)]
           \item
+               \textbf{Ruido impulsivo.}
+
+                El fenómeno físico representado en la figura es el \textbf{ruido},
+                particularmente el \textbf{ruido impulsivo}. El ruido consiste en señales
+                no deseadas que se insertan en algún punto entre el emisor y el receptor,
+                modificando la señal transmitida.
+
+                En la figura se observa una señal sinusoidal que presenta una perturbación
+                en una parte de la transmisión. Esta perturbación está formada por
+                variaciones irregulares y de corta duración, características del ruido
+                impulsivo.
+
+                El ruido impulsivo es de carácter no continuo y está compuesto por pulsos
+                o picos irregulares de corta duración y amplitud relativamente grande.
+                Este tipo de ruido puede provocar errores en los datos recibidos,
+                siendo especialmente importante en las comunicaciones digitales.
+
           \item
                     El fenómeno del \textbf{ruido impulsivo} afecta a las transmisiones considerando la naturaleza de la señal y el medio físico empleado:
               \subsection*{Transmisiones más afectadas:}
@@ -138,8 +159,36 @@
                   \item \textbf{Modulaciones Digitales de Bajo Orden (ej. BPSK):} Al utilizar estados de fase con la máxima separación posible ($180^\circ$), ofrece el mayor margen de tolerancia frente a distorsiones abruptas en el canal antes de cometer un error en la detección del bit.
               \end{itemize}
           \item
+
+          El SNR es la relación entre señal y ruido. Indica qué tan afectada se encuentra la señal útil por el ruido. Mientras mayor es el SNR, mejor, ya que indica que la señal útil es más fuerte.
+
+          Se puede inferir una relación con el BER: una señal con un SNR bajo indica que el ruido se está imponiendo a la señal útil. Esto influye directamente en la tasa de errores de bits en una comunicación digital, por lo que este indicador aumentará.
+
         \end{enumerate}
   \item
+              Frente al ruido, lo más común es agregarle redundancia a lo que se transmite.
+      Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor
+      se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete
+      (esto es lo que se conoce como ARQ).
+
+      El problema es que pedir reenvío no siempre es viable o conviene, sobre todo
+      si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran
+      los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales,
+      etc.), que directamente le permiten al receptor ubicar y arreglar los bits
+      dañados sin tener que pedir nada de vuelta.
+
+      Para el tema de las variaciones de frecuencia el enfoque es distinto, porque
+      ahí el problema no es que se pierda o corrompa un bit sino que el receptor
+      pierde la sincronía con la señal.
+
+      Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en
+      particular) que van siguiendo de forma continua los corrimientos de frecuencia
+      y fase de la portadora, algo fundamental cuando hay efecto Doppler de por
+      medio o simplemente derivas por temperatura en el oscilador.
+
+      Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits
+      ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros
+      y ajustar el reloj antes de que llegue la información real. 
   \item
         \begin{enumerate}[label=\alph*)]
           \item
@@ -194,7 +243,221 @@
   \item
         \begin{enumerate}[label=\alph*)]
           \item
+                  Nuestro grupo es \textbf{NetRunners}. Para obtener el campo
+          \texttt{GROUP} se pasa el nombre a minúsculas y se toman los primeros
+          cinco caracteres:
+
+          \[
+            \text{NetRunners} \rightarrow \texttt{netru}
+          \]
+
+          Por lo tanto, el campo \texttt{GROUP} que buscamos en el archivo
+          binario es:
+
+          \[
+            \boxed{\texttt{netru}}
+          \]
+
+          En el archivo se encontraron dos paquetes correspondientes a nuestro
+          grupo:
+
+          \begin{center}
+
+            \begin{tabular}{|c|c|c|c|}
+              \hline
+              GROUP & SEQ & LENGTH & PAYLOAD \\
+              \hline
+              \texttt{netru} & 18 & 1 & \texttt{r} \\
+              \hline
+              \texttt{netru} & 19 & 2 & \texttt{ts} \\
+              \hline
+            \end{tabular}
+
+          \end{center}
+
+          El primer paquete, expresado en hexadecimal, es:
+
+          \[
+            \texttt{6E\ 65\ 74\ 72\ 75\ 12\ 01\ 72}
+          \]
+
+          Separando los campos del paquete:
+
+          \[
+            \underbrace{\texttt{6E\ 65\ 74\ 72\ 75}}_{\texttt{GROUP}}
+            \quad
+            \underbrace{\texttt{12}}_{\texttt{SEQ}}
+            \quad
+            \underbrace{\texttt{01}}_{\texttt{LENGTH}}
+            \quad
+            \underbrace{\texttt{72}}_{\texttt{PAYLOAD}}
+          \]
+
+          El byte \texttt{12} corresponde al campo \texttt{SEQ}. Como está
+          expresado en hexadecimal, lo convertimos a decimal:
+
+          \[
+            \texttt{0x12}=1\cdot16+2=18
+          \]
+
+          Por lo tanto, este paquete tiene:
+
+          \[
+            \texttt{SEQ}=18
+          \]
+
+          El siguiente byte es \texttt{01}, que indica que el payload tiene una
+          longitud de un byte. El byte \texttt{72} corresponde al carácter
+          \texttt{r}.
+
+          El segundo paquete es:
+
+          \[
+            \texttt{6E\ 65\ 74\ 72\ 75\ 13\ 02\ 74\ 73}
+          \]
+
+          En este caso, el byte \texttt{13} corresponde al campo \texttt{SEQ}.
+          Realizando la misma conversión:
+
+          \[
+            \texttt{0x13}=1\cdot16+3=19
+          \]
+
+          por lo que:
+
+          \[
+            \texttt{SEQ}=19
+          \]
+
+          El valor \texttt{02} indica que el payload tiene una longitud de dos
+          bytes. Los bytes \texttt{74\ 73} corresponden a los caracteres
+          \texttt{ts}.
+
+          Entonces, ordenando los paquetes según su número de secuencia:
+
+          \[
+            \texttt{SEQ 18} \rightarrow \texttt{r}
+          \]
+
+          \[
+            \texttt{SEQ 19} \rightarrow \texttt{ts}
+          \]
+
+          Finalmente, concatenando los payloads:
+
+          \[
+            \texttt{r}+\texttt{ts}=\boxed{\texttt{rts}}
+          \]
+
+          Por lo tanto, la información recuperada para el grupo
+          \textbf{NetRunners} es:
+
+          \[
+            \boxed{\texttt{rts}}
+          \]
           \item
+           Para este punto se realizó un pequeño programa en Python para analizar
+  el archivo \texttt{frames.bin}. El programa recorre el archivo buscando
+  los identificadores de los grupos y, cuando encuentra uno, toma los bytes
+  siguientes como \texttt{SEQ}, \texttt{LENGTH} y \texttt{PAYLOAD}.
+
+  Se utilizó este método porque dentro del archivo hay paquetes que
+  corresponden a ruido, por lo que no era conveniente asumir que todos los
+  bytes formaban parte de un paquete válido.
+
+  Los candidatos encontrados se fueron agrupando según su número de
+  secuencia. Algunos valores de \texttt{SEQ} no aparecen en el archivo y
+  en otros casos aparece más de un candidato, por lo que fue necesario
+  comparar los fragmentos obtenidos para distinguir los paquetes que
+  formaban parte de la información.
+
+  Al ordenar los fragmentos recuperados se obtuvieron, entre otros, los
+  siguientes:
+
+  \begin{center}
+
+    \begin{tabular}{|c|c|}
+      \hline
+      SEQ & PAYLOAD \\
+      \hline
+      1 & \texttt{ht} \\
+      \hline
+      2 & \texttt{t} \\
+      \hline
+      3 & \texttt{p} \\
+      \hline
+      4 & \texttt{s:} \\
+      \hline
+      5 & \texttt{/} \\
+      \hline
+      8 & \texttt{w} \\
+      \hline
+      9 & \texttt{w.} \\
+      \hline
+      11 & \texttt{ut} \\
+      \hline
+      14 & \texttt{c} \\
+      \hline
+      15 & \texttt{o} \\
+      \hline
+      16 & \texttt{m/s} \\
+      \hline
+      17 & \texttt{ho} \\
+      \hline
+      18 & \texttt{r} \\
+      \hline
+      19 & \texttt{ts} \\
+      \hline
+      20 & \texttt{/} \\
+      \hline
+      21 & \texttt{db} \\
+      \hline
+      22 & \texttt{be} \\
+      \hline
+      23 & \texttt{\_l} \\
+      \hline
+      24 & \texttt{n6} \\
+      \hline
+      25 & \texttt{Lnw} \\
+      \hline
+      32 & \texttt{w} \\
+      \hline
+    \end{tabular}
+
+  \end{center}
+
+  Por ejemplo, los primeros cinco paquetes permiten obtener:
+
+  \[
+    \texttt{ht}+\texttt{t}+\texttt{p}+\texttt{s:}+\texttt{/}
+    =
+    \texttt{https:/}
+  \]
+
+  Al realizar la concatenación automática de los resultados encontrados
+  por el programa, se obtiene:
+
+  \[
+    \boxed{\texttt{https://ww.utcom/shorts/dbbe\_ln6Lnww}}
+  \]
+
+  Sin embargo, al revisar los paquetes encontrados se observa que
+  existen paquetes de ruido y algunos números de secuencia faltantes.
+  Por lo tanto, la cadena obtenida directamente por el programa no
+  representa necesariamente la dirección original completa.
+
+  A partir del análisis de los fragmentos y teniendo en cuenta los
+  paquetes que corresponden al mensaje, se pudo reconstruir la dirección
+  correcta como:
+
+  \[
+    \boxed{\texttt{https://www.youtube.com/shorts/dbbe\_ln6Lnw}}
+  \]
+
+  La dirección reconstruida fue comprobada y el enlace se encuentra
+  disponible.
+
+
         \end{enumerate}
 \end{enumerate}
 \end{document}
