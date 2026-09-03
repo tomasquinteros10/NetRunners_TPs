@@ -1,0 +1,199 @@
+\documentclass[11pt,a4paper]{article}
+
+% -----------------------------------------------------------------------------
+% Paquetes: todos forman parte de una instalacion estandar de LaTeX.
+% -----------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% Fecha en espanol sin depender de babel ni de spanish.ldf.
+\newcommand{\FechaEnEspanol}{%
+  \number\day\space de\space
+  \ifcase\month
+    \or enero\or febrero\or marzo\or abril\or mayo\or junio\or
+    julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
+  \fi\space de\space\number\year
+}
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+% lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
+\newif\ifHayUltimaPagina
+\IfFileExists{lastpage.sty}{
+  \usepackage{lastpage}
+  \HayUltimaPaginatrue
+}{
+  \HayUltimaPaginafalse
+}
+
+% -----------------------------------------------------------------------------
+% CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
+% -----------------------------------------------------------------------------
+\newcommand{\NombreMateria}{Redes de Computadoras}
+\newcommand{\TipoTrabajo}{Trabajo Práctico}
+\newcommand{\NumeroTrabajo}{3}
+% Cambiar por "Teórico" o "Práctico" según corresponda.
+\newcommand{\TipoTP}{Práctico}
+\newcommand{\NombreTrabajo}{Tramas, IP y TCP}
+\newcommand{\NombreGrupo}{NetRunners}
+\newcommand{\Docente}{SANTIAGO MARTIN HENN}
+\newcommand{\LogoArchivo}{logo.png}
+\newcommand{\LogoRuta}{\LogoArchivo}
+
+% Una linea por integrante. Se pueden agregar o quitar filas.
+\newcommand{\Integrantes}{%
+  \begin{tabular}{ll}
+    Bastida, Lucas Ramiro & DNI 39444511 \\
+    Contessi, Ruben Andres & DNI 33315235 \\
+    Garay, Ignacio Hernan & DNI 44191925 \\
+    Giraudo, Juan Pablo & DNI 34970089 \\
+    Peñaloza, Gonzalo Adrian & DNI 40441355 \\
+    Quinteros del Castillo, Tomás Agustín & DNI 46169739 \\
+    Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
+  \end{tabular}%
+}
+
+% -----------------------------------------------------------------------------
+% Elementos comunes de caratula y encabezado.
+% -----------------------------------------------------------------------------
+\newcommand{\InsertarLogo}[1][0.24\textwidth]{%
+  \ifx\LogoRuta\empty
+    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
+  \else
+    \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
+  \fi
+}
+
+\newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\InsertarLogo[1.4cm]}
+\fancyhead[C]{\small\textbf{\TituloCorto}}
+\fancyhead[R]{\small\NombreGrupo}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    \InsertarLogo[0.32\textwidth]
+
+    \vfill
+    {\Large\textsc{\NombreMateria}\par}
+    \vspace{1.5cm}
+    {\Huge\bfseries \TipoTrabajo\par}
+    \vspace{0.35cm}
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
+    \vspace{0.8cm}
+    {\Large\NombreTrabajo\par}
+
+    \vfill
+    \begin{tabular}{rl}
+      \textbf{Grupo:} & \NombreGrupo \\
+      \textbf{Docente:} & \Docente
+    \end{tabular}
+
+    \vspace{1cm}
+    \begin{center}
+      \textbf{Integrantes}\\[0.2cm]
+      \Integrantes
+    \end{center}
+
+    \vfill
+    {\large \FechaEnEspanol\par}
+  \end{center}
+\end{titlepage}
+
+\section{Desarrollo}
+\begin{enumerate}
+  \item
+    \begin{enumerate}
+      \item Esta capa es la encargada de:
+        \begin{itemize}
+          \item sincronizar la conexión (activar, mantener, desactivar);
+          \item al igual que otras capas, separa los datos a conveniencia, en este
+            caso en unidades llamadas tramas;
+          \item detecta y controla errores en tramas recibidas;
+          \item ordena el flujo de la comunicación.
+        \end{itemize}
+
+        \vspace{\baselineskip}
+
+        Resuelve la comunicación entre dos dispositivos conectados a un mismo
+        enlace: una PC y un switch, dos PCs, un switch y otro, etc.
+      \item La MAC es la dirección de un dispositivo físico conectado a una LAN.
+        Está definida desde fábrica por registro en un chip del dispositivo. Con
+        esta dirección, el dispositivo se presenta en una red LAN para ser
+        localizado o identificado.
+
+        \vspace{\baselineskip}
+
+        La principal diferencia se establece en el uso y alcance de cada una:
+        la MAC sirve para direccionar tramas en una red local, mientras que la
+        dirección IP direcciona paquetes entre distintas redes. Al enviar un
+        paquete, la MAC se asegura de que llegue al próximo dispositivo local dentro
+        de mi red; una vez allí, la trama MAC se desarma y se vuelve a armar para el
+        siguiente salto hacia el próximo dispositivo de la red. Pero, para definir
+        cuál es el próximo dispositivo, se utiliza la IP, ya que mediante ella se
+        conoce a qué dirección debe llegar el mensaje y viaja en todo el recorrido,
+        independientemente de cuántos saltos en dispositivos intermedios se
+        produzcan.
+      \item Es la unidad de datos transmitida en una red Ethernet. Pertenece a la
+        sub-capa MAC en la capa de Enlaces de Datos.
+
+        Está conformada por:
+        \begin{itemize}
+          \item Preámbulo: Se utiliza para sincronizar el emisor con el receptor,
+            son 7 octetos de ceros y unos alternados.
+          \item SFD (Start frame delimiter): consiste en una secuencia de bits
+            específica (10101011) que sirve como marca para detectar el inicio de
+            la trama.
+          \item Dirección de destino: Es la dirección MAC de destino del mensaje.
+          \item Dirección de origen: es la dirección MAC de quien envió el mensaje.
+          \item Longitud/Tipo: Son dos octetos que, según su valor, pueden
+            determinar el tamaño de los datos en la trama (hasta un máximo de 1518
+            octetos, sin contar el preámbulo y el SFD). Si el valor es 1536 o mayor
+            determina el tipo de Ethernet (ej. IPv4, ARP, etc).
+          \item Datos LLC: Unidad de datos proporcionada por el LLC. Si la trama
+            tiene longitud entonces se agrega una cabecera al inicio de los datos
+            donde se determina el protocolo de LLC con el que vienen esos datos.
+          \item Relleno: octetos que se agregan para asegurar que la trama sea lo
+            suficientemente extensa.
+          \item FCS (Frame Check Sequence), secuencia de comprobación de trama: Es
+            una comprobación de redundancia cíclica de 32 bits, se calcula teniendo
+            en cuenta todos los datos excepto el preámbulo, el SFD y el FCS.
+        \end{itemize}
+      \item El campo Longitud/Tipo permite identificar el protocolo superior cuando
+        se utiliza como tipo segun la especificacion primitiva de Ethernet, si la
+        trama respeta el protocolo especificado por IEEE 802.3, ese campo viene con
+        la longitud y la forma de identificarlo es mediante los primero datos donde
+        LLC incluye el protocolo utilizado.
+    \end{enumerate}
+  \item
+    \begin{enumerate}
+      \item
+      \item
+      \item
+      \item
+    \end{enumerate}
+  \item
+    \begin{enumerate}
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+    \end{enumerate}
+  \item
+\end{enumerate}
+
+\section{Conclusiones}
+Escribir las conclusiones del grupo.
+
+\end{document}
