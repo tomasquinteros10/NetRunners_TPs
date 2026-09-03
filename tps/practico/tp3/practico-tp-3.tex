@@ -177,10 +177,31 @@
     \end{enumerate}
   \item
     \begin{enumerate}
-      \item
-      \item
-      \item
-      \item
+      \item En la trama Ethernet se encuentran las siguientes direcciones MAC:
+        \begin{itemize}
+          \item Source: \texttt{64:fd:96:c7:0b:77}
+          \item Destination: \texttt{74:c6:3b:2d:48:0f}
+        \end{itemize}
+
+        Mediante \texttt{ip link show}, se reconoce que
+        \texttt{74:c6:3b:2d:48:0f} es el identificador de la placa Wi-Fi de la
+        PC. Haciendo una validación de las redes inalámbricas con
+        \texttt{nmcli -f ACTIVE,SSID,BSSID dev wifi list}, se reconoce
+        \texttt{64:fd:96:c7:0b:77} como el identificador del punto de acceso
+        Wi-Fi.
+      \item Las direcciones que se ven son:
+        \begin{itemize}
+          \item Source: \texttt{140.82.114.26}
+          \item Destination: \texttt{192.168.1.6}
+        \end{itemize}
+      \item No representan lo mismo, las MAC son las direcciones en mi red local,
+        indican que el destino de la trama es mi PC y el origen el router, cuando
+        la trama llega al router y la redirecciona las MAC cambiarán siendo la de
+        origen el router y destino el punto del proveedor a donde lo distribuya.
+        La IP es el origen y destino del paquete de punta a punta, es lo que marca
+        a donde debe llegar el paquete y desde donde sin importar cuántos saltos
+        entre dispositivos se realicen.
+      \item IPv4
     \end{enumerate}
   \item
     \begin{enumerate}
