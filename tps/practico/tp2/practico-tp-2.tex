@@ -1,22 +1,12 @@
 \documentclass[11pt,a4paper]{article}
-
 % -----------------------------------------------------------------------------
-% PAQUETES
+% Paquetes: todos forman parte de una instalacion estandar de LaTeX.
 % -----------------------------------------------------------------------------
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{enumitem}
 \usepackage{amsmath}
-\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{fancyhdr}
-
-% -----------------------------------------------------------------------------
-% FECHA EN ESPAÑOL
-% -----------------------------------------------------------------------------
-
+\usepackage{enumitem}
+% Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
   \ifcase\month
@@ -24,38 +14,32 @@
     julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
   \fi\space de\space\number\year
 }
-
-% -----------------------------------------------------------------------------
-% PAGINA FINAL
-% -----------------------------------------------------------------------------
-
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+% lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
-
 \IfFileExists{lastpage.sty}{
   \usepackage{lastpage}
   \HayUltimaPaginatrue
 }{
   \HayUltimaPaginafalse
 }
-
 % -----------------------------------------------------------------------------
-% CONFIGURACION DEL TRABAJO
+% CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
 % -----------------------------------------------------------------------------
-
 \newcommand{\NombreMateria}{Redes de Computadoras}
 \newcommand{\TipoTrabajo}{Trabajo Práctico}
 \newcommand{\NumeroTrabajo}{2}
+% Cambiar por "Teórico" o "Práctico" según corresponda.
 \newcommand{\TipoTP}{Práctico}
 \newcommand{\NombreTrabajo}{Conceptos de capa física y capa de enlace de datos.}
 \newcommand{\NombreGrupo}{NetRunners}
 \newcommand{\Docente}{SANTIAGO MARTIN HENN}
 \newcommand{\LogoArchivo}{logo.png}
 \newcommand{\LogoRuta}{\LogoArchivo}
-
-% -----------------------------------------------------------------------------
-% INTEGRANTES
-% -----------------------------------------------------------------------------
-
+% Una linea por integrante. Se pueden agregar o quitar filas.
 \newcommand{\Integrantes}{%
   \begin{tabular}{ll}
     Bastida, Lucas Ramiro & DNI 39444511 \\
@@ -67,392 +51,312 @@
     Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
   \end{tabular}%
 }
-
 % -----------------------------------------------------------------------------
-% CARATULA Y ENCABEZADO
+% Elementos comunes de caratula y encabezado.
 % -----------------------------------------------------------------------------
-
 \newcommand{\InsertarLogo}[1][0.24\textwidth]{%
   \ifx\LogoRuta\empty
-    \fbox{%
-      \parbox[c][1cm][c]{#1}{%
-        \centering Logo institucional\\
-        \small (colocar archivo)%
-      }%
-    }%
+    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
   \else
     \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
   \fi
 }
-
 \newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
-
 \pagestyle{fancy}
 \fancyhf{}
-
 \fancyhead[L]{\InsertarLogo[1.4cm]}
 \fancyhead[C]{\small\textbf{\TituloCorto}}
 \fancyhead[R]{\small\NombreGrupo}
-
 \renewcommand{\headrulewidth}{0.4pt}
-
-\fancyfoot[C]{%
-  \small Página \thepage
-  \ifHayUltimaPagina
-    \ de \pageref{LastPage}
-  \fi
-}
-
+\fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
 \renewcommand{\footrulewidth}{0pt}
-
-% -----------------------------------------------------------------------------
-% DOCUMENTO
-% -----------------------------------------------------------------------------
-
 \begin{document}
-
-% -----------------------------------------------------------------------------
-% CARATULA
-% -----------------------------------------------------------------------------
-
 \begin{titlepage}
-
   \thispagestyle{empty}
-
   \begin{center}
-
     \InsertarLogo[0.32\textwidth]
-
     \vfill
-
     {\Large\textsc{\NombreMateria}\par}
-
     \vspace{1.5cm}
-
     {\Huge\bfseries \TipoTrabajo\par}
-
     \vspace{0.35cm}
-
-    {\LARGE N.\textsuperscript{o} \NumeroTrabajo\ (\TipoTP)\par}
-
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
     \vspace{0.8cm}
-
     {\Large\NombreTrabajo\par}
-
     \vfill
-
     \begin{tabular}{rl}
-      \textbf{Grupo:} & \NombreGrupo \\
+      \textbf{Grupo:}   & \NombreGrupo \\
       \textbf{Docente:} & \Docente
     \end{tabular}
-
     \vspace{1cm}
-
     \begin{center}
       \textbf{Integrantes}\\[0.2cm]
       \Integrantes
     \end{center}
     \vfill
-
     {\large \FechaEnEspanol\par}
-
   \end{center}
-
 \end{titlepage}
-
-% -----------------------------------------------------------------------------
-% CONSIGNAS
-% -----------------------------------------------------------------------------
-
 \section{Consignas}
-
 \begin{enumerate}[label=\arabic*)]
-
-% ============================================================================
-% PUNTO 1
-% ============================================================================
-
-\item
-
-\begin{enumerate}[label=\alph*)]
-
   \item
+        \begin{enumerate}[label=\alph*)]
+          \item
+                El fenómeno físico representado es el Efecto Doppler aplicado a ondas electromagnéticas en un medio no guiado (inalámbrico) mediante una enlace directo entre emisor y receptor.
+                Las características principales del fenómeno son:
+                \begin{itemize}
+                  \item \textbf{Origen:} Se produce por la \textbf{velocidad relativa} entre los nodos que se comunican (barco y satélite).
+                  \item \textbf{Desplazamiento de frecuencia:} Al \textbf{acercarse}, la frecuencia percibida aumenta (ondas comprimidas); al \textbf{alejarse}, la frecuencia disminuye.
+                  \item \textbf{Proporcionalidad matemática:} La frecuencia percibida ($f_p$) se obtiene mediante:
+                        \[
+                          f_p = f_e \cdot \sqrt{\frac{1+\beta}{1-\beta}}
+                        \]
+                        donde $f_e$ es la frecuencia de emisión original y $\beta = \frac{v}{c}$ es la relación entre la velocidad relativa ($v$) y la velocidad de la luz ($c$).
+                  \item \textbf{Aplicación en redes:} Permite la \textbf{compensación Doppler} en la capa física para ajustar el sintonizador del receptor y evitar la pérdida de datos por desincronización.
+                \end{itemize}
+          \item
+          Las transmisiones que se ven más afectadas por el efecto Doppler son aquellas cuya frecuencia es más alta o cuya longitud de onda es más pequeña, ya que presentan un mayor desplazamiento Doppler absoluto. Dispositivos como celulares, transmisión satelital, Wi-Fi y radares, que funcionan en bandas superiores a la banda 9 de la ITU, son los más afectados. Aunque, debido a la relación entre la frecuencia percibida y la original, la afectación dependerá de la velocidad relativa entre emisor y receptor.
+
+          Las ondas más resilientes son aquellas con menor frecuencia debido a que presentan un menor desplazamiento Doppler absoluto. Pero esto no las hace inmunes al efecto, ya que velocidades relativas suficientemente altas podrían afectar la comunicación.
+          \item
+                Típicamente, existen dos razones para esto; la primera es la interferencia que ocurre con los sistemas de comunicación y navegación de los aviones; y la más importante radica en la red celular: un avión tiene una velocidad promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy grande de antenas, las cuales están pensadas para las velocidades de los vehículos, por lo que se presenta una saturación de la red.
+
+                ¿Cómo se conecta esto último con lo visto sobre el efecto Doppler (fenómeno presentado en el ejercicio)? Observando la fórmula y los parámetros que entran en juego, resulta evidente que, al acercarse y alejarse el avión a una velocidad mucho mayor que la de un automóvil promedio, el efecto Doppler termina apareciendo dado este corrimiento de frecuencia tan alto y constante que se repite antena tras antena, algo que no está contemplado en la red, ya que no fue diseñada para esto.
+        \end{enumerate}
   \item
+        \begin{enumerate}[label=\alph*)]
+          \item
+               \textbf{Ruido impulsivo.}
 
-  Las transmisiones que se ven más afectadas por el efecto Doppler son aquellas cuya frecuencia es más alta o cuya longitud de onda es más pequeña, ya que presentan un mayor desplazamiento Doppler absoluto. Dispositivos como celulares, transmisión satelital, Wi-Fi y radares, que funcionan en bandas superiores a la banda 9 de la ITU, son los más afectados. Aunque, debido a la relación entre la frecuencia percibida y la original, la afectación dependerá de la velocidad relativa entre emisor y receptor.
+                El fenómeno físico representado en la figura es el \textbf{ruido},
+                particularmente el \textbf{ruido impulsivo}. El ruido consiste en señales
+                no deseadas que se insertan en algún punto entre el emisor y el receptor,
+                modificando la señal transmitida.
 
-  Las ondas más resilientes son aquellas con menor frecuencia debido a que presentan un menor desplazamiento Doppler absoluto. Pero esto no las hace inmunes al efecto, ya que velocidades relativas suficientemente altas podrían afectar la comunicación.
+                En la figura se observa una señal sinusoidal que presenta una perturbación
+                en una parte de la transmisión. Esta perturbación está formada por
+                variaciones irregulares y de corta duración, características del ruido
+                impulsivo.
 
+                El ruido impulsivo es de carácter no continuo y está compuesto por pulsos
+                o picos irregulares de corta duración y amplitud relativamente grande.
+                Este tipo de ruido puede provocar errores en los datos recibidos,
+                siendo especialmente importante en las comunicaciones digitales.
+
+          \item
+                    El fenómeno del \textbf{ruido impulsivo} afecta a las transmisiones considerando la naturaleza de la señal y el medio físico empleado:
+              \subsection*{Transmisiones más afectadas:}
+              \begin{itemize}[leftmargin=*]
+                  \item \textbf{Transmisión Digital (en cuanto a tipo de señal):} A diferencia de las señales analógicas (donde un pulso causa solo un chasquido imperceptible), en comunicaciones digitales a altas velocidades de transmisión un impulso de corta duración corrompe un gran bloque de bits contiguos (\emph{ráfaga de errores} o \emph{error burst}), obligando a retransmitir el paquete completo.
+                  \item \textbf{Medios No Guiados / Inalámbricos (Wi-Fi, Celular, Microondas):} Al propagarse por el aire en un espacio no restringido sin blindaje físico, la señal modulada es sumamente vulnerable a picos electromagnéticos provenientes de maquinaria, conmutaciones mecánicas, motores o chispas.
+                  \item \textbf{Medios de Cobre No Apantallados (Par Trenzado UTP):} Los impulsos electromagnéticos de fuentes externas inducen variaciones abruptas de tensión sobre el conductor de cobre, alterando los estados lógicos de la señal digital.
+              \end{itemize}
+
+              \subsection*{Transmisiones más resilientes:}
+              \begin{itemize}[leftmargin=*]
+                  \item \textbf{Fibra Óptica:} Es prácticamente \textbf{inmune} al ruido impulsivo electromagnético, ya que transmite datos mediante pulsos de luz (fotones) a través de un núcleo de vidrio o plástico en lugar de corriente eléctrica.
+                  \item \textbf{Medios Guiados Apantallados (Coaxial y STP):} Las mallas metálicas o blindajes reflectantes aíslan el conductor central de las inducciones electromagnéticas externas.
+                  \item \textbf{Modulaciones Digitales de Bajo Orden (ej. BPSK):} Al utilizar estados de fase con la máxima separación posible ($180^\circ$), ofrece el mayor margen de tolerancia frente a distorsiones abruptas en el canal antes de cometer un error en la detección del bit.
+              \end{itemize}
+          \item
+
+          El SNR es la relación entre señal y ruido. Indica qué tan afectada se encuentra la señal útil por el ruido. Mientras mayor es el SNR, mejor, ya que indica que la señal útil es más fuerte.
+
+          Se puede inferir una relación con el BER: una señal con un SNR bajo indica que el ruido se está imponiendo a la señal útil. Esto influye directamente en la tasa de errores de bits en una comunicación digital, por lo que este indicador aumentará.
+
+        \end{enumerate}
   \item
+              Frente al ruido, lo más común es agregarle redundancia a lo que se transmite.
+      Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor
+      se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete
+      (esto es lo que se conoce como ARQ).
 
-  Típicamente, existen dos razones para esto; la primera es la interferencia
-  que ocurre con los sistemas de comunicación y navegación de los aviones;
-  y la más importante radica en la red celular: un avión tiene una velocidad
-  promedio de 800\,km/h, por lo tanto por minuto atraviesa una cantidad muy
-  grande de antenas, las cuales están pensadas para las velocidades de los
-  vehículos, por lo que se presenta una saturación de la red.
+      El problema es que pedir reenvío no siempre es viable o conviene, sobre todo
+      si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran
+      los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales,
+      etc.), que directamente le permiten al receptor ubicar y arreglar los bits
+      dañados sin tener que pedir nada de vuelta.
 
-  ¿Cómo se conecta esto último con lo visto sobre el efecto Doppler
-  (fenómeno presentado en el ejercicio)? Observando la fórmula y los
-  parámetros que entran en juego, resulta evidente que, al acercarse y
-  alejarse el avión a una velocidad mucho mayor que la de un automóvil
-  promedio, el efecto Doppler termina apareciendo dado este corrimiento de
-  frecuencia tan alto y constante que se repite antena tras antena, algo que
-  no está contemplado en la red, ya que no fue diseñada para esto.
+      Para el tema de las variaciones de frecuencia el enfoque es distinto, porque
+      ahí el problema no es que se pierda o corrompa un bit sino que el receptor
+      pierde la sincronía con la señal.
 
-\end{enumerate}
+      Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en
+      particular) que van siguiendo de forma continua los corrimientos de frecuencia
+      y fase de la portadora, algo fundamental cuando hay efecto Doppler de por
+      medio o simplemente derivas por temperatura en el oscilador.
 
-% ============================================================================
-% PUNTO 2
-% ============================================================================
-
-\item
-
-\begin{enumerate}[label=\alph*)]
-
+      Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits
+      ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros
+      y ajustar el reloj antes de que llegue la información real. 
   \item
+        \begin{enumerate}[label=\alph*)]
+          \item
+                En las comunicaciones digitales la sincronización tiene un rol clave, permitiendo que el receptor sea capaz de determinar exactamente cuándo empieza y cuándo termina cada unidad de información (un bit, un byte, una trama). Sin sincronización, el receptor podría muestrear la señal en un momento equivocado y leer mal los datos.
 
-  \textbf{Ruido impulsivo.}
+                \textbf{Sincronización de bits:}
 
-  El fenómeno físico representado en la figura es el \textbf{ruido},
-  particularmente el \textbf{ruido impulsivo}. El ruido consiste en señales
-  no deseadas que se insertan en algún punto entre el emisor y el receptor,
-  modificando la señal transmitida.
+                El receptor necesita determinar exactamente cuánto dura cada bit y en qué instante debe ``muestrear'' la señal para decidir si es un 0 o un 1. El problema es que el emisor y el receptor tienen relojes físicos independientes que nunca son exactamente iguales, por lo que se debe utilizar codificadores de línea autosincronizantes que garantizan transiciones frecuentes en la señal de las que el receptor puede usar para recalibrarse constantemente.
 
-  En la figura se observa una señal sinusoidal que presenta una perturbación
-  en una parte de la transmisión. Esta perturbación está formada por
-  variaciones irregulares y de corta duración, características del ruido
-  impulsivo.
+                \textbf{Sincronización de trama:}
 
-  El ruido impulsivo es de carácter no continuo y está compuesto por pulsos
-  o picos irregulares de corta duración y amplitud relativamente grande.
-  Este tipo de ruido puede provocar errores en los datos recibidos,
-  siendo especialmente importante en las comunicaciones digitales.
+                Una vez que el receptor ya sabe leer bits correctamente, necesita saber dónde empieza y dónde termina una trama dentro del flujo continuo de bits (delimitación). Para esto se usan mecanismos como:
 
+                \begin{itemize}
+                  \item Un preámbulo o patrón de sincronismo conocido.
+                  \item Campos de longitud fija o variable que indican el tamaño de la trama.
+                  \item Caracteres o secuencias delimitadoras (flags) al inicio y fin de trama.
+                \end{itemize}
+
+                \textbf{Diferencia clave:} la sincronización de bits resuelve el problema de cuándo leer cada bit individual, mientras que la sincronización de trama resuelve el problema de dónde delimitar un conjunto de bits que forman un mensaje completo. Siendo la primera un requisito previo de la segunda: sin bits leídos correctamente, no hay forma de reconocer los delimitadores de una trama.
+          \item
+                \textbf{Trama (frame):} es la unidad básica de información que se transmite en la capa de Enlace de Datos. Encapsula los datos que vienen de capas superiores agregándoles la información de control necesaria para que puedan viajar correctamente por el medio físico y ser interpretados por el receptor.
+
+                Una trama típica se estructura en tres partes:
+
+                \begin{itemize}
+                  \item \textbf{Encabezado (header):} Va al principio de la trama. Contiene metadatos de control: direcciones de origen/destino, número de secuencia, tipo de protocolo, longitud, flags de sincronización, etc.
+                  \item \textbf{Carga útil (payload):} Es el contenido real que se quiere transmitir, siendo estos los datos provenientes de la capa superior.
+                  \item \textbf{Tráiler (trailer):} Va al final de la trama. Normalmente contiene información para el control de errores, que permite al receptor verificar si la trama llegó íntegra. En algunos protocolos también puede incluir un delimitador de fin de trama.
+                \end{itemize}
+
+                \textbf{Diferencia clave:} el header y el trailer son información de control agregada por la capa de Enlace de Datos, mientras que el payload es el dato ``real'' que se está transportando y que en definitiva le interesa a la capa superior. El header suele enfocarse en identificación/direccionamiento/sincronización, y el trailer suele enfocarse en la detección de errores.
+          \item
+                El preámbulo cumple principalmente las siguientes funciones:
+
+                \begin{enumerate}[label=\arabic*)]
+                  \item \textbf{Lograr la sincronización de bits:} Envía una secuencia repetitiva conocida para alinear los relojes físicos independientes del emisor y del receptor, permitiendo determinar el instante exacto en el que se debe muestrear la señal para distinguir los bits ($0$ y $1$).
+                  \item \textbf{Preparar la sincronización de la trama y estabilizar la señal:} Advierte al receptor que la fase de calibración ha finalizado para marcar el inicio inminente de la trama, dando tiempo a los circuitos de la Capa Física para detectar la presencia de la portadora y estabilizar su ganancia en el medio.
+                \end{enumerate}
+
+                No es parte de la información que se quiere transmitir. La carga útil (\textit{payload}) proviene de las capas superiores en el modelo TCP/IP o OSI y representa los datos reales del usuario. El preámbulo actúa antes del header a nivel de la Capa Física como sobrecarga (overhead). Una vez que cumple su función de acoplar los relojes y estabilizar la señal, el receptor lo descarta por completo y no se procesa dentro de la trama en la Capa de Enlace de Datos.
+          \item
+                En el nivel de enlace de datos, el delimitado de tramas (\emph{framing}) es fundamental para que el receptor pueda identificar con precisión dónde comienza y dónde termina una trama recibida a través del canal físico. Existen tres métodos principales para lograr esto:
+          
+                El primer método consiste en el uso de \textbf{tramas de longitud fija}, donde todos los bloques tienen un tamaño predefinido en bytes. Esto simplifica el diseño del hardware al requerir únicamente un contador constante de unidades recibidas (como en las celdas de 53 bytes de ATM), aunque resulta ineficiente cuando la carga útil es menor al límite, obligando al uso de relleno (\emph{padding}).
+
+                Una segunda alternativa es incluir un \textbf{campo de longitud en la cabecera}, el cual indica explícitamente mediante un valor numérico la cantidad de bytes que componen la trama. Aunque optimiza el uso del ancho de banda al permitir tramas de tamaño variable de forma limpia, es sumamente vulnerable a errores de transmisión: si el ruido altera el valor del campo, el receptor pierde la sincronización y desalinea las tramas subsecuentes, como sucede en variantes del estándar IEEE 802.3.
+
+                Por último, el método basado en \textbf{caracteres o secuencias delimitadoras} emplea secuencias de bits o patrones de control especiales (\emph{flags}) al inicio y fin del bloque, como el patrón \texttt{01111110} en HDLC. Para evitar falsos cierres cuando la secuencia delimitadora aparece en los datos útiles, se utilizan técnicas de transparencia como el relleno de bytes (\emph{byte stuffing}) o el relleno de bits (\emph{bit stuffing}). Su principal ventaja radica en su capacidad de auto-sincronización, permitiendo al receptor recuperar la transmisión tras un error con solo detectar la siguiente bandera.
+
+        \end{enumerate}
   \item
+        \begin{enumerate}[label=\alph*)]
+          \item
+                  Nuestro grupo es \textbf{NetRunners}. Para obtener el campo
+          \texttt{GROUP} se pasa el nombre a minúsculas y se toman los primeros
+          cinco caracteres:
 
-  \item El SNR es la relación entre señal y ruido. Indica qué tan afectada se encuentra la señal útil por el ruido. Mientras mayor es el SNR, mejor, ya que indica que la señal útil es más fuerte.
+          \[
+            \text{NetRunners} \rightarrow \texttt{netru}
+          \]
 
-  Se puede inferir una relación con el BER: una señal con un SNR bajo indica que el ruido se está imponiendo a la señal útil. Esto influye directamente en la tasa de errores de bits en una comunicación digital, por lo que este indicador aumentará.
+          Por lo tanto, el campo \texttt{GROUP} que buscamos en el archivo
+          binario es:
 
-\end{enumerate}
+          \[
+            \boxed{\texttt{netru}}
+          \]
 
-% ============================================================================
-% PUNTO 3
-% ============================================================================
+          En el archivo se encontraron dos paquetes correspondientes a nuestro
+          grupo:
 
-\item
+          \begin{center}
 
-Frente al ruido, lo más común es agregarle redundancia a lo que se transmite.
-Con algo tan simple como un bit de paridad, un checksum o un CRC, el receptor
-se da cuenta de que algo llegó mal y puede pedir que se reenvíe el paquete
-(esto es lo que se conoce como ARQ).
+            \begin{tabular}{|c|c|c|c|}
+              \hline
+              GROUP & SEQ & LENGTH & PAYLOAD \\
+              \hline
+              \texttt{netru} & 18 & 1 & \texttt{r} \\
+              \hline
+              \texttt{netru} & 19 & 2 & \texttt{ts} \\
+              \hline
+            \end{tabular}
 
-El problema es que pedir reenvío no siempre es viable o conviene, sobre todo
-si el enlace tiene mucha latencia o el ancho de banda es limitado. Ahí entran
-los códigos correctores tipo FEC (Hamming, Reed-Solomon, convolucionales,
-etc.), que directamente le permiten al receptor ubicar y arreglar los bits
-dañados sin tener que pedir nada de vuelta.
+          \end{center}
 
-Para el tema de las variaciones de frecuencia el enfoque es distinto, porque
-ahí el problema no es que se pierda o corrompa un bit sino que el receptor
-pierde la sincronía con la señal.
+          El primer paquete, expresado en hexadecimal, es:
 
-Para esto se usan lazos de enganche de fase (PLL, o el Costas Loop en
-particular) que van siguiendo de forma continua los corrimientos de frecuencia
-y fase de la portadora, algo fundamental cuando hay efecto Doppler de por
-medio o simplemente derivas por temperatura en el oscilador.
+          \[
+            \texttt{6E\ 65\ 74\ 72\ 75\ 12\ 01\ 72}
+          \]
 
-Además, casi todas las tramas arrancan con un preámbulo, una secuencia de bits
-ya conocida por ambos lados, que le sirve al receptor para calibrar sus filtros
-y ajustar el reloj antes de que llegue la información real.
+          Separando los campos del paquete:
 
-% ============================================================================
-% PUNTO 4
-% ============================================================================
+          \[
+            \underbrace{\texttt{6E\ 65\ 74\ 72\ 75}}_{\texttt{GROUP}}
+            \quad
+            \underbrace{\texttt{12}}_{\texttt{SEQ}}
+            \quad
+            \underbrace{\texttt{01}}_{\texttt{LENGTH}}
+            \quad
+            \underbrace{\texttt{72}}_{\texttt{PAYLOAD}}
+          \]
 
-\item
+          El byte \texttt{12} corresponde al campo \texttt{SEQ}. Como está
+          expresado en hexadecimal, lo convertimos a decimal:
 
-\begin{enumerate}[label=\alph*)]
+          \[
+            \texttt{0x12}=1\cdot16+2=18
+          \]
 
-  \item
+          Por lo tanto, este paquete tiene:
 
-  \textbf{Trama (frame):} es la unidad básica de información que se transmite
-  en la capa de Enlace de Datos. Encapsula los datos que vienen de capas
-  superiores agregándoles la información de control necesaria para que puedan
-  viajar correctamente por el medio físico y ser interpretados por el receptor.
+          \[
+            \texttt{SEQ}=18
+          \]
 
-  Una trama típica se estructura en tres partes:
+          El siguiente byte es \texttt{01}, que indica que el payload tiene una
+          longitud de un byte. El byte \texttt{72} corresponde al carácter
+          \texttt{r}.
 
-  \begin{itemize}
+          El segundo paquete es:
 
-    \item
-    \textbf{Encabezado (header):}
-    Va al principio de la trama. Contiene metadatos de control: direcciones
-    de origen/destino, número de secuencia, tipo de protocolo, longitud,
-    flags de sincronización, etc.
+          \[
+            \texttt{6E\ 65\ 74\ 72\ 75\ 13\ 02\ 74\ 73}
+          \]
 
-    \item
-    \textbf{Carga útil (payload):}
-    Es el contenido real que se quiere transmitir, siendo estos los datos
-    provenientes de la capa superior.
+          En este caso, el byte \texttt{13} corresponde al campo \texttt{SEQ}.
+          Realizando la misma conversión:
 
-    \item
-    \textbf{Tráiler (trailer):}
-    Va al final de la trama. Normalmente contiene información para el control
-    de errores, que permite al receptor verificar si la trama llegó íntegra.
-    En algunos protocolos también puede incluir un delimitador de fin de trama.
+          \[
+            \texttt{0x13}=1\cdot16+3=19
+          \]
 
-  \end{itemize}
+          por lo que:
 
-  \textbf{Diferencia clave:}
-  el header y el trailer son información de control agregada por la capa de
-  Enlace de Datos, mientras que el payload es el dato ``real'' que se está
-  transportando y que en definitiva le interesa a la capa superior.
+          \[
+            \texttt{SEQ}=19
+          \]
 
-  El header suele enfocarse en identificación/direccionamiento/sincronización,
-  y el trailer suele enfocarse en la detección de errores.
+          El valor \texttt{02} indica que el payload tiene una longitud de dos
+          bytes. Los bytes \texttt{74\ 73} corresponden a los caracteres
+          \texttt{ts}.
 
-  \item
+          Entonces, ordenando los paquetes según su número de secuencia:
 
-  \item
+          \[
+            \texttt{SEQ 18} \rightarrow \texttt{r}
+          \]
 
-\end{enumerate}
+          \[
+            \texttt{SEQ 19} \rightarrow \texttt{ts}
+          \]
 
-% ============================================================================
-% PUNTO 5
-% ============================================================================
+          Finalmente, concatenando los payloads:
 
-\item
+          \[
+            \texttt{r}+\texttt{ts}=\boxed{\texttt{rts}}
+          \]
 
-\begin{enumerate}[label=\alph*)]
+          Por lo tanto, la información recuperada para el grupo
+          \textbf{NetRunners} es:
 
-  % --------------------------------------------------------------------------
-  % 5.a
-  % --------------------------------------------------------------------------
-
-  \item
-
-  Nuestro grupo es \textbf{NetRunners}. Para obtener el campo
-  \texttt{GROUP} se pasa el nombre a minúsculas y se toman los primeros
-  cinco caracteres:
-
-  \[
-    \text{NetRunners} \rightarrow \texttt{netru}
-  \]
-
-  Por lo tanto, el campo \texttt{GROUP} que buscamos en el archivo
-  binario es:
-
-  \[
-    \boxed{\texttt{netru}}
-  \]
-
-  En el archivo se encontraron dos paquetes correspondientes a nuestro
-  grupo:
-
-  \begin{center}
-
-    \begin{tabular}{|c|c|c|c|}
-      \hline
-      GROUP & SEQ & LENGTH & PAYLOAD \\
-      \hline
-      \texttt{netru} & 18 & 1 & \texttt{r} \\
-      \hline
-      \texttt{netru} & 19 & 2 & \texttt{ts} \\
-      \hline
-    \end{tabular}
-
-  \end{center}
-
-  El primer paquete, expresado en hexadecimal, es:
-
-  \[
-    \texttt{6E\ 65\ 74\ 72\ 75\ 12\ 01\ 72}
-  \]
-
-  Separando los campos del paquete:
-
-  \[
-    \underbrace{\texttt{6E\ 65\ 74\ 72\ 75}}_{\texttt{GROUP}}
-    \quad
-    \underbrace{\texttt{12}}_{\texttt{SEQ}}
-    \quad
-    \underbrace{\texttt{01}}_{\texttt{LENGTH}}
-    \quad
-    \underbrace{\texttt{72}}_{\texttt{PAYLOAD}}
-  \]
-
-  El byte \texttt{12} corresponde al campo \texttt{SEQ}. Como está
-  expresado en hexadecimal, lo convertimos a decimal:
-
-  \[
-    \texttt{0x12}=1\cdot16+2=18
-  \]
-
-  Por lo tanto, este paquete tiene:
-
-  \[
-    \texttt{SEQ}=18
-  \]
-
-  El siguiente byte es \texttt{01}, que indica que el payload tiene una
-  longitud de un byte. El byte \texttt{72} corresponde al carácter
-  \texttt{r}.
-
-  El segundo paquete es:
-
-  \[
-    \texttt{6E\ 65\ 74\ 72\ 75\ 13\ 02\ 74\ 73}
-  \]
-
-  En este caso, el byte \texttt{13} corresponde al campo \texttt{SEQ}.
-  Realizando la misma conversión:
-
-  \[
-    \texttt{0x13}=1\cdot16+3=19
-  \]
-
-  por lo que:
-
-  \[
-    \texttt{SEQ}=19
-  \]
-
-  El valor \texttt{02} indica que el payload tiene una longitud de dos
-  bytes. Los bytes \texttt{74\ 73} corresponden a los caracteres
-  \texttt{ts}.
-
-  Entonces, ordenando los paquetes según su número de secuencia:
-
-  \[
-    \texttt{SEQ 18} \rightarrow \texttt{r}
-  \]
-
-  \[
-    \texttt{SEQ 19} \rightarrow \texttt{ts}
-  \]
-
-  Finalmente, concatenando los payloads:
-
-  \[
-    \texttt{r}+\texttt{ts}=\boxed{\texttt{rts}}
-  \]
-
-  Por lo tanto, la información recuperada para el grupo
-  \textbf{NetRunners} es:
-
-  \[
-    \boxed{\texttt{rts}}
-  \]
-
-  % --------------------------------------------------------------------------
-  % 5.b
-  % --------------------------------------------------------------------------
-
-  \item
-
-  Para este punto se realizó un pequeño programa en Python para analizar
+          \[
+            \boxed{\texttt{rts}}
+          \]
+          \item
+           Para este punto se realizó un pequeño programa en Python para analizar
   el archivo \texttt{frames.bin}. El programa recorre el archivo buscando
   los identificadores de los grupos y, cuando encuentra uno, toma los bytes
   siguientes como \texttt{SEQ}, \texttt{LENGTH} y \texttt{PAYLOAD}.
@@ -553,8 +457,7 @@ y ajustar el reloj antes de que llegue la información real.
   La dirección reconstruida fue comprobada y el enlace se encuentra
   disponible.
 
-\end{enumerate}
 
+        \end{enumerate}
 \end{enumerate}
-
 \end{document}
