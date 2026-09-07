@@ -137,7 +137,8 @@
         \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
         \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
       \end{itemize}
-  \item
+  \item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
+  La difusión directa por satélite (DBS, Direct Broadcast Satellite) es una tecnología de distribución de televisión en la que la señal de vídeo se transmite directamente desde el satélite hasta los domicilios de los usuarios finales.
   \item
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
@@ -148,7 +149,35 @@
 
       Una antena isotrópica es un punto en el espacio que radia potencia de igual forma en todas las direcciones. Su diagrama de radiación consiste en una esfera centrada en la posición de la antena isotrópica.
   \item
-  \item
+  \item \textbf{¿Qué factores determinan la ganancia de una antena?} \\
+  Los factores físicos y matemáticos que determinan la ganancia de una antena son principalmente el área efectiva y la frecuencia de operación (o longitud de onda).
+
+\begin{itemize}
+    \item \textbf{Área efectiva $(A_e)$:} está relacionada con el tamaño físico, la geometría y la eficiencia de la antena. En una antena parabólica, un mayor diámetro permite obtener una mayor directividad y, en consecuencia, una mayor ganancia. El área efectiva se puede expresar como:
+    
+    \[
+    A_e = \eta_a A
+    \]
+    
+    donde $\eta_a$ es la eficiencia de apertura.
+
+    \item \textbf{Frecuencia de operación $(f)$ o longitud de onda $(\lambda)$:} para un área efectiva constante, la ganancia es inversamente proporcional al cuadrado de la longitud de onda y directamente proporcional al cuadrado de la frecuencia. Por lo tanto, para una misma antena física, una mayor frecuencia de operación generalmente permite obtener una mayor ganancia.
+\end{itemize}
+
+La relación fundamental es:
+
+\[
+\boxed{
+G = \frac{4\pi A_e}{\lambda^2}
+= \frac{4\pi f^2 A_e}{c^2}
+}
+\]
+
+donde $c$ es la velocidad de propagación de las ondas electromagnéticas en el vacío, aproximadamente:
+
+\[
+c \approx 3 \times 10^8 \, \text{m/s}
+\]
   \item
   \item
         \textbf{¿Cuál es la principal causa de la pérdida de señal en comunicaciones vía satélite?} \\
