@@ -195,12 +195,31 @@
           \item Destination: \texttt{192.168.1.6}
         \end{itemize}
       \item No representan lo mismo, las MAC son las direcciones en mi red local,
-        indican que el destino de la trama es mi PC y el origen el router, cuando
-        la trama llega al router y la redirecciona las MAC cambiarán siendo la de
-        origen el router y destino el punto del proveedor a donde lo distribuya.
-        La IP es el origen y destino del paquete de punta a punta, es lo que marca
-        a donde debe llegar el paquete y desde donde sin importar cuántos saltos
-        entre dispositivos se realicen.
+        indican que el destino de la trama es mi PC y el origen el router, este es
+        el último trayecto de la trama hasta mi PC, pero cuando la trama llegó al
+        router el destino era su MAC y el origen el punto de conexión del proveedor.
+        Cuando se hizo la petición de los datos a la IP destino desde mi máquina,
+        la trama llegó al router con mi MAC, mi IP privada como origen y el puerto
+        desde el que se hace la petición. Además, llevaba como destino la MAC del
+        router, la IP de la página donde se hizo la petición. El router destruye la
+        trama MAC y la rearma con su MAC de origen y la del punto de acceso del
+        proveedor como destino, pero también guarda la IP privada y el puerto desde
+        donde se solicitó. Luego modifica la IP de origen de la solicitud por la IP
+        pública y el puerto antes de enviar la trama al punto de acceso. Cuando llega
+        una respuesta esta llegará con la IP pública como destino, el puerto que el
+        router le asignó, la MAC del router como destino y del punto de acceso del
+        proveedor como origen, allí el router recupera quién en la red interna había
+        iniciado esa solicitud con el puerto que llega en la trama, encontrando la
+        IP privada a donde va la información. Con esto rearma la trama
+        MAC poniéndose como origen y el destino mi PC, pero además cambia la IP
+        destino por mi IP privada y el puerto original desde el que se hizo la
+        solicitud.
+
+        Las MACs se utilizan para identificar 2 dispositivos a nivel físico en una
+        red que ambos dispositivos comparten una conexión. La IP identifica origen
+        y destino final de las tramas. Y salvo el cambio que hace el router de la
+        IP privada por la pública, se mantiene desde que sale del origen hasta que
+        llega al destino.
       \item IPv4
     \end{enumerate}
   \item
