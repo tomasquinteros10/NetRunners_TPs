@@ -5,6 +5,7 @@
 % -----------------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
+\usepackage{amsmath}
 \usepackage[T1]{fontenc}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
@@ -120,37 +121,36 @@
         Las principales limitaciones del par trenzado son su menor distancia de transmisión, menor ancho de banda y menor velocidad respecto de otros medios guiados. Además, es muy susceptible a interferencias y ruido, debido a su acoplamiento con campos electromagnéticos externos.
   \item
         \textbf{¿Cuál es la diferencia entre el par trenzado no apantallado y el par trenzado apantallado?} \\
-        La diferencia principal radica en que el par trenzado apantallado consta de una malla interna en la que está embutido, la cual evita la acción del ruido provocado por ondas electromagnéticas; pero la contrapartida es que es más costoso y difícil de ensamblar. 
+        La diferencia principal radica en que el par trenzado apantallado consta de una malla interna en la que está embutido, la cual evita la acción del ruido provocado por ondas electromagnéticas; pero la contrapartida es que es más costoso y difícil de ensamblar.
   \item
-           \textbf {Describir los principales componentes del cable de fibra óptica.}\\
-           
-           Un cable de fibra óptica posee una estructura cilíndrica concéntrica compuesta por tres elementos principales:
-         \begin{itemize}
-    \item \textbf{Núcleo (\textit{Core}):} Es la parte central del cable, extremadamente delgada, constituida por una sección cilíndrica de vidrio o plástico con un alto índice de refracción. Por aquí es por donde viajan las ondas de luz conducidas internamente.
-    
-    \item \textbf{Revestimiento (\textit{Cladding}):} Es la capa intermedia que rodea al núcleo. Está hecha de un material de vidrio o plástico con propiedades ópticas diferentes. Esta diferencia de índices de refracción atrapa la luz dentro del núcleo mediante el fenómeno de reflexión interna total.
-    
-    \item \textbf{Cubierta / Revestimiento exterior (\textit{Jacket}):} Es la capa más externa, fabricada generalmente de materiales plásticos o sintéticos. Su función no es óptica, sino puramente mecánica y de protección física: resguarda al núcleo y al revestimiento contra la humedad, abrasiones, tensiones mecánicas y agresiones del entorno.
-\end{itemize}
-    \item \textbf{¿Qué ventajas y desventajas tiene la transmisión de microondas?}
+        \textbf {Describir los principales componentes del cable de fibra óptica.}\\
+        Un cable de fibra óptica posee una estructura cilíndrica concéntrica compuesta por tres elementos principales:
+        \begin{itemize}
+          \item \textbf{Núcleo (\textit{Core}):} Es la parte central del cable, extremadamente delgada, constituida por una sección cilíndrica de vidrio o plástico con un alto índice de refracción. Por aquí es por donde viajan las ondas de luz conducidas internamente.
 
-      \textbf{Ventajas:}
-      \begin{itemize}
-        \item Las microondas permiten realizar enlaces de larga distancia sin necesidad de un medio físico.
-        \item En los sistemas de microondas, los amplificadores o repetidores pueden estar más separados entre sí, generalmente entre \(10\) km y \(100\) km.
-        \item Las frecuencias más altas permiten utilizar antenas más pequeñas y más baratas, por lo que son adecuadas para distancias más cortas.
-        \item Las microondas también pueden utilizarse en comunicaciones vía satélite, permitiendo establecer enlaces entre estaciones terrestres alejadas.
-      \end{itemize}
+          \item \textbf{Revestimiento (\textit{Cladding}):} Es la capa intermedia que rodea al núcleo. Está hecha de un material de vidrio o plástico con propiedades ópticas diferentes. Esta diferencia de índices de refracción atrapa la luz dentro del núcleo mediante el fenómeno de reflexión interna total.
 
-      \textbf{Desventajas:}
-      \begin{itemize}
-        \item La atenuación aumenta con la lluvia, siendo especialmente significativa para frecuencias superiores a \(10\) GHz.
-        \item Debido a la creciente popularidad de las microondas, las áreas de cobertura pueden solaparse, haciendo que las interferencias sean un peligro potencial.
-        \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
-        \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
-      \end{itemize}
+          \item \textbf{Cubierta / Revestimiento exterior (\textit{Jacket}):} Es la capa más externa, fabricada generalmente de materiales plásticos o sintéticos. Su función no es óptica, sino puramente mecánica y de protección física: resguarda al núcleo y al revestimiento contra la humedad, abrasiones, tensiones mecánicas y agresiones del entorno.
+        \end{itemize}
+  \item \textbf{¿Qué ventajas y desventajas tiene la transmisión de microondas?}
+
+        \textbf{Ventajas:}
+        \begin{itemize}
+          \item Las microondas permiten realizar enlaces de larga distancia sin necesidad de un medio físico.
+          \item En los sistemas de microondas, los amplificadores o repetidores pueden estar más separados entre sí, generalmente entre \(10\) km y \(100\) km.
+          \item Las frecuencias más altas permiten utilizar antenas más pequeñas y más baratas, por lo que son adecuadas para distancias más cortas.
+          \item Las microondas también pueden utilizarse en comunicaciones vía satélite, permitiendo establecer enlaces entre estaciones terrestres alejadas.
+        \end{itemize}
+
+        \textbf{Desventajas:}
+        \begin{itemize}
+          \item La atenuación aumenta con la lluvia, siendo especialmente significativa para frecuencias superiores a \(10\) GHz.
+          \item Debido a la creciente popularidad de las microondas, las áreas de cobertura pueden solaparse, haciendo que las interferencias sean un peligro potencial.
+          \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
+          \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
+        \end{itemize}
   \item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
-  La difusión directa por satélite (DBS, Direct Broadcast Satellite) es una tecnología de distribución de televisión en la que la señal de vídeo se transmite directamente desde el satélite hasta los domicilios de los usuarios finales.
+        La difusión directa por satélite (DBS, Direct Broadcast Satellite) es una tecnología de distribución de televisión en la que la señal de vídeo se transmite directamente desde el satélite hasta los domicilios de los usuarios finales.
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
         Debe usar frecuencias distintas porque, en una transmisión continua y sin interferencias, el satélite no puede transmitir y recibir en el mismo rango de frecuencias. Se produciría una interferencia entre la señal entrante y la saliente.
@@ -159,48 +159,47 @@
         Diferencias principales: la difusión de microondas es parabólica, es decir direccional, mientras que las ondas de radio son omnidireccionales; como consecuencia de lo anterior, la difusión por microondas requiere de antenas parabólicas bien direccionadas, en cambio las ondas de radio no; como otra diferencia clave está el hecho de que la difusión por microondas es útil para los enlaces punto a punto (antena a antena), en cambio en el caso de la difusión por ondas de radio el uso práctico son los enlaces de un emisor a muchos receptores; también podemos decir que los fenómenos físicos que afectan estas comunicaciones van a ser distintos, por ejemplo las ondas de radio son menos sensibles a la atenuación causada por lluvia que las microondas pero en contrapartida se ven más afectadas por multitrayectorias.
   \item
         \textbf{¿Qué dos funciones realiza una antena?}
-        
-       Una antena cumple dos funciones principales según si está transmitiendo o recibiendo la señal:
 
-\begin{itemize}
-    \item \textbf{En emisión:} Recibe la corriente eléctrica del equipo emisor y la transforma en ondas electromagnéticas que se propagan por el aire.
-    \item \textbf{En recepción:} Captura las ondas electromagnéticas que viajan por el aire y las transforma nuevamente en una corriente eléctrica para que el equipo receptor pueda procesarla.
-\end{itemize}
+        Una antena cumple dos funciones principales según si está transmitiendo o recibiendo la señal:
+
+        \begin{itemize}
+          \item \textbf{En emisión:} Recibe la corriente eléctrica del equipo emisor y la transforma en ondas electromagnéticas que se propagan por el aire.
+          \item \textbf{En recepción:} Captura las ondas electromagnéticas que viajan por el aire y las transforma nuevamente en una corriente eléctrica para que el equipo receptor pueda procesarla.
+        \end{itemize}
   \item
-      \textbf{¿Qué es una antena isotrópica?}
+        \textbf{¿Qué es una antena isotrópica?}
 
-      Una antena isotrópica es un punto en el espacio que radia potencia de igual forma en todas las direcciones. Su diagrama de radiación consiste en una esfera centrada en la posición de la antena isotrópica.
+        Una antena isotrópica es un punto en el espacio que radia potencia de igual forma en todas las direcciones. Su diagrama de radiación consiste en una esfera centrada en la posición de la antena isotrópica.
   \item
   \item \textbf{¿Qué factores determinan la ganancia de una antena?} \\
-  Los factores físicos y matemáticos que determinan la ganancia de una antena son principalmente el área efectiva y la frecuencia de operación (o longitud de onda).
+        Los factores físicos y matemáticos que determinan la ganancia de una antena son principalmente el área efectiva y la frecuencia de operación (o longitud de onda).
 
-\begin{itemize}
-    \item \textbf{Área efectiva $(A_e)$:} está relacionada con el tamaño físico, la geometría y la eficiencia de la antena. En una antena parabólica, un mayor diámetro permite obtener una mayor directividad y, en consecuencia, una mayor ganancia. El área efectiva se puede expresar como:
-    
-    \[
-    A_e = \eta_a A
-    \]
-    
-    donde $\eta_a$ es la eficiencia de apertura.
+        \begin{itemize}
+          \item \textbf{Área efectiva $(A_e)$:} está relacionada con el tamaño físico, la geometría y la eficiencia de la antena. En una antena parabólica, un mayor diámetro permite obtener una mayor directividad y, en consecuencia, una mayor ganancia. El área efectiva se puede expresar como:
 
-    \item \textbf{Frecuencia de operación $(f)$ o longitud de onda $(\lambda)$:} para un área efectiva constante, la ganancia es inversamente proporcional al cuadrado de la longitud de onda y directamente proporcional al cuadrado de la frecuencia. Por lo tanto, para una misma antena física, una mayor frecuencia de operación generalmente permite obtener una mayor ganancia.
-\end{itemize}
+                \[
+                  A_e = \eta_a A
+                \]
 
-La relación fundamental es:
+                donde $\eta_a$ es la eficiencia de apertura.
 
-\[
-\boxed{
-G = \frac{4\pi A_e}{\lambda^2}
-= \frac{4\pi f^2 A_e}{c^2}
-}
-\]
+          \item \textbf{Frecuencia de operación $(f)$ o longitud de onda $(\lambda)$:} para un área efectiva constante, la ganancia es inversamente proporcional al cuadrado de la longitud de onda y directamente proporcional al cuadrado de la frecuencia. Por lo tanto, para una misma antena física, una mayor frecuencia de operación generalmente permite obtener una mayor ganancia.
+        \end{itemize}
 
-donde $c$ es la velocidad de propagación de las ondas electromagnéticas en el vacío, aproximadamente:
+        La relación fundamental es:
 
-\[
-c \approx 3 \times 10^8 \, \text{m/s}
-\]
-  \item
+        \[
+          \boxed{
+            G = \frac{4\pi A_e}{\lambda^2}
+            = \frac{4\pi f^2 A_e}{c^2}
+          }
+        \]
+
+        donde $c$ es la velocidad de propagación de las ondas electromagnéticas en el vacío, aproximadamente:
+
+        \[
+          c \approx 3 \times 10^8 \, \text{m/s}
+        \]
   \item
         \textbf{¿Cuál es la principal causa de la pérdida de señal en comunicaciones vía satélite?} \\
         La principal causa de pérdida de señal en las comunicaciones vía satélite es la pérdida en el espacio libre, producida por la dispersión de la señal debido a la gran distancia entre las antenas.
