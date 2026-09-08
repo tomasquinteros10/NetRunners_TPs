@@ -224,7 +224,7 @@
     \end{enumerate}
   \item
     \begin{enumerate}
-      \item
+      \item El problema central es que sin TCP los datos son enviados "al vacío", ya que IP resuelve el problema de enrutar paquetes entre redes distintas (cosa que Ethernet no puede hacer) pero no asegura que la información llegue; entonces TCP es un protocolo que garantiza confiabilidad (que los paquetes lleguen), ordenamiento (que lleguen en orden) y además utiliza puertos para conexión orientada, es decir identifica qué aplicación solicitó la información; como punto extra, TCP también regula el ritmo de envío para que el emisor no sature al receptor (que puede ser más lento procesando) ni sature la red en el camino.
       \item
       \item
       \item
