@@ -225,7 +225,41 @@
   \item
     \begin{enumerate}
       \item El problema central es que sin TCP los datos son enviados "al vacío", ya que IP resuelve el problema de enrutar paquetes entre redes distintas (cosa que Ethernet no puede hacer) pero no asegura que la información llegue; entonces TCP es un protocolo que garantiza confiabilidad (que los paquetes lleguen), ordenamiento (que lleguen en orden) y además utiliza puertos para conexión orientada, es decir identifica qué aplicación solicitó la información; como punto extra, TCP también regula el ritmo de envío para que el emisor no sature al receptor (que puede ser más lento procesando) ni sature la red en el camino.
-      \item
+      \item \textbf{Investigar los campos más importantes de la metadata en un frame TCP. ¿Para qué sirve cada uno?}
+
+TCP utiliza un único tipo de unidad de datos de protocolo, llamado \textbf{segmento TCP}. La cabecera contiene distintos campos que permiten llevar a cabo los mecanismos del protocolo. Los campos más importantes son:
+
+\begin{itemize}
+    \item \textbf{Puerto origen (16 bits):} identifica al usuario TCP origen.
+
+    \item \textbf{Puerto destino (16 bits):} identifica al usuario TCP destino.
+
+    \item \textbf{Número de secuencia (32 bits):} indica el número de secuencia del primer octeto de datos del segmento.
+
+    \item \textbf{Número de confirmación (32 bits):} contiene el número de secuencia del siguiente octeto que la entidad TCP espera recibir.
+
+    \item \textbf{Longitud de la cabecera (4 bits):} indica el número de palabras de 32 bits de la cabecera.
+
+    \item \textbf{Reservado (6 bits):} son bits reservados para uso futuro.
+
+    \item \textbf{Indicadores (6 bits):} permiten realizar distintas funciones de TCP:
+    \begin{itemize}
+        \item \texttt{URG}: el campo de puntero urgente es válido.
+        \item \texttt{ACK}: el campo de confirmación es válido.
+        \item \texttt{PSH}: función de forzado.
+        \item \texttt{RST}: reinicia la conexión.
+        \item \texttt{SYN}: sincroniza los números de secuencia.
+        \item \texttt{FIN}: indica que el emisor no enviará más datos.
+    \end{itemize}
+
+    \item \textbf{Ventana (16 bits):} se utiliza para el control de flujo, en octetos. Contiene el número de octetos de datos, comenzando con el número de secuencia indicado en el campo de confirmación, que el emisor está dispuesto a aceptar.
+
+    \item \textbf{Suma de comprobación (16 bits):} permite comprobar el segmento mediante un cálculo realizado sobre las palabras de 16 bits del segmento y una pseudocabecera.
+
+    \item \textbf{Puntero urgente (16 bits):} cuando se suma al número de secuencia del segmento, contiene el número de secuencia del último octeto de la secuencia de datos urgentes. Esto permite al receptor conocer la cantidad de datos urgentes que llegan.
+
+    \item \textbf{Opciones (variable):} permite incluir información adicional. Un ejemplo es la opción que especifica la longitud máxima de segmento que será aceptada.
+\end{itemize}
       \item
       \item
       \item
