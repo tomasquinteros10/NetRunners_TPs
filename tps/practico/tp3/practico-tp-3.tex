@@ -132,10 +132,26 @@
      \begin{enumerate}[label=\alph*)]
         \item 
         \item 
+        \item\textbf{Explicar el Three y Four way handshake en TCP.Three-Way Handshake (Establecimiento de conexión)} \\
+Es el proceso de 3 pasos utilizado por TCP para establecer una conexión confiable entre cliente y servidor antes de transmitir datos:[SYN] (Sincronización): El cliente envía un paquete con el flag SYN activo para solicitar el inicio de la sesión e indicar su número de secuencia inicial ($Seq = x$).[SYN, ACK] (Sincronización y Confirmación): El servidor responde aceptando la solicitud, activando SYN para proponer su propio número de secuencia ($Seq = y$) y ACK para confirmar el del cliente ($Ack = x + 1$).[ACK] (Confirmación): El cliente responde con un flag ACK para confirmar el número de secuencia del servidor ($Ack = y + 1$). A partir de este momento, la conexión queda en estado ESTABLISHED. Four-Way Handshake (Cierre de conexión): Es la secuencia de 4 pasos para finalizar una sesión de forma ordenada y bidireccional:[FIN, ACK]: El cliente envía una solicitud de cierre indicando que no transmitirá más datos.[ACK]: El servidor responde confirmando la recepción de la solicitud de cierre.[FIN, ACK]: Cuando el servidor termina sus tareas, envía su propia solicitud de cierre al cliente.[ACK]: El cliente confirma la recepción del cierre del servidor, finalizando por completo la conexión.
+        \begin{center}
+            \includegraphics[width=0.6\linewidth,height=0.25\textheight,keepaspectratio]{punto_3_c.jpeg}
+        \end{center}
+Análisis de la captura de Packet Sender (Servidor y Cliente TCP Local). Configuración del Servidor TCP: Se observa el botón TCP:43131 indicando que la instancia de Packet Sender se encuentra escuchando tráfico en el puerto local 43131.
+Configuración del Cliente TCP: Se definió la dirección de destino 127.0.0.1 (interfaz Loopback/localhost), el puerto 43131, el protocolo TCP y la carga útil en ASCII "hola" (representada en hexadecimal como 68 6f 6c 61).
+        \item \leavevmode
+        \begin{center}
+            \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{punto_3_d.jpeg}
+        \end{center}
+        Análisis de la captura del Handshake e inspección del Payload (Paquete PSH, ACK)(Incluir aquí la captura de pantalla de Wireshark con el filtro tcp.port == 43131)Identificación de fases en Wireshark:Paso 1 (Handshake): Se observan los primeros tres paquetes intercambiados ([SYN], [SYN, ACK] y [ACK]) entre la dirección local 127.0.0.1 y el puerto asignado.Paso 2 (Payload): El paquete subsiguiente corresponde a la transmisión de datos y contiene los flags [PSH, ACK]. El flag PSH (Push) le indica a la pila de red que entregue los datos inmediatamente a la aplicación sin esperar a que el búfer se llene.Inspección del mensaje enviado: Al seleccionar el paquete [PSH, ACK] e inspeccionar la sección inferior (Data / Hex Bytes), se visualizan exactamente los bytes 68 6f 6c 61 en hexadecimal, los cuales corresponden a la cadena de caracteres ASCII "hola" configurada en Packet Sender
+        \item \leavevmode
+        \begin{center}
+            \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{punto_3_e_2.jpeg}
+        \end{center}
+        Al apagar el servidor o finalizar la sesión desde Packet Sender, se capturan en Wireshark los paquetes de terminación TCP. Se observan los flags [FIN, ACK] enviados para indicar el fin de la transmisión y sus correspondientes respuestas de confirmación [ACK], liberando formalmente los recursos de los sockets locales asignados a la comunicación.
         \item 
-        \item 
-        \item 
-        \item 
+        Luego de analizar la captura del paquete de datos (PSH, ACK), se evidencia que el contenido enviado ("hola") es completamente visible en el panel hexadecimal de Wireshark sin requerir ningún proceso de descifrado.
+Esto demuestra que el protocolo TCP en la capa de transporte garantiza la entrega ordenada y confiable de los segmentos, pero no proporciona asi ningún servicio de confidencialidad ni cifrado de la información. Ante esto un atacante en la misma red local que capture el tráfico puede leer íntegramente la información transmitida. Por esto, para mitigar esta vulnerabilidad, es fundamental implementar protocolos de seguridad sobre TCP en la capa de aplicación, tales como TLS/SSL (ejemplos: HTTPS o SSH).
     \end{enumerate}
     \item 
 \end{enumerate}
