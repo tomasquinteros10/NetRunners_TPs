@@ -18,6 +18,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
 
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
@@ -268,10 +269,16 @@ Es el proceso de 3 pasos utilizado por TCP para establecer una conexión confiab
 Análisis de la captura de Packet Sender (Servidor y Cliente TCP Local). Configuración del Servidor TCP: Se observa el botón TCP:43131 indicando que la instancia de Packet Sender se encuentra escuchando tráfico en el puerto local 43131.
 Configuración del Cliente TCP: Se definió la dirección de destino 127.0.0.1 (interfaz Loopback/localhost), el puerto 43131, el protocolo TCP y la carga útil en ASCII "hola" (representada en hexadecimal como 68 6f 6c 61).
         \item \leavevmode
+        Análisis de la captura del Handshake e inspección del Payload (Paquete PSH, ACK)
         \begin{center}
             \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{punto_3_d.jpeg}
         \end{center}
-        Análisis de la captura del Handshake e inspección del Payload (Paquete PSH, ACK)(Incluir aquí la captura de pantalla de Wireshark con el filtro tcp.port == 43131)Identificación de fases en Wireshark:Paso 1 (Handshake): Se observan los primeros tres paquetes intercambiados ([SYN], [SYN, ACK] y [ACK]) entre la dirección local 127.0.0.1 y el puerto asignado.Paso 2 (Payload): El paquete subsiguiente corresponde a la transmisión de datos y contiene los flags [PSH, ACK]. El flag PSH (Push) le indica a la pila de red que entregue los datos inmediatamente a la aplicación sin esperar a que el búfer se llene.Inspección del mensaje enviado: Al seleccionar el paquete [PSH, ACK] e inspeccionar la sección inferior (Data / Hex Bytes), se visualizan exactamente los bytes 68 6f 6c 61 en hexadecimal, los cuales corresponden a la cadena de caracteres ASCII "hola" configurada en Packet Sender
+        Identificación de fases en Wireshark:
+        \begin{enumerate}
+            \item Paso 1 (Handshake): Se observan los primeros tres paquetes intercambiados ([SYN], [SYN, ACK] y [ACK]) entre la dirección local 127.0.0.1 y el puerto asignado.
+            \item Paso 2 (Payload): El paquete subsiguiente corresponde a la transmisión de datos y contiene los flags [PSH, ACK]. El flag PSH (Push) le indica a la pila de red que entregue los datos inmediatamente a la aplicación sin esperar a que el búfer se llene.
+        \end{enumerate}
+        Inspección del mensaje enviado: Al seleccionar el paquete [PSH, ACK] e inspeccionar la sección inferior (Data / Hex Bytes), se visualizan exactamente los bytes 68 6f 6c 61 en hexadecimal, los cuales corresponden a la cadena de caracteres ASCII "hola" configurada en Packet Sender
         \item \leavevmode
         \begin{center}
             \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{punto_3_e_2.jpeg}
@@ -282,9 +289,17 @@ Configuración del Cliente TCP: Se definió la dirección de destino 127.0.0.1 (
 Esto demuestra que el protocolo TCP en la capa de transporte garantiza la entrega ordenada y confiable de los segmentos, pero no proporciona asi ningún servicio de confidencialidad ni cifrado de la información. Ante esto un atacante en la misma red local que capture el tráfico puede leer íntegramente la información transmitida. Por esto, para mitigar esta vulnerabilidad, es fundamental implementar protocolos de seguridad sobre TCP en la capa de aplicación, tales como TLS/SSL (ejemplos: HTTPS o SSH).
     \end{enumerate}
   \item
-\end{enumerate}
+    Al ejecutar los pasos y enviar el nombre del grupo netrunners se obtiene la siguiente respuesta:
 
-\section{Conclusiones}
-Escribir las conclusiones del grupo.
+    seq: 19, payload: v=
+
+    \begin{center}
+      \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_packett.png}
+    \end{center}
+
+    \begin{center}
+      \href{https://www.youtube.com/watch?v=BsWk1eMl4EU}{\includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_todos_amamos_su_glorioso_regimen.png}}
+    \end{center}
+\end{enumerate}
 
 \end{document}
