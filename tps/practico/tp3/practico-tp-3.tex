@@ -4,6 +4,7 @@
 % Paquetes: todos forman parte de una instalacion estandar de LaTeX.
 % -----------------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
 \usepackage{enumitem}
 \usepackage[T1]{fontenc}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
@@ -18,6 +19,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
 
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
@@ -110,40 +112,177 @@
   \end{center}
 \end{titlepage}
 
-\section*{Consignas}
+\section{Desarrollo}
+\begin{enumerate}
+  \item
+    \begin{enumerate}
+      \item Esta capa es la encargada de:
+        \begin{itemize}
+          \item sincronizar la conexión (activar, mantener, desactivar);
+          \item al igual que otras capas, separa los datos a conveniencia, en este
+            caso en unidades llamadas tramas;
+          \item detecta y controla errores en tramas recibidas;
+          \item ordena el flujo de la comunicación.
+        \end{itemize}
 
-\begin{enumerate}[label=\arabic*), itemsep=0.3cm]
+        \vspace{\baselineskip}
 
-    \item 
-    \begin{enumerate}[label=\alph*)]
-        \item 
-        \item 
-        \item 
-        \item 
+        Resuelve la comunicación entre dos dispositivos conectados a un mismo
+        enlace: una PC y un switch, dos PCs, un switch y otro, etc.
+      \item La MAC es la dirección de un dispositivo físico conectado a una LAN.
+        Está definida desde fábrica por registro en un chip del dispositivo. Con
+        esta dirección, el dispositivo se presenta en una red LAN para ser
+        localizado o identificado.
+
+        \vspace{\baselineskip}
+
+        La principal diferencia se establece en el uso y alcance de cada una:
+        la MAC sirve para direccionar tramas en una red local, mientras que la
+        dirección IP direcciona paquetes entre distintas redes. Al enviar un
+        paquete, la MAC se asegura de que llegue al próximo dispositivo local dentro
+        de mi red; una vez allí, la trama MAC se desarma y se vuelve a armar para el
+        siguiente salto hacia el próximo dispositivo de la red. Pero, para definir
+        cuál es el próximo dispositivo, se utiliza la IP, ya que mediante ella se
+        conoce a qué dirección debe llegar el mensaje y viaja en todo el recorrido,
+        independientemente de cuántos saltos en dispositivos intermedios se
+        produzcan.
+      \item Es la unidad de datos transmitida en una red Ethernet. Pertenece a la
+        sub-capa MAC en la capa de Enlaces de Datos.
+
+        Está conformada por:
+        \begin{itemize}
+          \item Preámbulo: Se utiliza para sincronizar el emisor con el receptor,
+            son 7 octetos de ceros y unos alternados.
+          \item SFD (Start frame delimiter): consiste en una secuencia de bits
+            específica (10101011) que sirve como marca para detectar el inicio de
+            la trama.
+          \item Dirección de destino: Es la dirección MAC de destino del mensaje.
+          \item Dirección de origen: es la dirección MAC de quien envió el mensaje.
+          \item Longitud/Tipo: Son dos octetos que, según su valor, pueden
+            determinar el tamaño de los datos en la trama (hasta un máximo de 1518
+            octetos, sin contar el preámbulo y el SFD). Si el valor es 1536 o mayor
+            determina el tipo de Ethernet (ej. IPv4, ARP, etc).
+          \item Datos LLC: Unidad de datos proporcionada por el LLC. Si la trama
+            tiene longitud entonces se agrega una cabecera al inicio de los datos
+            donde se determina el protocolo de LLC con el que vienen esos datos.
+          \item Relleno: octetos que se agregan para asegurar que la trama sea lo
+            suficientemente extensa.
+          \item FCS (Frame Check Sequence), secuencia de comprobación de trama: Es
+            una comprobación de redundancia cíclica de 32 bits, se calcula teniendo
+            en cuenta todos los datos excepto el preámbulo, el SFD y el FCS.
+        \end{itemize}
+      \item El campo Longitud/Tipo permite identificar el protocolo superior cuando
+        se utiliza como tipo segun la especificacion primitiva de Ethernet, si la
+        trama respeta el protocolo especificado por IEEE 802.3, ese campo viene con
+        la longitud y la forma de identificarlo es mediante los primero datos donde
+        LLC incluye el protocolo utilizado.
     \end{enumerate}
-    \item 
-     \begin{enumerate}[label=\alph*)]
-        \item 
-        \item 
-        \item 
-        \item 
+  \item
+    \begin{enumerate}
+      \item En la trama Ethernet se encuentran las siguientes direcciones MAC:
+        \begin{itemize}
+          \item Source: \texttt{64:fd:96:c7:0b:77}
+          \item Destination: \texttt{74:c6:3b:2d:48:0f}
+        \end{itemize}
+
+        Mediante \texttt{ip link show}, se reconoce que
+        \texttt{74:c6:3b:2d:48:0f} es el identificador de la placa Wi-Fi de la
+        PC. Haciendo una validación de las redes inalámbricas con
+        \texttt{nmcli -f ACTIVE,SSID,BSSID dev wifi list}, se reconoce
+        \texttt{64:fd:96:c7:0b:77} como el identificador del punto de acceso
+        Wi-Fi.
+      \item Las direcciones que se ven son:
+        \begin{itemize}
+          \item Source: \texttt{140.82.114.26}
+          \item Destination: \texttt{192.168.1.6}
+        \end{itemize}
+      \item No representan lo mismo, las MAC son las direcciones en mi red local,
+        indican que el destino de la trama es mi PC y el origen el router, este es
+        el último trayecto de la trama hasta mi PC, pero cuando la trama llegó al
+        router el destino era su MAC y el origen el punto de conexión del proveedor.
+        Cuando se hizo la petición de los datos a la IP destino desde mi máquina,
+        la trama llegó al router con mi MAC, mi IP privada como origen y el puerto
+        desde el que se hace la petición. Además, llevaba como destino la MAC del
+        router, la IP de la página donde se hizo la petición. El router destruye la
+        trama MAC y la rearma con su MAC de origen y la del punto de acceso del
+        proveedor como destino, pero también guarda la IP privada y el puerto desde
+        donde se solicitó. Luego modifica la IP de origen de la solicitud por la IP
+        pública y el puerto antes de enviar la trama al punto de acceso. Cuando llega
+        una respuesta esta llegará con la IP pública como destino, el puerto que el
+        router le asignó, la MAC del router como destino y del punto de acceso del
+        proveedor como origen, allí el router recupera quién en la red interna había
+        iniciado esa solicitud con el puerto que llega en la trama, encontrando la
+        IP privada a donde va la información. Con esto rearma la trama
+        MAC poniéndose como origen y el destino mi PC, pero además cambia la IP
+        destino por mi IP privada y el puerto original desde el que se hizo la
+        solicitud.
+
+        Las MACs se utilizan para identificar 2 dispositivos a nivel físico en una
+        red que ambos dispositivos comparten una conexión. La IP identifica origen
+        y destino final de las tramas. Y salvo el cambio que hace el router de la
+        IP privada por la pública, se mantiene desde que sale del origen hasta que
+        llega al destino.
+      \item IPv4
     \end{enumerate}
-    \item 
-     \begin{enumerate}[label=\alph*)]
-        \item 
-        \item 
-        \item\textbf{Explicar el Three y Four way handshake en TCP.Three-Way Handshake (Establecimiento de conexión)} \\
+  \item
+    \begin{enumerate}
+      \item El problema central es que sin TCP los datos son enviados ``al vacío'', ya que IP resuelve el problema de enrutar paquetes entre redes distintas (cosa que Ethernet no puede hacer) pero no asegura que la información llegue; entonces TCP es un protocolo que garantiza confiabilidad (que los paquetes lleguen), ordenamiento (que lleguen en orden) y además utiliza puertos para conexión orientada, es decir identifica qué aplicación solicitó la información; como punto extra, TCP también regula el ritmo de envío para que el emisor no sature al receptor (que puede ser más lento procesando) ni sature la red en el camino.
+      \item \textbf{Investigar los campos más importantes de la metadata en un frame TCP. ¿Para qué sirve cada uno?}
+
+TCP utiliza un único tipo de unidad de datos de protocolo, llamado \textbf{segmento TCP}. La cabecera contiene distintos campos que permiten llevar a cabo los mecanismos del protocolo. Los campos más importantes son:
+
+\begin{itemize}
+    \item \textbf{Puerto origen (16 bits):} identifica al usuario TCP origen.
+
+    \item \textbf{Puerto destino (16 bits):} identifica al usuario TCP destino.
+
+    \item \textbf{Número de secuencia (32 bits):} indica el número de secuencia del primer octeto de datos del segmento.
+
+    \item \textbf{Número de confirmación (32 bits):} contiene el número de secuencia del siguiente octeto que la entidad TCP espera recibir.
+
+    \item \textbf{Longitud de la cabecera (4 bits):} indica el número de palabras de 32 bits de la cabecera.
+
+    \item \textbf{Reservado (6 bits):} son bits reservados para uso futuro.
+
+    \item \textbf{Indicadores (6 bits):} permiten realizar distintas funciones de TCP:
+    \begin{itemize}
+        \item \texttt{URG}: el campo de puntero urgente es válido.
+        \item \texttt{ACK}: el campo de confirmación es válido.
+        \item \texttt{PSH}: función de forzado.
+        \item \texttt{RST}: reinicia la conexión.
+        \item \texttt{SYN}: sincroniza los números de secuencia.
+        \item \texttt{FIN}: indica que el emisor no enviará más datos.
+    \end{itemize}
+
+    \item \textbf{Ventana (16 bits):} se utiliza para el control de flujo, en octetos. Contiene el número de octetos de datos, comenzando con el número de secuencia indicado en el campo de confirmación, que el emisor está dispuesto a aceptar.
+
+    \item \textbf{Suma de comprobación (16 bits):} permite comprobar el segmento mediante un cálculo realizado sobre las palabras de 16 bits del segmento y una pseudocabecera.
+
+    \item \textbf{Puntero urgente (16 bits):} cuando se suma al número de secuencia del segmento, contiene el número de secuencia del último octeto de la secuencia de datos urgentes. Esto permite al receptor conocer la cantidad de datos urgentes que llegan.
+
+    \item \textbf{Opciones (variable):} permite incluir información adicional. Un ejemplo es la opción que especifica la longitud máxima de segmento que será aceptada.
+\end{itemize}
+      \item \textbf{Explicar el Three y Four way handshake en TCP.Three-Way Handshake (Establecimiento de conexión)} \\
 Es el proceso de 3 pasos utilizado por TCP para establecer una conexión confiable entre cliente y servidor antes de transmitir datos:[SYN] (Sincronización): El cliente envía un paquete con el flag SYN activo para solicitar el inicio de la sesión e indicar su número de secuencia inicial ($Seq = x$).[SYN, ACK] (Sincronización y Confirmación): El servidor responde aceptando la solicitud, activando SYN para proponer su propio número de secuencia ($Seq = y$) y ACK para confirmar el del cliente ($Ack = x + 1$).[ACK] (Confirmación): El cliente responde con un flag ACK para confirmar el número de secuencia del servidor ($Ack = y + 1$). A partir de este momento, la conexión queda en estado ESTABLISHED. Four-Way Handshake (Cierre de conexión): Es la secuencia de 4 pasos para finalizar una sesión de forma ordenada y bidireccional:[FIN, ACK]: El cliente envía una solicitud de cierre indicando que no transmitirá más datos.[ACK]: El servidor responde confirmando la recepción de la solicitud de cierre.[FIN, ACK]: Cuando el servidor termina sus tareas, envía su propia solicitud de cierre al cliente.[ACK]: El cliente confirma la recepción del cierre del servidor, finalizando por completo la conexión.
+
+\vspace{\baselineskip}
+Análisis de la captura de Packet Sender (Servidor y Cliente TCP Local).
         \begin{center}
             \includegraphics[width=0.6\linewidth,height=0.25\textheight,keepaspectratio]{punto_3_c.jpeg}
         \end{center}
-Análisis de la captura de Packet Sender (Servidor y Cliente TCP Local). Configuración del Servidor TCP: Se observa el botón TCP:43131 indicando que la instancia de Packet Sender se encuentra escuchando tráfico en el puerto local 43131.
+Configuración del Servidor TCP: Se observa el botón TCP:43131 indicando que la instancia de Packet Sender se encuentra escuchando tráfico en el puerto local 43131.
 Configuración del Cliente TCP: Se definió la dirección de destino 127.0.0.1 (interfaz Loopback/localhost), el puerto 43131, el protocolo TCP y la carga útil en ASCII "hola" (representada en hexadecimal como 68 6f 6c 61).
         \item \leavevmode
+        Análisis de la captura del Handshake e inspección del Payload (Paquete PSH, ACK)
         \begin{center}
             \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{punto_3_d.jpeg}
         \end{center}
-        Análisis de la captura del Handshake e inspección del Payload (Paquete PSH, ACK)(Incluir aquí la captura de pantalla de Wireshark con el filtro tcp.port == 43131)Identificación de fases en Wireshark:Paso 1 (Handshake): Se observan los primeros tres paquetes intercambiados ([SYN], [SYN, ACK] y [ACK]) entre la dirección local 127.0.0.1 y el puerto asignado.Paso 2 (Payload): El paquete subsiguiente corresponde a la transmisión de datos y contiene los flags [PSH, ACK]. El flag PSH (Push) le indica a la pila de red que entregue los datos inmediatamente a la aplicación sin esperar a que el búfer se llene.Inspección del mensaje enviado: Al seleccionar el paquete [PSH, ACK] e inspeccionar la sección inferior (Data / Hex Bytes), se visualizan exactamente los bytes 68 6f 6c 61 en hexadecimal, los cuales corresponden a la cadena de caracteres ASCII "hola" configurada en Packet Sender
+        Identificación de fases en Wireshark:
+        \begin{enumerate}
+            \item Paso 1 (Handshake): Se observan los primeros tres paquetes intercambiados ([SYN], [SYN, ACK] y [ACK]) entre la dirección local 127.0.0.1 y el puerto asignado.
+            \item Paso 2 (Payload): El paquete subsiguiente corresponde a la transmisión de datos y contiene los flags [PSH, ACK]. El flag PSH (Push) le indica a la pila de red que entregue los datos inmediatamente a la aplicación sin esperar a que el búfer se llene.
+        \end{enumerate}
+        Inspección del mensaje enviado: Al seleccionar el paquete [PSH, ACK] e inspeccionar la sección inferior (Data / Hex Bytes), se visualizan exactamente los bytes 68 6f 6c 61 en hexadecimal, los cuales corresponden a la cadena de caracteres ASCII "hola" configurada en Packet Sender
         \item \leavevmode
         \begin{center}
             \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{punto_3_e_2.jpeg}
@@ -153,6 +292,28 @@ Configuración del Cliente TCP: Se definió la dirección de destino 127.0.0.1 (
         Luego de analizar la captura del paquete de datos (PSH, ACK), se evidencia que el contenido enviado ("hola") es completamente visible en el panel hexadecimal de Wireshark sin requerir ningún proceso de descifrado.
 Esto demuestra que el protocolo TCP en la capa de transporte garantiza la entrega ordenada y confiable de los segmentos, pero no proporciona asi ningún servicio de confidencialidad ni cifrado de la información. Ante esto un atacante en la misma red local que capture el tráfico puede leer íntegramente la información transmitida. Por esto, para mitigar esta vulnerabilidad, es fundamental implementar protocolos de seguridad sobre TCP en la capa de aplicación, tales como TLS/SSL (ejemplos: HTTPS o SSH).
     \end{enumerate}
-    \item 
+  \item
+    Se establece la conexión y se la mantiene persistente, enviando comandos y se ve en Wireshark los paquetes.
+
+    Se identifica cómo cambia la conexión cuando se envía solo un paquete a cuando se mantiene persistente. En el primer caso se ven el Three-Way Handshake para iniciar la conexión y el Four-Way Handshake para terminarla ni bien se recibe la respuesta. Al dejarla persistente los saludos se envían solo una vez al iniciar y cuando se cierra la interfaz de PacketSender de la conexión persistente, permitiendo enviar comandos sin necesidad de iniciar y terminar la conexión en cada envío.
+
+    \begin{center}
+      \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_wireshark_punto4.png}
+    \end{center}
+
+    En PacketSender vemos los comandos que se envían y la respuesta del server.
+
+    Al ejecutar los pasos y enviar el nombre del grupo netrunners se obtiene la siguiente respuesta:
+
+    \textbf{seq: 19, payload: v=}
+
+    \begin{center}
+      \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_packett.png}
+    \end{center}
+
+    \begin{center}
+      \href{https://www.youtube.com/watch?v=BsWk1eMl4EU}{\includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_todos_amamos_su_glorioso_regimen.png}}
+    \end{center}
 \end{enumerate}
+
 \end{document}
