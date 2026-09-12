@@ -293,9 +293,19 @@ Configuración del Cliente TCP: Se definió la dirección de destino 127.0.0.1 (
 Esto demuestra que el protocolo TCP en la capa de transporte garantiza la entrega ordenada y confiable de los segmentos, pero no proporciona asi ningún servicio de confidencialidad ni cifrado de la información. Ante esto un atacante en la misma red local que capture el tráfico puede leer íntegramente la información transmitida. Por esto, para mitigar esta vulnerabilidad, es fundamental implementar protocolos de seguridad sobre TCP en la capa de aplicación, tales como TLS/SSL (ejemplos: HTTPS o SSH).
     \end{enumerate}
   \item
+    Se establece la conexión y se la mantiene persistente, enviando comandos y se ve en Wireshark los paquetes.
+
+    Se identifica cómo cambia la conexión cuando se envía solo un paquete a cuando se mantiene persistente. En el primer caso se ven el Three-Way Handshake para iniciar la conexión y el Four-Way Handshake para terminarla ni bien se recibe la respuesta. Al dejarla persistente los saludos se envían solo una vez al iniciar y cuando se cierra la interfaz de PacketSender de la conexión persistente, permitiendo enviar comandos sin necesidad de iniciar y terminar la conexión en cada envío.
+
+    \begin{center}
+      \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_wireshark_punto4.png}
+    \end{center}
+
+    En PacketSender vemos los comandos que se envían y la respuesta del server.
+
     Al ejecutar los pasos y enviar el nombre del grupo netrunners se obtiene la siguiente respuesta:
 
-    seq: 19, payload: v=
+    \textbf{seq: 19, payload: v=}
 
     \begin{center}
       \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{captura_packett.png}
