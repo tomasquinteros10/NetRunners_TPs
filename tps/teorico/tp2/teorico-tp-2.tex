@@ -225,6 +225,61 @@
   \item
 
   \item
+        Para calcular, primero debemos conocer la potencia de salida.
+
+        \[
+          \text{Pérdida} = 10 \log_{10}\left(\frac{P_{\text{in}}}{P_{\text{out}}}\right)
+        \]
+
+        \[
+          \text{Pérdida} = 20; \quad P_{\text{in}} = 0,5\ \text{W}
+        \]
+
+        \[
+          20 = 10 \log_{10}\left(\frac{0,5\ \text{W}}{P_{\text{out}}}\right)
+        \]
+
+        \[
+          \frac{20}{10} = \log_{10}\left(\frac{0,5\ \text{W}}{P_{\text{out}}}\right)
+        \]
+
+        \[
+          10^{2} = \frac{0,5\ \text{W}}{P_{\text{out}}}
+        \]
+
+        \[
+          P_{\text{out}} = \frac{0,5\ \text{W}}{100} = 5\ \text{mW}
+        \]
+
+        Ahora podemos calcular SNR:
+
+        \[
+          \text{SNR} = 10 \log_{10}\left(\frac{P_{\text{señ}}}{P_{\text{rui}}}\right)
+        \]
+
+        \[
+          P_{\text{señ}} = P_{\text{out}} = 5\ \text{mW}; \quad P_{\text{rui}} = 4,5\ \mu\text{W}
+        \]
+
+        \[
+          \text{SNR} = 10 \log_{10}\left(\frac{5\ \text{mW}}{4,5\ \mu\text{W}}\right)
+        \]
+
+        \[
+          \text{SNR} = 10 \log_{10}(1111,11)
+        \]
+
+        \[
+          \text{SNR} = 10 \times 3,0457
+        \]
+
+        \[
+          \text{SNR} = 30,457
+        \]
+
+        \[
+          \boxed{\text{SNR} \approx 30\ \text{dB}}
+        \]
 
   \item
 
@@ -239,6 +294,54 @@
   \item
 
   \item
+
+        Debido a la relación:
+
+        \[
+          \frac{P_r}{P_t} = \frac{f^2 A_r A_t}{(cd)^2}
+        \]
+
+        Si duplicamos la frecuencia, entonces:
+
+        \[
+          \frac{P_r}{P_t} = \frac{(2f)^2 A_r A_t}{(cd)^2}
+        \]
+
+        \[
+          \frac{P_r}{P_t} = 4 \frac{f^2 A_r A_t}{(cd)^2}; \quad a = \frac{f^2 A_r A_t}{(cd)^2}
+        \]
+
+        \[
+          \frac{P_r}{P_t} = 4a
+        \]
+
+        \[
+          P_r = 4a P_t
+        \]
+
+        Lo que significa que cuadruplicamos la relación entre potencia recibida y potencia transmitida.
+
+        Por otro lado, si duplicamos el área efectiva de ambas antenas, tenemos que:
+
+        \[
+          \frac{P_r}{P_t} = \frac{f^2 \cdot 2A_r \cdot 2A_t}{(cd)^2}
+        \]
+
+        O sea:
+
+        \[
+          \frac{P_r}{P_t} = 4 \frac{f^2 A_r A_t}{(cd)^2}; \quad a = \frac{f^2 A_r A_t}{(cd)^2}
+        \]
+
+        \[
+          \frac{P_r}{P_t} = 4a
+        \]
+
+        \[
+          P_r = 4a P_t
+        \]
+
+        Esto demuestra que ambos escenarios llegan a un mismo resultado: una cuadruplicación de la potencia recibida.
 
   \item
 
