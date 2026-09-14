@@ -7,6 +7,7 @@
 \usepackage{enumitem}
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
@@ -345,7 +346,71 @@
         Debido al apantallamiento, por construcción, el cable coaxial es mucho menos susceptible que el par trenzado tanto a interferencias como a diafonía. La ventaja de conectar la malla exterior a tierra es que las corrientes inducidas por señales externas se derivan a tierra a través de la malla, reduciendo así el ruido y las interferencias que podrían afectar al conductor interno.
 
   \item
+\textbf{Demuestre que duplicando la frecuencia de transmisión o duplicando la distancia entre las antenas de transmisión y recepción, la potencia recibida se atenúa en 6 dB.} \\
+\section*{Demostración}
 
+La pérdida en el espacio libre $L_{dB}$ se define como:
+\begin{equation}
+    L_{dB} = 20 \log_{10}(f) + 20 \log_{10}(d) - 147,56 \quad [\text{dB}]
+ \end{equation}
+Donde $f$ es la frecuencia en Hz y $d$ es la distancia en metros.
+Alternativamente, analizando la razón de pérdida $L = \frac{P_t}{P_r}$ en escala lineal, tenemos:
+\begin{equation}
+    L = \left( \frac{4\pi d f}{c} \right)^2
+\end{equation}
+
+Expresando esta razón en decibelios ($\text{dB}$):
+\begin{equation}
+    L_{dB} = 10 \log_{10} \left( \frac{P_t}{P_r} \right) = 20 \log_{10} \left( \frac{4\pi d f}{c} \right)
+\end{equation}
+
+A continuación, evaluaremos independientemente cada una de las dos condiciones planteadas en el enunciado.
+
+\subsection*{Caso A: Duplicar la frecuencia ($f' = 2f$)}
+
+Supongamos que mantenemos la distancia $d$ constante y duplicamos la frecuencia de la portadora, de modo que $f' = 2f$. Calculamos la nueva atenuación $L'_{dB}$:
+
+\begin{align*}
+    L'_{dB} &= 20 \log_{10} \left( \frac{4\pi d (2f)}{c} \right) \\[0.5em]
+    &= 20 \log_{10} \left( 2 \cdot \frac{4\pi d f}{c} \right)
+\end{align*}
+
+Aplicando la propiedad de los logaritmos ($\log(a \cdot b) = \log(a) + \log(b)$):
+
+\begin{align*}
+    L'_{dB} &= 20 \log_{10}(2) + 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \\[0.5em]
+    &= 20 \log_{10}(2) + L_{dB}
+\end{align*}
+
+Sabiendo que $20 \log_{10}(2) \approx 20 \cdot 0,30103 = 6,02\text{ dB} \approx 6\text{ dB}$:
+
+\begin{equation}
+    L'_{dB} \approx L_{dB} + 6\text{ dB}
+\end{equation}
+
+\textbf{Conclusión A:} Al duplicar la frecuencia, la atenuación del medio aumenta en $6\text{ dB}$, lo que equivale a que la potencia recibida $P_r$ se reduce a la cuarta parte, es decir, una pérdida adicional de $6\text{ dB}$.
+
+\subsection*{Caso B: Duplicar la distancia ($d' = 2d$)}
+
+Supongamos ahora que mantenemos la frecuencia $f$ constante y duplicamos la distancia entre antenas, haciendo $d' = 2d$. La nueva atenuación $L''_{dB}$ resulta:
+
+\begin{align*}
+    L''_{dB} &= 20 \log_{10} \left( \frac{4\pi (2d) f}{c} \right) \\[0.5em]
+    &= 20 \log_{10} \left( 2 \cdot \frac{4\pi d f}{c} \right) \\[0.5em]
+    &= 20 \log_{10}(2) + 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \\[0.5em]
+    &= 20 \log_{10}(2) + L_{dB}
+\end{align*}
+
+De la misma manera:
+
+\begin{equation}
+    L''_{dB} \approx L_{dB} + 6\text{ dB}
+\end{equation}
+
+\textbf{Conclusión B:} Al duplicar la distancia entre el transmisor y el receptor, la atenuación también se incrementa en $6\text{ dB}$.
+
+\section*{Conclusión}
+Queda demostrado que tanto al duplicar la frecuencia de transmisión ($f$) como al duplicar la distancia de enlace ($d$), el término dependiente introduce un factor $20 \log_{10}(2) \approx 6\text{ dB}$ adicional a la pérdida de propagación en espacio libre, atenuando la potencia de la señal recibida en $6\text{ dB}$ en ambos casos. \quad $\blacksquare$
   \item
       Para calcular la longitud típica de la antena, primero se determina la longitud de onda ($\lambda$) de la señal electromagnética a $30\text{ Hz}$:
 
@@ -469,7 +534,83 @@
 
         Esto demuestra que ambos escenarios llegan a un mismo resultado: una cuadruplicación de la potencia recibida.
 
-  \item
+  \item \textbf{En la transmisión de radio en el espacio libre, la potencia de la señal se reduce proporcionalmente al cuadrado de la distancia recorrida desde la fuente, mientras que en una transmisión en un cable, la atenuación es una cantidad fija en dB por kilómetro. En la siguiente
+tabla se muestra, en dB, la reducción relativa a una referencia dada para la transmisión en
+el espacio libre y en un cable uniforme. Rellene las celdas que faltan para completar la
+tabla.}
+
+\section*{Deducción de Fórmulas}
+
+\subsection*{1. Transmisión por Radio (Espacio Libre)}
+En espacio libre, la atenuación varía con el cuadrado de la distancia ($d^2$). Expresado en escala logarítmica ($\text{dB}$), la atenuación es proporcional a $20 \log_{10}(d)$.
+
+Si se duplica la distancia ($d' = 2d$), el cambio en atenuación es:
+\[
+\Delta L_{\text{Radio}} = 20 \log_{10}(2) \approx 6,02 \text{ dB} \approx 6 \text{ dB}
+\]
+Esto significa que **cada vez que la distancia se duplica, la atenuación por radio aumenta en $6 \text{ dB}$ adicionales** (es decir, disminuye $6 \text{ dB}$ respecto a la referencia).
+
+\subsection*{2. Transmisión por Cable}
+En un cable, la atenuación es lineal respecto a la distancia ($a \cdot d$). Por lo tanto, en escala en $\text{dB}$, la atenuación es directamente proporcional a la longitud recorrida:
+\[
+L_{\text{Cable}}(d) = \alpha \cdot d
+\]
+Dado que para $d = 1\text{ km}$ la atenuación es de $-3\text{ dB}$, la tasa fija de atenuación es de $\alpha = -3\text{ dB/km}$.
+Esto implica que **cada vez que la distancia se duplica, la atenuación en $\text{dB}$ también se duplica**.
+
+\section*{Cálculo de Valores}
+
+\begin{itemize}
+    \item \textbf{Para $1\text{ km}$:}
+    \begin{itemize}
+        \item Radio: $-6\text{ dB}$ (Dato de referencia).
+        \item Cable: $-3\text{ dB}$ (Dato de referencia).
+    \end{itemize}
+    
+    \item \textbf{Para $2\text{ km}$ (se duplica respecto a $1\text{ km}$):}
+    \begin{itemize}
+        \item Radio: $-6\text{ dB} - 6\text{ dB} = \mathbf{-12\text{ dB}}$
+        \item Cable: $-3\text{ dB} \times 2 = \mathbf{-6\text{ dB}}$
+    \end{itemize}
+
+    \item \textbf{Para $4\text{ km}$ (se duplica respecto a $2\text{ km}$):}
+    \begin{itemize}
+        \item Radio: $-12\text{ dB} - 6\text{ dB} = \mathbf{-18\text{ dB}}$
+        \item Cable: $-3\text{ dB} \times 4 = \mathbf{-12\text{ dB}}$
+    \end{itemize}
+
+    \item \textbf{Para $8\text{ km}$ (se duplica respecto a $4\text{ km}$):}
+    \begin{itemize}
+        \item Radio: $-18\text{ dB} - 6\text{ dB} = \mathbf{-24\text{ dB}}$
+        \item Cable: $-3\text{ dB} \times 8 = \mathbf{-24\text{ dB}}$
+    \end{itemize}
+
+    \item \textbf{Para $16\text{ km}$ (se duplica respecto a $8\text{ km}$):}
+    \begin{itemize}
+        \item Radio: $-24\text{ dB} - 6\text{ dB} = \mathbf{-30\text{ dB}}$
+        \item Cable: $-3\text{ dB} \times 16 = \mathbf{-48\text{ dB}}$
+    \end{itemize}
+\end{itemize}
+
+\section*{Tabla Completa}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+\toprule
+\textbf{Longitud (km)} & \textbf{Radio (dB)} & \textbf{Cable (dB)} \\
+\midrule
+1  & $-6$  & $-3$  \\
+2  & $-12$ & $-6$  \\
+4  & $-18$ & $-12$ \\
+8  & $-24$ & $-24$ \\
+16 & $-30$ & $-48$ \\
+\bottomrule
+\end{tabular}
+
+\end{table}
+
+Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa menos que la propagación por radio. A los $8\text{ km}$ ambos medios sufren la misma atenuación ($-24\text{ dB}$), y para distancias mayores ($16\text{ km}$ o más), el medio inalámbrico (radio) resulta ser mucho más eficiente en cuanto a atenuación que el cable. \quad $\blacksquare$
 
   \item Para la parábola de la Figura 4.12 se quiere demostrar
         que los rayos que parten del foco y se reflejan en la parábola siguen
