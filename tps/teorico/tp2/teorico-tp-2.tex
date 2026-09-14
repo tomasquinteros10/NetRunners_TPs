@@ -340,6 +340,40 @@
         \]
 
   \item
+  Para resolver este ejercicio, debemos tener presente dos cosas: la primera, la fórmula de la que vamos a partir es la del cálculo de presupuesto de pérdida:
+\[
+  L_{dB} = 10\log_{10}\left(\frac{P_{entrada}}{P_{salida}}\right)
+\]
+Y como segunda cosa, tenemos que ver el gráfico de las curvas de atenuación versus frecuencia. Con estas dos herramientas, lo primero que hacemos es calcular el presupuesto que va a ser común a los 5 puntos, ya que la relación de potencias es la misma:
+\[
+  L_{dB} = 10\log_{10}\left(\frac{100}{1}\right)
+\]
+\[
+  L_{dB} = 20\,\mathrm{dB}
+\]
+Con esto, el segundo paso es analizar cada punto a partir de revisar los gráficos de la Figura 4.3 del libro:
+\begin{itemize}
+  \item[a)] Para una $f = 300\,\mathrm{kHz}$, podemos ubicar a ojo un valor de $10\,\mathrm{dB}$ de atenuación, con lo cual la longitud $L$ máxima es $L = \text{presupuesto}/\text{tasa de atenuación}$:
+  \[
+    L = \frac{20\,\mathrm{dB}}{10\,\mathrm{dB/Km}} = 2\,\mathrm{Km}
+  \]
+  \item[b)] Para $f = 1\,\mathrm{MHz}$, en este caso:
+  \[
+    L = \frac{20\,\mathrm{dB}}{20\,\mathrm{dB/Km}} = 1\,\mathrm{Km}
+  \]
+  \item[c)]
+  \[
+    L_{max} = \frac{20\,\mathrm{dB}}{2,5\,\mathrm{dB/Km}} = 8\,\mathrm{Km}
+  \]
+  \item[d)]
+  \[
+    L_{max} = \frac{20\,\mathrm{dB}}{10\,\mathrm{dB/Km}} = 2\,\mathrm{Km}
+  \]
+  \item[e)] Frecuencia óptima en el caso de la fibra óptica sería el mínimo de la curva, más o menos entre $0,2$ y $0,5$; vamos a usar $0,2$ para el cálculo:
+  \[
+    L_{max} = \frac{20\,\mathrm{dB}}{0,2\,\mathrm{dB/Km}} = 100\,\mathrm{Km}
+  \]
+\end{itemize}
 
   \item
         \textbf{El cable coaxial es un sistema de transmisión con dos conductores. ¿Qué ventaja tiene conectar la malla exterior a tierra?} \\
@@ -483,7 +517,10 @@ Queda demostrado que tanto al duplicar la frecuencia de transmisión ($f$) como 
         Para poder utilizar una antena de 1 metro, la señal de voz debe modularse sobre una frecuencia portadora de \textbf{150 MHz}, perteneciente a la banda VHF.
 
   \item
-
+        Observamos que la longitud de onda completa es $\lambda = 0,005\,\mathrm{m}$, y usando $f = c/\lambda$, despejamos y encontramos que:
+        \[
+             f = \frac{c}{\lambda} = 6\times10^{10}\,\mathrm{Hz} = 60\,\mathrm{GHz}
+        \]
   \item
 
         Debido a la relación:
@@ -1005,6 +1042,33 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
       \end{equation}
 
       Por lo tanto, la potencia de la señal a la salida de la antena receptora es aproximadamente $-55{,}09,\text{dBm}$.
+
+  \item
+        Para obtener la expresión, comenzamos armando el triángulo e identificando los lados:
+        \begin{itemize}
+          \item $OB = R$ (radio de la Tierra).
+          \item $OA = R + h$ (radio más la altura de la antena).
+          \item $AB = d$.
+        \end{itemize}
+        Planteamos Pitágoras:
+        \[
+          OA^2 = OB^2 + AB^2
+        \]
+        \[
+          (R+h)^2 = R^2 + d^2
+        \]
+        Despejamos $d^2$:
+        \[
+          d^2 = (R+h)^2 - R^2 = R^2 + 2Rh + h^2 - R^2 = 2Rh + h^2
+        \]
+        Como $h^2$ termina siendo despreciable frente al término $2Rh$ (siendo $R = 6.370$ kilómetros $= 6.370.000$ metros), nos queda:
+        \[
+          d \approx \sqrt{2Rh}
+        \]
+        \[
+          d(\mathrm{km}) = \sqrt{12,74\cdot h} \approx 3,57\sqrt{h}
+        \]
+        En el enunciado del ejercicio, vemos que el término $3,57$ está mal escrito, apareciendo como $3,75$; pero en el desarrollo, y previamente en el mismo libro, se menciona que es $3,57$.
 
   \item
 
