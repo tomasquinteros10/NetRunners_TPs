@@ -366,7 +366,56 @@
     \end{equation}
 
     Por lo tanto, la longitud típica requerida para la antena es de \textbf{$5\,000\text{ km}$} (o $5 \times 10^6\text{ m}$).
-  \item
+  \item 
+\textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
+
+        \textbf{a) ¿Cuál debe ser la longitud de una antena, equivalente a la mitad de la longitud de onda, para enviar una señal de 300 Hz?}
+
+        \textbf{b) Una posible alternativa es emplear algún esquema de modulación, como los descritos en el Capítulo 5, de tal manera que la señal a transmitir tenga un ancho de banda estrecho, centrado en torno a la frecuencia portadora. Supóngase que quisiéramos una antena de 1 metro de longitud. ¿Qué frecuencia de portadora debería utilizarse?}
+  
+  Para resolver este problema, se utiliza la relación fundamental entre la velocidad de propagación de una onda electromagnética ($c \approx 3 \times 10^8\ \text{m/s}$), la frecuencia ($f$) y la longitud de onda ($\lambda$):
+
+        \[
+          \lambda = \frac{c}{f}
+        \]
+
+        \textbf{a) Longitud de la antena para una señal de 300 Hz}
+
+        Primero calculamos la longitud de onda:
+
+        \[
+          \lambda = \frac{3 \times 10^8\ \text{m/s}}{300\ \text{Hz}}
+          = 1\,000\,000\ \text{m} = 1\,000\ \text{km}
+        \]
+
+        Como la longitud de la antena debe ser la mitad de la longitud de onda ($L = \lambda/2$):
+
+        \[
+          L = \frac{1\,000\,000\ \text{m}}{2}
+          = \boxed{500\,000\ \text{m} = 500\ \text{km}}
+        \]
+
+        Una antena de 500 km es físicamente irrealizable para un sistema de transmisión práctico, lo que justifica la necesidad de utilizar modulación.
+
+        \medskip
+        \textbf{b) Frecuencia portadora requerida para una antena de 1 metro}
+
+        Si la antena mide $L = 1\ \text{m}$ y equivale a la mitad de la longitud de onda ($L = \lambda/2$), la longitud de onda necesaria es:
+
+        \[
+          \lambda = 2L = 2 \times 1\ \text{m} = 2\ \text{m}
+        \]
+
+        Calculamos la frecuencia portadora:
+
+        \[
+          f = \frac{c}{\lambda}
+          = \frac{3 \times 10^8\ \text{m/s}}{2\ \text{m}}
+          = 150\,000\,000\ \text{Hz}
+          = \boxed{150\ \text{MHz}}
+        \]
+
+        Para poder utilizar una antena de 1 metro, la señal de voz debe modularse sobre una frecuencia portadora de \textbf{150 MHz}, perteneciente a la banda VHF.
 
   \item
 
@@ -543,6 +592,56 @@
         trayectorias paralelas al eje \(x\).
 
   \item
+\textbf{A menudo es más conveniente expresar las distancias en km en lugar de en m y las frecuencias en MHz en lugar de Hz. Rescriba la Ecuación (4.1) usando estas unidades.}
+  
+  Para reescribir la fórmula de pérdida en el espacio libre utilizando la frecuencia en megahercios ($f_{\text{MHz}}$) y la distancia en kilómetros ($d_{\text{km}}$), partimos de la ecuación con la frecuencia $f$ expresada en hercios y la distancia $d$ en metros:
+
+        \[
+          L_{\text{dB}} = 20\log_{10}(f) + 20\log_{10}(d) - 147{,}56
+        \]
+
+        \textbf{Relación de unidades:}
+        \[
+          f = f_{\text{MHz}} \times 10^6,
+          \qquad d = d_{\text{km}} \times 10^3
+        \]
+
+        Sustituyendo en la ecuación original:
+
+        \[
+          L_{\text{dB}} = 20\log_{10}(f_{\text{MHz}} \times 10^6)
+          + 20\log_{10}(d_{\text{km}} \times 10^3) - 147{,}56
+        \]
+
+        Aplicando la propiedad $\log(ab) = \log(a) + \log(b)$:
+
+        \[
+          \begin{aligned}
+            L_{\text{dB}} ={}& 20\log_{10}(f_{\text{MHz}}) + 20\log_{10}(10^6) \\
+                            &+ 20\log_{10}(d_{\text{km}}) + 20\log_{10}(10^3) - 147{,}56
+          \end{aligned}
+        \]
+
+        Calculamos las constantes logarítmicas:
+
+        \[
+          20\log_{10}(10^6) = 20 \times 6 = 120,
+          \qquad 20\log_{10}(10^3) = 20 \times 3 = 60
+        \]
+
+        Por lo tanto:
+
+        \[
+          L_{\text{dB}} = 20\log_{10}(f_{\text{MHz}})
+          + 20\log_{10}(d_{\text{km}}) + (120 + 60 - 147{,}56)
+        \]
+
+        Expresando la frecuencia en MHz y la distancia en km, la pérdida en el espacio libre, en dB, resulta:
+
+        \[
+          \boxed{L_{\text{dB}} = 20\log_{10}(f_{\text{MHz}})
+          + 20\log_{10}(d_{\text{km}}) + 32{,}44}
+        \]
 
   \item
         \textbf{Suponga que un transmisor emite 50 W de potencia.}
