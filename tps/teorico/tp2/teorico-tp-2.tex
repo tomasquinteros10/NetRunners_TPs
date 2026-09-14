@@ -6,6 +6,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
 \usepackage[T1]{fontenc}
 \usepackage[spanish]{babel}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
@@ -225,61 +227,61 @@
 \begin{enumerate}[label=4.\arabic*), itemsep=0.3cm]
   \item
         \textbf{Supóngase que unos datos se almacenan en disquetes de
-        \(1,4\) Mbytes que pesan \(30\) g cada uno y que una compañía aérea
-        transporta \(10^4\) kg de disquetes a una velocidad de \(1000\) km/h
-        sobre una distancia de \(5000\) km. ¿Cuál es la velocidad de transmisión
-        en bits por segundo de este sistema?}
+          \(1,4\) Mbytes que pesan \(30\) g cada uno y que una compañía aérea
+          transporta \(10^4\) kg de disquetes a una velocidad de \(1000\) km/h
+          sobre una distancia de \(5000\) km. ¿Cuál es la velocidad de transmisión
+          en bits por segundo de este sistema?}
 
         Primero calculamos la cantidad de disquetes transportados:
 
         \[
-        10^4\text{ kg}=10^7\text{ g}
+          10^4\text{ kg}=10^7\text{ g}
         \]
 
         \[
-        N=\frac{10^7}{30}=333333,33\text{ disquetes}
+          N=\frac{10^7}{30}=333333,33\text{ disquetes}
         \]
 
         La cantidad de información transportada es:
 
         \[
-        D=333333,33(1,4\times10^6)\text{ bytes}
+          D=333333,33(1,4\times10^6)\text{ bytes}
         \]
 
         Pasando a bits:
 
         \[
-        D=333333,33(1,4\times10^6)(8)
+          D=333333,33(1,4\times10^6)(8)
         \]
 
         \[
-        D=3,7333\times10^{12}\text{ bits}
+          D=3,7333\times10^{12}\text{ bits}
         \]
 
         El tiempo necesario para recorrer los \(5000\) km es:
 
         \[
-        t=\frac{5000}{1000}=5\text{ h}
+          t=\frac{5000}{1000}=5\text{ h}
         \]
 
         \[
-        t=5(3600)=18000\text{ s}
+          t=5(3600)=18000\text{ s}
         \]
 
         Por lo tanto, la velocidad de transmisión equivalente es:
 
         \[
-        R=\frac{3,7333\times10^{12}}{18000}
+          R=\frac{3,7333\times10^{12}}{18000}
         \]
 
         \[
-        \boxed{R\approx2,07\times10^8\text{ bit/s}}
+          \boxed{R\approx2,07\times10^8\text{ bit/s}}
         \]
 
         Por lo tanto, la velocidad de transmisión es aproximadamente:
 
         \[
-        \boxed{207,4\text{ Mbit/s}}
+          \boxed{207,4\text{ Mbit/s}}
         \]
 
   \item
@@ -340,139 +342,139 @@
         \]
 
   \item
-  Para resolver este ejercicio, debemos tener presente dos cosas: la primera, la fórmula de la que vamos a partir es la del cálculo de presupuesto de pérdida:
-\[
-  L_{dB} = 10\log_{10}\left(\frac{P_{entrada}}{P_{salida}}\right)
-\]
-Y como segunda cosa, tenemos que ver el gráfico de las curvas de atenuación versus frecuencia. Con estas dos herramientas, lo primero que hacemos es calcular el presupuesto que va a ser común a los 5 puntos, ya que la relación de potencias es la misma:
-\[
-  L_{dB} = 10\log_{10}\left(\frac{100}{1}\right)
-\]
-\[
-  L_{dB} = 20\,\mathrm{dB}
-\]
-Con esto, el segundo paso es analizar cada punto a partir de revisar los gráficos de la Figura 4.3 del libro:
-\begin{itemize}
-  \item[a)] Para una $f = 300\,\mathrm{kHz}$, podemos ubicar a ojo un valor de $10\,\mathrm{dB}$ de atenuación, con lo cual la longitud $L$ máxima es $L = \text{presupuesto}/\text{tasa de atenuación}$:
-  \[
-    L = \frac{20\,\mathrm{dB}}{10\,\mathrm{dB/Km}} = 2\,\mathrm{Km}
-  \]
-  \item[b)] Para $f = 1\,\mathrm{MHz}$, en este caso:
-  \[
-    L = \frac{20\,\mathrm{dB}}{20\,\mathrm{dB/Km}} = 1\,\mathrm{Km}
-  \]
-  \item[c)]
-  \[
-    L_{max} = \frac{20\,\mathrm{dB}}{2,5\,\mathrm{dB/Km}} = 8\,\mathrm{Km}
-  \]
-  \item[d)]
-  \[
-    L_{max} = \frac{20\,\mathrm{dB}}{10\,\mathrm{dB/Km}} = 2\,\mathrm{Km}
-  \]
-  \item[e)] Frecuencia óptima en el caso de la fibra óptica sería el mínimo de la curva, más o menos entre $0,2$ y $0,5$; vamos a usar $0,2$ para el cálculo:
-  \[
-    L_{max} = \frac{20\,\mathrm{dB}}{0,2\,\mathrm{dB/Km}} = 100\,\mathrm{Km}
-  \]
-\end{itemize}
+        Para resolver este ejercicio, debemos tener presente dos cosas: la primera, la fórmula de la que vamos a partir es la del cálculo de presupuesto de pérdida:
+        \[
+          L_{dB} = 10\log_{10}\left(\frac{P_{entrada}}{P_{salida}}\right)
+        \]
+        Y como segunda cosa, tenemos que ver el gráfico de las curvas de atenuación versus frecuencia. Con estas dos herramientas, lo primero que hacemos es calcular el presupuesto que va a ser común a los 5 puntos, ya que la relación de potencias es la misma:
+        \[
+          L_{dB} = 10\log_{10}\left(\frac{100}{1}\right)
+        \]
+        \[
+          L_{dB} = 20\,\mathrm{dB}
+        \]
+        Con esto, el segundo paso es analizar cada punto a partir de revisar los gráficos de la Figura 4.3 del libro:
+        \begin{itemize}
+          \item[a)] Para una $f = 300\,\mathrm{kHz}$, podemos ubicar a ojo un valor de $10\,\mathrm{dB}$ de atenuación, con lo cual la longitud $L$ máxima es $L = \text{presupuesto}/\text{tasa de atenuación}$:
+                \[
+                  L = \frac{20\,\mathrm{dB}}{10\,\mathrm{dB/Km}} = 2\,\mathrm{Km}
+                \]
+          \item[b)] Para $f = 1\,\mathrm{MHz}$, en este caso:
+                \[
+                  L = \frac{20\,\mathrm{dB}}{20\,\mathrm{dB/Km}} = 1\,\mathrm{Km}
+                \]
+          \item[c)]
+                \[
+                  L_{max} = \frac{20\,\mathrm{dB}}{2,5\,\mathrm{dB/Km}} = 8\,\mathrm{Km}
+                \]
+          \item[d)]
+                \[
+                  L_{max} = \frac{20\,\mathrm{dB}}{10\,\mathrm{dB/Km}} = 2\,\mathrm{Km}
+                \]
+          \item[e)] Frecuencia óptima en el caso de la fibra óptica sería el mínimo de la curva, más o menos entre $0,2$ y $0,5$; vamos a usar $0,2$ para el cálculo:
+                \[
+                  L_{max} = \frac{20\,\mathrm{dB}}{0,2\,\mathrm{dB/Km}} = 100\,\mathrm{Km}
+                \]
+        \end{itemize}
 
   \item
         \textbf{El cable coaxial es un sistema de transmisión con dos conductores. ¿Qué ventaja tiene conectar la malla exterior a tierra?} \\
         Debido al apantallamiento, por construcción, el cable coaxial es mucho menos susceptible que el par trenzado tanto a interferencias como a diafonía. La ventaja de conectar la malla exterior a tierra es que las corrientes inducidas por señales externas se derivan a tierra a través de la malla, reduciendo así el ruido y las interferencias que podrían afectar al conductor interno.
 
   \item
-\textbf{Demuestre que duplicando la frecuencia de transmisión o duplicando la distancia entre las antenas de transmisión y recepción, la potencia recibida se atenúa en 6 dB.} \\
-\section*{Demostración}
+        \textbf{Demuestre que duplicando la frecuencia de transmisión o duplicando la distancia entre las antenas de transmisión y recepción, la potencia recibida se atenúa en 6 dB.} \\
+        \section*{Demostración}
 
-La pérdida en el espacio libre $L_{dB}$ se define como:
-\begin{equation}
-    L_{dB} = 20 \log_{10}(f) + 20 \log_{10}(d) - 147,56 \quad [\text{dB}]
- \end{equation}
-Donde $f$ es la frecuencia en Hz y $d$ es la distancia en metros.
-Alternativamente, analizando la razón de pérdida $L = \frac{P_t}{P_r}$ en escala lineal, tenemos:
-\begin{equation}
-    L = \left( \frac{4\pi d f}{c} \right)^2
-\end{equation}
+        La pérdida en el espacio libre $L_{dB}$ se define como:
+        \begin{equation}
+          L_{dB} = 20 \log_{10}(f) + 20 \log_{10}(d) - 147,56 \quad [\text{dB}]
+        \end{equation}
+        Donde $f$ es la frecuencia en Hz y $d$ es la distancia en metros.
+        Alternativamente, analizando la razón de pérdida $L = \frac{P_t}{P_r}$ en escala lineal, tenemos:
+        \begin{equation}
+          L = \left( \frac{4\pi d f}{c} \right)^2
+        \end{equation}
 
-Expresando esta razón en decibelios ($\text{dB}$):
-\begin{equation}
-    L_{dB} = 10 \log_{10} \left( \frac{P_t}{P_r} \right) = 20 \log_{10} \left( \frac{4\pi d f}{c} \right)
-\end{equation}
+        Expresando esta razón en decibelios ($\text{dB}$):
+        \begin{equation}
+          L_{dB} = 10 \log_{10} \left( \frac{P_t}{P_r} \right) = 20 \log_{10} \left( \frac{4\pi d f}{c} \right)
+        \end{equation}
 
-A continuación, evaluaremos independientemente cada una de las dos condiciones planteadas en el enunciado.
+        A continuación, evaluaremos independientemente cada una de las dos condiciones planteadas en el enunciado.
 
-\subsection*{Caso A: Duplicar la frecuencia ($f' = 2f$)}
+        \subsection*{Caso A: Duplicar la frecuencia ($f' = 2f$)}
 
-Supongamos que mantenemos la distancia $d$ constante y duplicamos la frecuencia de la portadora, de modo que $f' = 2f$. Calculamos la nueva atenuación $L'_{dB}$:
+        Supongamos que mantenemos la distancia $d$ constante y duplicamos la frecuencia de la portadora, de modo que $f' = 2f$. Calculamos la nueva atenuación $L'_{dB}$:
 
-\begin{align*}
-    L'_{dB} &= 20 \log_{10} \left( \frac{4\pi d (2f)}{c} \right) \\[0.5em]
-    &= 20 \log_{10} \left( 2 \cdot \frac{4\pi d f}{c} \right)
-\end{align*}
+        \begin{align*}
+          L'_{dB} & = 20 \log_{10} \left( \frac{4\pi d (2f)}{c} \right)      \\[0.5em]
+                  & = 20 \log_{10} \left( 2 \cdot \frac{4\pi d f}{c} \right)
+        \end{align*}
 
-Aplicando la propiedad de los logaritmos ($\log(a \cdot b) = \log(a) + \log(b)$):
+        Aplicando la propiedad de los logaritmos ($\log(a \cdot b) = \log(a) + \log(b)$):
 
-\begin{align*}
-    L'_{dB} &= 20 \log_{10}(2) + 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \\[0.5em]
-    &= 20 \log_{10}(2) + L_{dB}
-\end{align*}
+        \begin{align*}
+          L'_{dB} & = 20 \log_{10}(2) + 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \\[0.5em]
+                  & = 20 \log_{10}(2) + L_{dB}
+        \end{align*}
 
-Sabiendo que $20 \log_{10}(2) \approx 20 \cdot 0,30103 = 6,02\text{ dB} \approx 6\text{ dB}$:
+        Sabiendo que $20 \log_{10}(2) \approx 20 \cdot 0,30103 = 6,02\text{ dB} \approx 6\text{ dB}$:
 
-\begin{equation}
-    L'_{dB} \approx L_{dB} + 6\text{ dB}
-\end{equation}
+        \begin{equation}
+          L'_{dB} \approx L_{dB} + 6\text{ dB}
+        \end{equation}
 
-\textbf{Conclusión A:} Al duplicar la frecuencia, la atenuación del medio aumenta en $6\text{ dB}$, lo que equivale a que la potencia recibida $P_r$ se reduce a la cuarta parte, es decir, una pérdida adicional de $6\text{ dB}$.
+        \textbf{Conclusión A:} Al duplicar la frecuencia, la atenuación del medio aumenta en $6\text{ dB}$, lo que equivale a que la potencia recibida $P_r$ se reduce a la cuarta parte, es decir, una pérdida adicional de $6\text{ dB}$.
 
-\subsection*{Caso B: Duplicar la distancia ($d' = 2d$)}
+        \subsection*{Caso B: Duplicar la distancia ($d' = 2d$)}
 
-Supongamos ahora que mantenemos la frecuencia $f$ constante y duplicamos la distancia entre antenas, haciendo $d' = 2d$. La nueva atenuación $L''_{dB}$ resulta:
+        Supongamos ahora que mantenemos la frecuencia $f$ constante y duplicamos la distancia entre antenas, haciendo $d' = 2d$. La nueva atenuación $L''_{dB}$ resulta:
 
-\begin{align*}
-    L''_{dB} &= 20 \log_{10} \left( \frac{4\pi (2d) f}{c} \right) \\[0.5em]
-    &= 20 \log_{10} \left( 2 \cdot \frac{4\pi d f}{c} \right) \\[0.5em]
-    &= 20 \log_{10}(2) + 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \\[0.5em]
-    &= 20 \log_{10}(2) + L_{dB}
-\end{align*}
+        \begin{align*}
+          L''_{dB} & = 20 \log_{10} \left( \frac{4\pi (2d) f}{c} \right)                \\[0.5em]
+                   & = 20 \log_{10} \left( 2 \cdot \frac{4\pi d f}{c} \right)           \\[0.5em]
+                   & = 20 \log_{10}(2) + 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \\[0.5em]
+                   & = 20 \log_{10}(2) + L_{dB}
+        \end{align*}
 
-De la misma manera:
+        De la misma manera:
 
-\begin{equation}
-    L''_{dB} \approx L_{dB} + 6\text{ dB}
-\end{equation}
+        \begin{equation}
+          L''_{dB} \approx L_{dB} + 6\text{ dB}
+        \end{equation}
 
-\textbf{Conclusión B:} Al duplicar la distancia entre el transmisor y el receptor, la atenuación también se incrementa en $6\text{ dB}$.
+        \textbf{Conclusión B:} Al duplicar la distancia entre el transmisor y el receptor, la atenuación también se incrementa en $6\text{ dB}$.
 
-\section*{Conclusión}
-Queda demostrado que tanto al duplicar la frecuencia de transmisión ($f$) como al duplicar la distancia de enlace ($d$), el término dependiente introduce un factor $20 \log_{10}(2) \approx 6\text{ dB}$ adicional a la pérdida de propagación en espacio libre, atenuando la potencia de la señal recibida en $6\text{ dB}$ en ambos casos. \quad $\blacksquare$
+        \section*{Conclusión}
+        Queda demostrado que tanto al duplicar la frecuencia de transmisión ($f$) como al duplicar la distancia de enlace ($d$), el término dependiente introduce un factor $20 \log_{10}(2) \approx 6\text{ dB}$ adicional a la pérdida de propagación en espacio libre, atenuando la potencia de la señal recibida en $6\text{ dB}$ en ambos casos. \quad $\blacksquare$
   \item
-      Para calcular la longitud típica de la antena, primero se determina la longitud de onda ($\lambda$) de la señal electromagnética a $30\text{ Hz}$:
+        Para calcular la longitud típica de la antena, primero se determina la longitud de onda ($\lambda$) de la señal electromagnética a $30\text{ Hz}$:
 
-    \begin{equation}
-        c = \lambda \cdot f \implies \lambda = \frac{c}{f}
-    \end{equation}
+        \begin{equation}
+          c = \lambda \cdot f \implies \lambda = \frac{c}{f}
+        \end{equation}
 
-    Sustituyendo la velocidad de la luz $c \approx 3 \times 10^8\text{ m/s}$ y la frecuencia $f = 30\text{ Hz}$:
+        Sustituyendo la velocidad de la luz $c \approx 3 \times 10^8\text{ m/s}$ y la frecuencia $f = 30\text{ Hz}$:
 
-    \begin{equation}
-        \lambda = \frac{3 \times 10^8\text{ m/s}}{30\text{ s}^{-1}} = 10\,000\,000\text{ m} = 10\,000\text{ km}
-    \end{equation}
+        \begin{equation}
+          \lambda = \frac{3 \times 10^8\text{ m/s}}{30\text{ s}^{-1}} = 10\,000\,000\text{ m} = 10\,000\text{ km}
+        \end{equation}
 
-    Dado que la dimensión deseable de la antena debe ser del orden de la mitad de la longitud de onda ($L = \lambda / 2$):
+        Dado que la dimensión deseable de la antena debe ser del orden de la mitad de la longitud de onda ($L = \lambda / 2$):
 
-    \begin{equation}
-        L = \frac{10\,000\text{ km}}{2} = 5\,000\text{ km}
-    \end{equation}
+        \begin{equation}
+          L = \frac{10\,000\text{ km}}{2} = 5\,000\text{ km}
+        \end{equation}
 
-    Por lo tanto, la longitud típica requerida para la antena es de \textbf{$5\,000\text{ km}$} (o $5 \times 10^6\text{ m}$).
-  \item 
-\textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
+        Por lo tanto, la longitud típica requerida para la antena es de \textbf{$5\,000\text{ km}$} (o $5 \times 10^6\text{ m}$).
+  \item
+        \textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
 
         \textbf{a) ¿Cuál debe ser la longitud de una antena, equivalente a la mitad de la longitud de onda, para enviar una señal de 300 Hz?}
 
         \textbf{b) Una posible alternativa es emplear algún esquema de modulación, como los descritos en el Capítulo 5, de tal manera que la señal a transmitir tenga un ancho de banda estrecho, centrado en torno a la frecuencia portadora. Supóngase que quisiéramos una antena de 1 metro de longitud. ¿Qué frecuencia de portadora debería utilizarse?}
-  
-  Para resolver este problema, se utiliza la relación fundamental entre la velocidad de propagación de una onda electromagnética ($c \approx 3 \times 10^8\ \text{m/s}$), la frecuencia ($f$) y la longitud de onda ($\lambda$):
+
+        Para resolver este problema, se utiliza la relación fundamental entre la velocidad de propagación de una onda electromagnética ($c \approx 3 \times 10^8\ \text{m/s}$), la frecuencia ($f$) y la longitud de onda ($\lambda$):
 
         \[
           \lambda = \frac{c}{f}
@@ -519,7 +521,7 @@ Queda demostrado que tanto al duplicar la frecuencia de transmisión ($f$) como 
   \item
         Observamos que la longitud de onda completa es $\lambda = 0,005\,\mathrm{m}$, y usando $f = c/\lambda$, despejamos y encontramos que:
         \[
-             f = \frac{c}{\lambda} = 6\times10^{10}\,\mathrm{Hz} = 60\,\mathrm{GHz}
+          f = \frac{c}{\lambda} = 6\times10^{10}\,\mathrm{Hz} = 60\,\mathrm{GHz}
         \]
   \item
 
@@ -572,82 +574,82 @@ Queda demostrado que tanto al duplicar la frecuencia de transmisión ($f$) como 
         Esto demuestra que ambos escenarios llegan a un mismo resultado: una cuadruplicación de la potencia recibida.
 
   \item \textbf{En la transmisión de radio en el espacio libre, la potencia de la señal se reduce proporcionalmente al cuadrado de la distancia recorrida desde la fuente, mientras que en una transmisión en un cable, la atenuación es una cantidad fija en dB por kilómetro. En la siguiente
-tabla se muestra, en dB, la reducción relativa a una referencia dada para la transmisión en
-el espacio libre y en un cable uniforme. Rellene las celdas que faltan para completar la
-tabla.}
+          tabla se muestra, en dB, la reducción relativa a una referencia dada para la transmisión en
+          el espacio libre y en un cable uniforme. Rellene las celdas que faltan para completar la
+          tabla.}
 
-\section*{Deducción de Fórmulas}
+        \section*{Deducción de Fórmulas}
 
-\subsection*{1. Transmisión por Radio (Espacio Libre)}
-En espacio libre, la atenuación varía con el cuadrado de la distancia ($d^2$). Expresado en escala logarítmica ($\text{dB}$), la atenuación es proporcional a $20 \log_{10}(d)$.
+        \subsection*{1. Transmisión por Radio (Espacio Libre)}
+        En espacio libre, la atenuación varía con el cuadrado de la distancia ($d^2$). Expresado en escala logarítmica ($\text{dB}$), la atenuación es proporcional a $20 \log_{10}(d)$.
 
-Si se duplica la distancia ($d' = 2d$), el cambio en atenuación es:
-\[
-\Delta L_{\text{Radio}} = 20 \log_{10}(2) \approx 6,02 \text{ dB} \approx 6 \text{ dB}
-\]
-Esto significa que **cada vez que la distancia se duplica, la atenuación por radio aumenta en $6 \text{ dB}$ adicionales** (es decir, disminuye $6 \text{ dB}$ respecto a la referencia).
+        Si se duplica la distancia ($d' = 2d$), el cambio en atenuación es:
+        \[
+          \Delta L_{\text{Radio}} = 20 \log_{10}(2) \approx 6,02 \text{ dB} \approx 6 \text{ dB}
+        \]
+        Esto significa que **cada vez que la distancia se duplica, la atenuación por radio aumenta en $6 \text{ dB}$ adicionales** (es decir, disminuye $6 \text{ dB}$ respecto a la referencia).
 
-\subsection*{2. Transmisión por Cable}
-En un cable, la atenuación es lineal respecto a la distancia ($a \cdot d$). Por lo tanto, en escala en $\text{dB}$, la atenuación es directamente proporcional a la longitud recorrida:
-\[
-L_{\text{Cable}}(d) = \alpha \cdot d
-\]
-Dado que para $d = 1\text{ km}$ la atenuación es de $-3\text{ dB}$, la tasa fija de atenuación es de $\alpha = -3\text{ dB/km}$.
-Esto implica que **cada vez que la distancia se duplica, la atenuación en $\text{dB}$ también se duplica**.
+        \subsection*{2. Transmisión por Cable}
+        En un cable, la atenuación es lineal respecto a la distancia ($a \cdot d$). Por lo tanto, en escala en $\text{dB}$, la atenuación es directamente proporcional a la longitud recorrida:
+        \[
+          L_{\text{Cable}}(d) = \alpha \cdot d
+        \]
+        Dado que para $d = 1\text{ km}$ la atenuación es de $-3\text{ dB}$, la tasa fija de atenuación es de $\alpha = -3\text{ dB/km}$.
+        Esto implica que **cada vez que la distancia se duplica, la atenuación en $\text{dB}$ también se duplica**.
 
-\section*{Cálculo de Valores}
+        \section*{Cálculo de Valores}
 
-\begin{itemize}
-    \item \textbf{Para $1\text{ km}$:}
-    \begin{itemize}
-        \item Radio: $-6\text{ dB}$ (Dato de referencia).
-        \item Cable: $-3\text{ dB}$ (Dato de referencia).
-    \end{itemize}
-    
-    \item \textbf{Para $2\text{ km}$ (se duplica respecto a $1\text{ km}$):}
-    \begin{itemize}
-        \item Radio: $-6\text{ dB} - 6\text{ dB} = \mathbf{-12\text{ dB}}$
-        \item Cable: $-3\text{ dB} \times 2 = \mathbf{-6\text{ dB}}$
-    \end{itemize}
+        \begin{itemize}
+          \item \textbf{Para $1\text{ km}$:}
+                \begin{itemize}
+                  \item Radio: $-6\text{ dB}$ (Dato de referencia).
+                  \item Cable: $-3\text{ dB}$ (Dato de referencia).
+                \end{itemize}
 
-    \item \textbf{Para $4\text{ km}$ (se duplica respecto a $2\text{ km}$):}
-    \begin{itemize}
-        \item Radio: $-12\text{ dB} - 6\text{ dB} = \mathbf{-18\text{ dB}}$
-        \item Cable: $-3\text{ dB} \times 4 = \mathbf{-12\text{ dB}}$
-    \end{itemize}
+          \item \textbf{Para $2\text{ km}$ (se duplica respecto a $1\text{ km}$):}
+                \begin{itemize}
+                  \item Radio: $-6\text{ dB} - 6\text{ dB} = \mathbf{-12\text{ dB}}$
+                  \item Cable: $-3\text{ dB} \times 2 = \mathbf{-6\text{ dB}}$
+                \end{itemize}
 
-    \item \textbf{Para $8\text{ km}$ (se duplica respecto a $4\text{ km}$):}
-    \begin{itemize}
-        \item Radio: $-18\text{ dB} - 6\text{ dB} = \mathbf{-24\text{ dB}}$
-        \item Cable: $-3\text{ dB} \times 8 = \mathbf{-24\text{ dB}}$
-    \end{itemize}
+          \item \textbf{Para $4\text{ km}$ (se duplica respecto a $2\text{ km}$):}
+                \begin{itemize}
+                  \item Radio: $-12\text{ dB} - 6\text{ dB} = \mathbf{-18\text{ dB}}$
+                  \item Cable: $-3\text{ dB} \times 4 = \mathbf{-12\text{ dB}}$
+                \end{itemize}
 
-    \item \textbf{Para $16\text{ km}$ (se duplica respecto a $8\text{ km}$):}
-    \begin{itemize}
-        \item Radio: $-24\text{ dB} - 6\text{ dB} = \mathbf{-30\text{ dB}}$
-        \item Cable: $-3\text{ dB} \times 16 = \mathbf{-48\text{ dB}}$
-    \end{itemize}
-\end{itemize}
+          \item \textbf{Para $8\text{ km}$ (se duplica respecto a $4\text{ km}$):}
+                \begin{itemize}
+                  \item Radio: $-18\text{ dB} - 6\text{ dB} = \mathbf{-24\text{ dB}}$
+                  \item Cable: $-3\text{ dB} \times 8 = \mathbf{-24\text{ dB}}$
+                \end{itemize}
 
-\section*{Tabla Completa}
+          \item \textbf{Para $16\text{ km}$ (se duplica respecto a $8\text{ km}$):}
+                \begin{itemize}
+                  \item Radio: $-24\text{ dB} - 6\text{ dB} = \mathbf{-30\text{ dB}}$
+                  \item Cable: $-3\text{ dB} \times 16 = \mathbf{-48\text{ dB}}$
+                \end{itemize}
+        \end{itemize}
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{ccc}
-\toprule
-\textbf{Longitud (km)} & \textbf{Radio (dB)} & \textbf{Cable (dB)} \\
-\midrule
-1  & $-6$  & $-3$  \\
-2  & $-12$ & $-6$  \\
-4  & $-18$ & $-12$ \\
-8  & $-24$ & $-24$ \\
-16 & $-30$ & $-48$ \\
-\bottomrule
-\end{tabular}
+        \section*{Tabla Completa}
 
-\end{table}
+        \begin{table}[h!]
+          \centering
+          \begin{tabular}{ccc}
+            \toprule
+            \textbf{Longitud (km)} & \textbf{Radio (dB)} & \textbf{Cable (dB)} \\
+            \midrule
+            1                      & $-6$                & $-3$                \\
+            2                      & $-12$               & $-6$                \\
+            4                      & $-18$               & $-12$               \\
+            8                      & $-24$               & $-24$               \\
+            16                     & $-30$               & $-48$               \\
+            \bottomrule
+          \end{tabular}
 
-Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa menos que la propagación por radio. A los $8\text{ km}$ ambos medios sufren la misma atenuación ($-24\text{ dB}$), y para distancias mayores ($16\text{ km}$ o más), el medio inalámbrico (radio) resulta ser mucho más eficiente en cuanto a atenuación que el cable. \quad $\blacksquare$
+        \end{table}
+
+        Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa menos que la propagación por radio. A los $8\text{ km}$ ambos medios sufren la misma atenuación ($-24\text{ dB}$), y para distancias mayores ($16\text{ km}$ o más), el medio inalámbrico (radio) resulta ser mucho más eficiente en cuanto a atenuación que el cable. \quad $\blacksquare$
 
   \item Para la parábola de la Figura 4.12 se quiere demostrar
         que los rayos que parten del foco y se reflejan en la parábola siguen
@@ -658,38 +660,38 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
         La ecuación de la parábola es:
 
         \[
-        y^2=2px
+          y^2=2px
         \]
 
         Despejando \(x\):
 
         \[
-        x=\frac{y^2}{2p}
+          x=\frac{y^2}{2p}
         \]
 
         Derivando:
 
         \[
-        \frac{dx}{dy}=\frac{y}{p}
+          \frac{dx}{dy}=\frac{y}{p}
         \]
 
         Por lo tanto:
 
         \[
-        \frac{dy}{dx}=\frac{p}{y}
+          \frac{dy}{dx}=\frac{p}{y}
         \]
 
         En el punto \(P(x_1,y_1)\), la pendiente de la tangente \(M\) es:
 
         \[
-        m_M=\frac{p}{y_1}
+          m_M=\frac{p}{y_1}
         \]
 
         Como la pendiente de una recta es igual a la tangente del ángulo
         que forma con el eje \(x\):
 
         \[
-        \boxed{\tan\beta=\frac{p}{y_1}}
+          \boxed{\tan\beta=\frac{p}{y_1}}
         \]
 
         \textbf{b)}
@@ -697,72 +699,72 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
         El foco de la parábola se encuentra en:
 
         \[
-        F\left(\frac{p}{2},0\right)
+          F\left(\frac{p}{2},0\right)
         \]
 
         La pendiente de la recta \(PF\) es:
 
         \[
-        m_{PF}
-        =
-        \frac{y_1-0}{x_1-\frac{p}{2}}
+          m_{PF}
+          =
+          \frac{y_1-0}{x_1-\frac{p}{2}}
         \]
 
         Como:
 
         \[
-        x_1=\frac{y_1^2}{2p}
+          x_1=\frac{y_1^2}{2p}
         \]
 
         se obtiene:
 
         \[
-        m_{PF}
-        =
-        \frac{y_1}
-        {\frac{y_1^2}{2p}-\frac{p}{2}}
+          m_{PF}
+          =
+          \frac{y_1}
+          {\frac{y_1^2}{2p}-\frac{p}{2}}
         \]
 
         \[
-        m_{PF}
-        =
-        \frac{2py_1}{y_1^2-p^2}
+          m_{PF}
+          =
+          \frac{2py_1}{y_1^2-p^2}
         \]
 
         \[
-        \tan\theta = m_{PF}
+          \tan\theta = m_{PF}
         \]
 
         Aplicando la fórmula de la tangente de la diferencia de dos ángulos:
 
         \[
-        \tan\alpha=
-        \frac{\tan\beta-\tan\theta}
-        {1+\tan\beta\tan\theta}
+          \tan\alpha=
+          \frac{\tan\beta-\tan\theta}
+          {1+\tan\beta\tan\theta}
         \]
 
         y utilizando las pendientes de \(M\) y \(PF\), resulta:
 
         \[
-        \tan\alpha=-\frac{p}{y_1}
+          \tan\alpha=-\frac{p}{y_1}
         \]
 
         Tomando el valor del ángulo entre las dos rectas:
 
         \[
-        \boxed{\tan\alpha=\frac{p}{y_1}}
+          \boxed{\tan\alpha=\frac{p}{y_1}}
         \]
 
         Como:
 
         \[
-        \tan\alpha=\tan\beta
+          \tan\alpha=\tan\beta
         \]
 
         se cumple que:
 
         \[
-        \boxed{\alpha=\beta}
+          \boxed{\alpha=\beta}
         \]
 
         Por lo tanto, debido a que el ángulo de incidencia es igual al
@@ -770,9 +772,9 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
         trayectorias paralelas al eje \(x\).
 
   \item
-\textbf{A menudo es más conveniente expresar las distancias en km en lugar de en m y las frecuencias en MHz en lugar de Hz. Rescriba la Ecuación (4.1) usando estas unidades.}
-  
-  Para reescribir la fórmula de pérdida en el espacio libre utilizando la frecuencia en megahercios ($f_{\text{MHz}}$) y la distancia en kilómetros ($d_{\text{km}}$), partimos de la ecuación con la frecuencia $f$ expresada en hercios y la distancia $d$ en metros:
+        \textbf{A menudo es más conveniente expresar las distancias en km en lugar de en m y las frecuencias en MHz en lugar de Hz. Rescriba la Ecuación (4.1) usando estas unidades.}
+
+        Para reescribir la fórmula de pérdida en el espacio libre utilizando la frecuencia en megahercios ($f_{\text{MHz}}$) y la distancia en kilómetros ($d_{\text{km}}$), partimos de la ecuación con la frecuencia $f$ expresada en hercios y la distancia $d$ en metros:
 
         \[
           L_{\text{dB}} = 20\log_{10}(f) + 20\log_{10}(d) - 147{,}56
@@ -795,8 +797,8 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
 
         \[
           \begin{aligned}
-            L_{\text{dB}} ={}& 20\log_{10}(f_{\text{MHz}}) + 20\log_{10}(10^6) \\
-                            &+ 20\log_{10}(d_{\text{km}}) + 20\log_{10}(10^3) - 147{,}56
+            L_{\text{dB}} ={} & 20\log_{10}(f_{\text{MHz}}) + 20\log_{10}(10^6)             \\
+                              & + 20\log_{10}(d_{\text{km}}) + 20\log_{10}(10^3) - 147{,}56
           \end{aligned}
         \]
 
@@ -818,7 +820,7 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
 
         \[
           \boxed{L_{\text{dB}} = 20\log_{10}(f_{\text{MHz}})
-          + 20\log_{10}(d_{\text{km}}) + 32{,}44}
+            + 20\log_{10}(d_{\text{km}}) + 32{,}44}
         \]
 
   \item
@@ -922,126 +924,126 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
         $$
 
   \item
-         \begin{itemize}
-      \item Potencia de transmisión: $P_t = 0{,}1,\text{W} = 100 \text{mW}$
-      \item Frecuencia de operación: $f = 2\text {GHz} = 2 \times 10^9\text{Hz}$
-      \item Diámetro de las antenas: $d = 1{,}2 \text{m}$, por lo que $r = 0{,}6,\text{m}$
-      \item Distancia del enlace: $d_{\text{dist}} = 24\text {km} = 24,000\text{m}$
-      \item Velocidad de propagación: $c \approx 3 \times 10^8\text{m/s}$
-      \end{itemize}
+        \begin{itemize}
+          \item Potencia de transmisión: $P_t = 0{,}1,\text{W} = 100 \text{mW}$
+          \item Frecuencia de operación: $f = 2\text {GHz} = 2 \times 10^9\text{Hz}$
+          \item Diámetro de las antenas: $d = 1{,}2 \text{m}$, por lo que $r = 0{,}6,\text{m}$
+          \item Distancia del enlace: $d_{\text{dist}} = 24\text {km} = 24,000\text{m}$
+          \item Velocidad de propagación: $c \approx 3 \times 10^8\text{m/s}$
+        \end{itemize}
 
-      Primero calculamos la longitud de onda:
+        Primero calculamos la longitud de onda:
 
-      \begin{equation}
-      \lambda = \frac{c}{f}
-      = \frac{3 \times 10^8}{2 \times 10^9}
-      = 0{,}15,\text{m}
-      \end{equation}
+        \begin{equation}
+          \lambda = \frac{c}{f}
+          = \frac{3 \times 10^8}{2 \times 10^9}
+          = 0{,}15,\text{m}
+        \end{equation}
 
-      El área física de la antena es:
+        El área física de la antena es:
 
-      \begin{equation}
-      A = \pi r^2
-      = \pi(0{,}6)^2
-      \approx 1{,}131,\text{m}^2
-      \end{equation}
+        \begin{equation}
+          A = \pi r^2
+          = \pi(0{,}6)^2
+          \approx 1{,}131,\text{m}^2
+        \end{equation}
 
-      Considerando una eficiencia de $0{,}56$, el área efectiva resulta:
+        Considerando una eficiencia de $0{,}56$, el área efectiva resulta:
 
-      \begin{equation}
-      A_e = 0{,}56 A
-      = 0{,}56 \times 1{,}131
-      \approx 0{,}6333,\text{m}^2
-      \end{equation}
+        \begin{equation}
+          A_e = 0{,}56 A
+            = 0{,}56 \times 1{,}131
+          \approx 0{,}6333,\text{m}^2
+        \end{equation}
 
-      \subsection*{a) Ganancia de cada antena}
+        \subsection*{a) Ganancia de cada antena}
 
-      La ganancia se obtiene a partir del área efectiva:
+        La ganancia se obtiene a partir del área efectiva:
 
-      \begin{equation}
-      G = \frac{4\pi A_e}{\lambda^2}
-      = \frac{4\pi(0{,}6333)}{(0{,}15)^2}
-      \approx 353{,}72
-      \end{equation}
+        \begin{equation}
+          G = \frac{4\pi A_e}{\lambda^2}
+          = \frac{4\pi(0{,}6333)}{(0{,}15)^2}
+          \approx 353{,}72
+        \end{equation}
 
-      Para expresarla en decibelios:
+        Para expresarla en decibelios:
 
-      \begin{equation}
-      G_{\text{dB}} = 10\log_{10}(353{,}72)
-      \approx 25{,}49,\text{dB}
-      \end{equation}
+        \begin{equation}
+          G_{\text{dB}} = 10\log_{10}(353{,}72)
+          \approx 25{,}49,\text{dB}
+        \end{equation}
 
-      Por lo tanto, la ganancia de cada antena es aproximadamente $25{,}49,\text{dB}$.
+        Por lo tanto, la ganancia de cada antena es aproximadamente $25{,}49,\text{dB}$.
 
-      \subsection*{b) Potencia Efectiva Radiada (EIRP)}
+        \subsection*{b) Potencia Efectiva Radiada (EIRP)}
 
-      La EIRP se obtiene multiplicando la potencia transmitida por la ganancia de la antena transmisora:
+        La EIRP se obtiene multiplicando la potencia transmitida por la ganancia de la antena transmisora:
 
-      \begin{equation}
-      \text{EIRP} = P_t G_t
-      = 0{,}1 \times 353{,}72
-      \approx 35{,}37,\text{W}
-      \end{equation}
+        \begin{equation}
+          \text{EIRP} = P_t G_t
+            = 0{,}1 \times 353{,}72
+          \approx 35{,}37,\text{W}
+        \end{equation}
 
-      La potencia transmitida expresada en dBm es:
+        La potencia transmitida expresada en dBm es:
 
-      \begin{equation}
-      P_{t,\text{dBm}}
-      = 10\log_{10}(100)
-      = 20,\text{dBm}
-      \end{equation}
+        \begin{equation}
+          P_{t,\text{dBm}}
+          = 10\log_{10}(100)
+          = 20,\text{dBm}
+        \end{equation}
 
-      Entonces:
+        Entonces:
 
-      \begin{equation}
-      \text{EIRP}{\text{dBm}}
-      = P{t,\text{dBm}} + G_{t,\text{dB}}
-      = 20 + 25{,}49
-      = 45{,}49,\text{dBm}
-      \end{equation}
+        \begin{equation}
+          \text{EIRP}{\text{dBm}}
+          = P{t,\text{dBm}} + G_{t,\text{dB}}
+          = 20 + 25{,}49
+            = 45{,}49,\text{dBm}
+        \end{equation}
 
-      Por lo tanto, la EIRP es de aproximadamente $35{,}37,\text{W}$, equivalente a $45{,}49,\text{dBm}$.
+        Por lo tanto, la EIRP es de aproximadamente $35{,}37,\text{W}$, equivalente a $45{,}49,\text{dBm}$.
 
-      \subsection*{c) Potencia recibida ($P_r$)}
+        \subsection*{c) Potencia recibida ($P_r$)}
 
-      Primero calculamos la pérdida de propagación en el espacio libre:
+        Primero calculamos la pérdida de propagación en el espacio libre:
 
-      \begin{equation}
-      L_{\text{dB}}
-      = 20\log_{10}\left(
-      \frac{4\pi d_{\text{dist}}}{\lambda}
-      \right)
-      \end{equation}
+        \begin{equation}
+          L_{\text{dB}}
+          = 20\log_{10}\left(
+          \frac{4\pi d_{\text{dist}}}{\lambda}
+          \right)
+        \end{equation}
 
-      Reemplazando:
+        Reemplazando:
 
-      \begin{equation}
-      L_{\text{dB}}
-      = 20\log_{10}\left(
-      \frac{4\pi(24,000)}{0{,}15}
-      \right)
-      \approx 126{,}07,\text{dB}
-      \end{equation}
+        \begin{equation}
+          L_{\text{dB}}
+          = 20\log_{10}\left(
+          \frac{4\pi(24,000)}{0{,}15}
+          \right)
+          \approx 126{,}07,\text{dB}
+        \end{equation}
 
-      Finalmente, aplicamos el balance de enlace:
+        Finalmente, aplicamos el balance de enlace:
 
-      \begin{equation}
-      P_{r,\text{dBm}}
-      = P_{t,\text{dBm}}
-      + G_{t,\text{dB}}
-      + G_{r,\text{dB}}
-      - L_{\text{dB}}
-      \end{equation}
+        \begin{equation}
+          P_{r,\text{dBm}}
+          = P_{t,\text{dBm}}
+          + G_{t,\text{dB}}
+          + G_{r,\text{dB}}
+          - L_{\text{dB}}
+        \end{equation}
 
-      Como ambas antenas tienen la misma ganancia:
+        Como ambas antenas tienen la misma ganancia:
 
-      \begin{equation}
-      P_{r,\text{dBm}}
-      = 20 + 25{,}49 + 25{,}49 - 126{,}07
-      \approx -55{,}09,\text{dBm}
-      \end{equation}
+        \begin{equation}
+          P_{r,\text{dBm}}
+          = 20 + 25{,}49 + 25{,}49 - 126{,}07
+          \approx -55{,}09,\text{dBm}
+        \end{equation}
 
-      Por lo tanto, la potencia de la señal a la salida de la antena receptora es aproximadamente $-55{,}09,\text{dBm}$.
+        Por lo tanto, la potencia de la señal a la salida de la antena receptora es aproximadamente $-55{,}09,\text{dBm}$.
 
   \item
         Para obtener la expresión, comenzamos armando el triángulo e identificando los lados:
@@ -1099,62 +1101,62 @@ Observamos que para distancias cortas (hasta $4\text{ km}$), el cable atenúa me
         \]
 
   \item
-    El rayo incide sobre la superficie del agua formando un ángulo de $30^\circ$ respecto del horizonte. Como la Ley de Snell utiliza los ángulos medidos respecto de la normal a la superficie, primero calculamos el ángulo de incidencia:
+        El rayo incide sobre la superficie del agua formando un ángulo de $30^\circ$ respecto del horizonte. Como la Ley de Snell utiliza los ángulos medidos respecto de la normal a la superficie, primero calculamos el ángulo de incidencia:
 
-    \begin{equation}
-    \theta_1 = 90^\circ - 30^\circ = 60^\circ
-    \end{equation}
+        \begin{equation}
+          \theta_1 = 90^\circ - 30^\circ = 60^\circ
+        \end{equation}
 
-    Los índices de refracción son:
+        Los índices de refracción son:
 
-    \begin{equation}
-    n_1 = 1{,}0003
-    \end{equation}
+        \begin{equation}
+          n_1 = 1{,}0003
+        \end{equation}
 
-    para el aire, y
+        para el aire, y
 
-    \begin{equation}
-    n_2 = \frac{4}{3} \approx 1{,}3333
-    \end{equation}
+        \begin{equation}
+          n_2 = \frac{4}{3} \approx 1{,}3333
+        \end{equation}
 
-    para el agua.
+        para el agua.
 
-    Aplicando la Ley de Snell:
+        Aplicando la Ley de Snell:
 
-    \begin{equation}
-    n_1 \sin(\theta_1) = n_2 \sin(\theta_2)
-    \end{equation}
+        \begin{equation}
+          n_1 \sin(\theta_1) = n_2 \sin(\theta_2)
+        \end{equation}
 
-    Despejamos $\theta_2$:
+        Despejamos $\theta_2$:
 
-    \begin{equation}
-    \sin(\theta_2) =
-    \frac{n_1 \sin(\theta_1)}{n_2}
-    \end{equation}
+        \begin{equation}
+          \sin(\theta_2) =
+          \frac{n_1 \sin(\theta_1)}{n_2}
+        \end{equation}
 
-    Reemplazando los valores:
+        Reemplazando los valores:
 
-    \begin{equation}
-    \sin(\theta_2) =
-    \frac{1{,}0003 \sin(60^\circ)}{1{,}3333}
-    \approx 0{,}6497
-    \end{equation}
+        \begin{equation}
+          \sin(\theta_2) =
+          \frac{1{,}0003 \sin(60^\circ)}{1{,}3333}
+          \approx 0{,}6497
+        \end{equation}
 
-    Por lo tanto:
+        Por lo tanto:
 
-    \begin{equation}
-    \theta_2 = \arcsin(0{,}6497) \approx 40{,}52^\circ
-    \end{equation}
+        \begin{equation}
+          \theta_2 = \arcsin(0{,}6497) \approx 40{,}52^\circ
+        \end{equation}
 
-    Entonces, el rayo se refracta dentro del agua formando un ángulo de aproximadamente $40{,}52^\circ$ respecto de la normal.
+        Entonces, el rayo se refracta dentro del agua formando un ángulo de aproximadamente $40{,}52^\circ$ respecto de la normal.
 
-    Si se quiere expresar el ángulo respecto de la superficie del agua:
+        Si se quiere expresar el ángulo respecto de la superficie del agua:
 
-    \begin{equation}
-    90^\circ - 40{,}52^\circ = 49{,}48^\circ
-    \end{equation}
+        \begin{equation}
+          90^\circ - 40{,}52^\circ = 49{,}48^\circ
+        \end{equation}
 
-    Por lo tanto, el ángulo de refracción es de $40{,}52^\circ$ respecto de la normal, o equivalentemente $49{,}48^\circ$ respecto de la superficie del agua.
+        Por lo tanto, el ángulo de refracción es de $40{,}52^\circ$ respecto de la normal, o equivalentemente $49{,}48^\circ$ respecto de la superficie del agua.
 
 
 \end{enumerate}
