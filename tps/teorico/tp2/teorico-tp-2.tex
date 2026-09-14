@@ -223,6 +223,63 @@
 
 \begin{enumerate}[label=4.\arabic*), itemsep=0.3cm]
   \item
+        \textbf{Supóngase que unos datos se almacenan en disquetes de
+        \(1,4\) Mbytes que pesan \(30\) g cada uno y que una compañía aérea
+        transporta \(10^4\) kg de disquetes a una velocidad de \(1000\) km/h
+        sobre una distancia de \(5000\) km. ¿Cuál es la velocidad de transmisión
+        en bits por segundo de este sistema?}
+
+        Primero calculamos la cantidad de disquetes transportados:
+
+        \[
+        10^4\text{ kg}=10^7\text{ g}
+        \]
+
+        \[
+        N=\frac{10^7}{30}=333333,33\text{ disquetes}
+        \]
+
+        La cantidad de información transportada es:
+
+        \[
+        D=333333,33(1,4\times10^6)\text{ bytes}
+        \]
+
+        Pasando a bits:
+
+        \[
+        D=333333,33(1,4\times10^6)(8)
+        \]
+
+        \[
+        D=3,7333\times10^{12}\text{ bits}
+        \]
+
+        El tiempo necesario para recorrer los \(5000\) km es:
+
+        \[
+        t=\frac{5000}{1000}=5\text{ h}
+        \]
+
+        \[
+        t=5(3600)=18000\text{ s}
+        \]
+
+        Por lo tanto, la velocidad de transmisión equivalente es:
+
+        \[
+        R=\frac{3,7333\times10^{12}}{18000}
+        \]
+
+        \[
+        \boxed{R\approx2,07\times10^8\text{ bit/s}}
+        \]
+
+        Por lo tanto, la velocidad de transmisión es aproximadamente:
+
+        \[
+        \boxed{207,4\text{ Mbit/s}}
+        \]
 
   \item
         Para calcular, primero debemos conocer la potencia de salida.
@@ -365,7 +422,125 @@
 
   \item
 
-  \item
+  \item Para la parábola de la Figura 4.12 se quiere demostrar
+        que los rayos que parten del foco y se reflejan en la parábola siguen
+        trayectorias paralelas al eje \(x\).
+
+        \textbf{a)}
+
+        La ecuación de la parábola es:
+
+        \[
+        y^2=2px
+        \]
+
+        Despejando \(x\):
+
+        \[
+        x=\frac{y^2}{2p}
+        \]
+
+        Derivando:
+
+        \[
+        \frac{dx}{dy}=\frac{y}{p}
+        \]
+
+        Por lo tanto:
+
+        \[
+        \frac{dy}{dx}=\frac{p}{y}
+        \]
+
+        En el punto \(P(x_1,y_1)\), la pendiente de la tangente \(M\) es:
+
+        \[
+        m_M=\frac{p}{y_1}
+        \]
+
+        Como la pendiente de una recta es igual a la tangente del ángulo
+        que forma con el eje \(x\):
+
+        \[
+        \boxed{\tan\beta=\frac{p}{y_1}}
+        \]
+
+        \textbf{b)}
+
+        El foco de la parábola se encuentra en:
+
+        \[
+        F\left(\frac{p}{2},0\right)
+        \]
+
+        La pendiente de la recta \(PF\) es:
+
+        \[
+        m_{PF}
+        =
+        \frac{y_1-0}{x_1-\frac{p}{2}}
+        \]
+
+        Como:
+
+        \[
+        x_1=\frac{y_1^2}{2p}
+        \]
+
+        se obtiene:
+
+        \[
+        m_{PF}
+        =
+        \frac{y_1}
+        {\frac{y_1^2}{2p}-\frac{p}{2}}
+        \]
+
+        \[
+        m_{PF}
+        =
+        \frac{2py_1}{y_1^2-p^2}
+        \]
+
+        \[
+        \tan\theta = m_{PF}
+        \]
+
+        Aplicando la fórmula de la tangente de la diferencia de dos ángulos:
+
+        \[
+        \tan\alpha=
+        \frac{\tan\beta-\tan\theta}
+        {1+\tan\beta\tan\theta}
+        \]
+
+        y utilizando las pendientes de \(M\) y \(PF\), resulta:
+
+        \[
+        \tan\alpha=-\frac{p}{y_1}
+        \]
+
+        Tomando el valor del ángulo entre las dos rectas:
+
+        \[
+        \boxed{\tan\alpha=\frac{p}{y_1}}
+        \]
+
+        Como:
+
+        \[
+        \tan\alpha=\tan\beta
+        \]
+
+        se cumple que:
+
+        \[
+        \boxed{\alpha=\beta}
+        \]
+
+        Por lo tanto, debido a que el ángulo de incidencia es igual al
+        ángulo de reflexión, los rayos reflejados por la parábola siguen
+        trayectorias paralelas al eje \(x\).
 
   \item
 
@@ -590,8 +765,6 @@
       \end{equation}
 
       Por lo tanto, la potencia de la señal a la salida de la antena receptora es aproximadamente $-55{,}09,\text{dBm}$.
-
-  \item
 
   \item
 
