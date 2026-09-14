@@ -290,7 +290,25 @@
   \item
 
   \item
+      Para calcular la longitud típica de la antena, primero se determina la longitud de onda ($\lambda$) de la señal electromagnética a $30\text{ Hz}$:
 
+    \begin{equation}
+        c = \lambda \cdot f \implies \lambda = \frac{c}{f}
+    \end{equation}
+
+    Sustituyendo la velocidad de la luz $c \approx 3 \times 10^8\text{ m/s}$ y la frecuencia $f = 30\text{ Hz}$:
+
+    \begin{equation}
+        \lambda = \frac{3 \times 10^8\text{ m/s}}{30\text{ s}^{-1}} = 10\,000\,000\text{ m} = 10\,000\text{ km}
+    \end{equation}
+
+    Dado que la dimensión deseable de la antena debe ser del orden de la mitad de la longitud de onda ($L = \lambda / 2$):
+
+    \begin{equation}
+        L = \frac{10\,000\text{ km}}{2} = 5\,000\text{ km}
+    \end{equation}
+
+    Por lo tanto, la longitud típica requerida para la antena es de \textbf{$5\,000\text{ km}$} (o $5 \times 10^6\text{ m}$).
   \item
 
   \item
@@ -450,7 +468,128 @@
         $$
           \boxed{P_r=-61.52\,dBm}
         $$
+
   \item
+         \begin{itemize}
+      \item Potencia de transmisión: $P_t = 0{,}1,\text{W} = 100 \text{mW}$
+      \item Frecuencia de operación: $f = 2\text {GHz} = 2 \times 10^9\text{Hz}$
+      \item Diámetro de las antenas: $d = 1{,}2 \text{m}$, por lo que $r = 0{,}6,\text{m}$
+      \item Distancia del enlace: $d_{\text{dist}} = 24\text {km} = 24,000\text{m}$
+      \item Velocidad de propagación: $c \approx 3 \times 10^8\text{m/s}$
+      \end{itemize}
+
+      Primero calculamos la longitud de onda:
+
+      \begin{equation}
+      \lambda = \frac{c}{f}
+      = \frac{3 \times 10^8}{2 \times 10^9}
+      = 0{,}15,\text{m}
+      \end{equation}
+
+      El área física de la antena es:
+
+      \begin{equation}
+      A = \pi r^2
+      = \pi(0{,}6)^2
+      \approx 1{,}131,\text{m}^2
+      \end{equation}
+
+      Considerando una eficiencia de $0{,}56$, el área efectiva resulta:
+
+      \begin{equation}
+      A_e = 0{,}56 A
+      = 0{,}56 \times 1{,}131
+      \approx 0{,}6333,\text{m}^2
+      \end{equation}
+
+      \subsection*{a) Ganancia de cada antena}
+
+      La ganancia se obtiene a partir del área efectiva:
+
+      \begin{equation}
+      G = \frac{4\pi A_e}{\lambda^2}
+      = \frac{4\pi(0{,}6333)}{(0{,}15)^2}
+      \approx 353{,}72
+      \end{equation}
+
+      Para expresarla en decibelios:
+
+      \begin{equation}
+      G_{\text{dB}} = 10\log_{10}(353{,}72)
+      \approx 25{,}49,\text{dB}
+      \end{equation}
+
+      Por lo tanto, la ganancia de cada antena es aproximadamente $25{,}49,\text{dB}$.
+
+      \subsection*{b) Potencia Efectiva Radiada (EIRP)}
+
+      La EIRP se obtiene multiplicando la potencia transmitida por la ganancia de la antena transmisora:
+
+      \begin{equation}
+      \text{EIRP} = P_t G_t
+      = 0{,}1 \times 353{,}72
+      \approx 35{,}37,\text{W}
+      \end{equation}
+
+      La potencia transmitida expresada en dBm es:
+
+      \begin{equation}
+      P_{t,\text{dBm}}
+      = 10\log_{10}(100)
+      = 20,\text{dBm}
+      \end{equation}
+
+      Entonces:
+
+      \begin{equation}
+      \text{EIRP}{\text{dBm}}
+      = P{t,\text{dBm}} + G_{t,\text{dB}}
+      = 20 + 25{,}49
+      = 45{,}49,\text{dBm}
+      \end{equation}
+
+      Por lo tanto, la EIRP es de aproximadamente $35{,}37,\text{W}$, equivalente a $45{,}49,\text{dBm}$.
+
+      \subsection*{c) Potencia recibida ($P_r$)}
+
+      Primero calculamos la pérdida de propagación en el espacio libre:
+
+      \begin{equation}
+      L_{\text{dB}}
+      = 20\log_{10}\left(
+      \frac{4\pi d_{\text{dist}}}{\lambda}
+      \right)
+      \end{equation}
+
+      Reemplazando:
+
+      \begin{equation}
+      L_{\text{dB}}
+      = 20\log_{10}\left(
+      \frac{4\pi(24,000)}{0{,}15}
+      \right)
+      \approx 126{,}07,\text{dB}
+      \end{equation}
+
+      Finalmente, aplicamos el balance de enlace:
+
+      \begin{equation}
+      P_{r,\text{dBm}}
+      = P_{t,\text{dBm}}
+      + G_{t,\text{dB}}
+      + G_{r,\text{dB}}
+      - L_{\text{dB}}
+      \end{equation}
+
+      Como ambas antenas tienen la misma ganancia:
+
+      \begin{equation}
+      P_{r,\text{dBm}}
+      = 20 + 25{,}49 + 25{,}49 - 126{,}07
+      \approx -55{,}09,\text{dBm}
+      \end{equation}
+
+      Por lo tanto, la potencia de la señal a la salida de la antena receptora es aproximadamente $-55{,}09,\text{dBm}$.
 
   \item
 
@@ -483,6 +622,62 @@
         \]
 
   \item
+    El rayo incide sobre la superficie del agua formando un ángulo de $30^\circ$ respecto del horizonte. Como la Ley de Snell utiliza los ángulos medidos respecto de la normal a la superficie, primero calculamos el ángulo de incidencia:
+
+    \begin{equation}
+    \theta_1 = 90^\circ - 30^\circ = 60^\circ
+    \end{equation}
+
+    Los índices de refracción son:
+
+    \begin{equation}
+    n_1 = 1{,}0003
+    \end{equation}
+
+    para el aire, y
+
+    \begin{equation}
+    n_2 = \frac{4}{3} \approx 1{,}3333
+    \end{equation}
+
+    para el agua.
+
+    Aplicando la Ley de Snell:
+
+    \begin{equation}
+    n_1 \sin(\theta_1) = n_2 \sin(\theta_2)
+    \end{equation}
+
+    Despejamos $\theta_2$:
+
+    \begin{equation}
+    \sin(\theta_2) =
+    \frac{n_1 \sin(\theta_1)}{n_2}
+    \end{equation}
+
+    Reemplazando los valores:
+
+    \begin{equation}
+    \sin(\theta_2) =
+    \frac{1{,}0003 \sin(60^\circ)}{1{,}3333}
+    \approx 0{,}6497
+    \end{equation}
+
+    Por lo tanto:
+
+    \begin{equation}
+    \theta_2 = \arcsin(0{,}6497) \approx 40{,}52^\circ
+    \end{equation}
+
+    Entonces, el rayo se refracta dentro del agua formando un ángulo de aproximadamente $40{,}52^\circ$ respecto de la normal.
+
+    Si se quiere expresar el ángulo respecto de la superficie del agua:
+
+    \begin{equation}
+    90^\circ - 40{,}52^\circ = 49{,}48^\circ
+    \end{equation}
+
+    Por lo tanto, el ángulo de refracción es de $40{,}52^\circ$ respecto de la normal, o equivalentemente $49{,}48^\circ$ respecto de la superficie del agua.
 
 
 \end{enumerate}
