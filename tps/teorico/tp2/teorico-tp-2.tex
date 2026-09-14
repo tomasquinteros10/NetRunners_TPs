@@ -225,6 +225,67 @@
   \item
 
   \item
+        Para calcular, primero debemos conocer la potencia de salida.
+
+        \[
+          \text{Pérdida} = 10 \log_{10}\left(\frac{P_{\text{in}}}{P_{\text{out}}}\right)
+        \]
+
+        \[
+          \text{Pérdida} = 20; \quad P_{\text{in}} = 0,5\ \text{W}
+        \]
+
+        \[
+          20 = 10 \log_{10}\left(\frac{0,5\ \text{W}}{P_{\text{out}}}\right)
+        \]
+
+        \[
+          \frac{20}{10} = \log_{10}\left(\frac{0,5\ \text{W}}{P_{\text{out}}}\right)
+        \]
+
+        \[
+          10^{2} = \frac{0,5\ \text{W}}{P_{\text{out}}}
+        \]
+
+        \[
+          P_{\text{out}} = \frac{0,5\ \text{W}}{100} = 5\ \text{mW}
+        \]
+
+        Ahora podemos calcular SNR:
+
+        \[
+          \text{SNR} = 10 \log_{10}\left(\frac{P_{\text{señ}}}{P_{\text{rui}}}\right)
+        \]
+
+        \[
+          P_{\text{señ}} = P_{\text{out}} = 5\ \text{mW}; \quad P_{\text{rui}} = 4,5\ \mu\text{W}
+        \]
+
+        \[
+          \text{SNR} = 10 \log_{10}\left(\frac{5\ \text{mW}}{4,5\ \mu\text{W}}\right)
+        \]
+
+        \[
+          \text{SNR} = 10 \log_{10}(1111,11)
+        \]
+
+        \[
+          \text{SNR} = 10 \times 3,0457
+        \]
+
+        \[
+          \text{SNR} = 30,457
+        \]
+
+        \[
+          \boxed{\text{SNR} \approx 30\ \text{dB}}
+        \]
+
+  \item
+
+  \item
+        \textbf{El cable coaxial es un sistema de transmisión con dos conductores. ¿Qué ventaja tiene conectar la malla exterior a tierra?} \\
+        Debido al apantallamiento, por construcción, el cable coaxial es mucho menos susceptible que el par trenzado tanto a interferencias como a diafonía. La ventaja de conectar la malla exterior a tierra es que las corrientes inducidas por señales externas se derivan a tierra a través de la malla, reduciendo así el ruido y las interferencias que podrían afectar al conductor interno.
 
   \item
 
@@ -236,7 +297,53 @@
 
   \item
 
-  \item
+        Debido a la relación:
+
+        \[
+          \frac{P_r}{P_t} = \frac{f^2 A_r A_t}{(cd)^2}
+        \]
+
+        Si duplicamos la frecuencia, entonces:
+
+        \[
+          \frac{P_r}{P_t} = \frac{(2f)^2 A_r A_t}{(cd)^2}
+        \]
+
+        \[
+          \frac{P_r}{P_t} = 4 \frac{f^2 A_r A_t}{(cd)^2}; \quad a = \frac{f^2 A_r A_t}{(cd)^2}
+        \]
+
+        \[
+          \frac{P_r}{P_t} = 4a
+        \]
+
+        \[
+          P_r = 4a P_t
+        \]
+
+        Lo que significa que cuadruplicamos la relación entre potencia recibida y potencia transmitida.
+
+        Por otro lado, si duplicamos el área efectiva de ambas antenas, tenemos que:
+
+        \[
+          \frac{P_r}{P_t} = \frac{f^2 \cdot 2A_r \cdot 2A_t}{(cd)^2}
+        \]
+
+        O sea:
+
+        \[
+          \frac{P_r}{P_t} = 4 \frac{f^2 A_r A_t}{(cd)^2}; \quad a = \frac{f^2 A_r A_t}{(cd)^2}
+        \]
+
+        \[
+          \frac{P_r}{P_t} = 4a
+        \]
+
+        \[
+          P_r = 4a P_t
+        \]
+
+        Esto demuestra que ambos escenarios llegan a un mismo resultado: una cuadruplicación de la potencia recibida.
 
   \item
 
@@ -245,14 +352,135 @@
   \item
 
   \item
+        \textbf{Suponga que un transmisor emite 50 W de potencia.}
 
+        \textbf{a) Exprese la potencia transmitida en dBm y dBW.}
+        $$
+          Potencia_{dBW}=10\log\left(\frac{Potencia_W}{1W}\right)
+        $$
+        $$
+          \boxed{
+            Potencia_{dBW}=16.99\,dBW
+          }
+        $$
+        $$
+          Potencia_{dBm}=10\log\left(\frac{Potencia_{mW}}{1mW}\right)
+        $$
+        $$
+          Potencia_{dBm}=10\log\left(\frac{50000mW}{1mW}\right)
+        $$
+        $$
+          \boxed{Potencia_{dBm}=46.99\,dBm}
+        $$
+
+        \textbf{b) Si la potencia del transmisor se aplica a una antena con ganancia unidad, usando una frecuencia de portadora de 900 MHz, ¿cuál es la potencia recibida, en dBm, en el espacio libre a una distancia de 100 m?}
+
+        Para la antena isotrópica ideal, la pérdida en el espacio libre es
+        $$
+          L_{dB}=20\log(f)+20\log(d)-147.56\,dB
+        $$
+        $$
+          L_{dB}=20\log(900\times10^6)+20\log(100)-147.56
+        $$
+        $$
+          \boxed{L_{dB}=71.52\,dB}
+        $$
+
+        Luego la potencia de la señal en la antena receptora, segun la perdida en el espacio libre es
+        $$
+          P_r=P_T\left(\frac{\lambda}{4\pi d}\right)^2
+        $$
+        $$
+          10\log(P_r)=10\log(P_t) +10\log\left[  \left(\frac{\lambda}{4\pi d}\right)^2\right]
+        $$
+
+        Como la pérdida en espacio libre es:
+        $$
+          L_{dB}=10\log\left(\frac{P_t}{P_r}\right)
+        $$
+
+        entonces:
+        $$
+          P_r(dBm)=P_t(dBm)-L_{dB}
+        $$
+        $$
+          P_r=46.99-71.52
+        $$
+        $$
+          \boxed{P_r=-24.53\,dBm}
+        $$
+
+        \textbf{c) Repita el Apartado (b) para una distancia de 10 km.}
+        $$
+          L_{dB}=20\log(900\times10^6)+20\log(10000)-147.56=111.52\,dB
+        $$
+        $$
+          \boxed{P_r=46.99\,dBm-111.52\,dB=-64.53\,dBm}
+        $$
+
+        \textbf{d) Repita (c) pero suponiendo una ganancia para la antena de recepción de 2}
+
+        Para antenas teniendo en cuenta la ganancia, la ecuacion de pérdida en el espacio libre es:
+        $$
+          \frac{P_t}{P_r}=\frac{(4\pi)^2d^2}{G_rG_t\lambda^2}
+        $$
+
+        Podemos rescribir esta ecuacion para obtener la potencia recibida en dBm y obtenemos:
+        $$
+          P_r(dBm)=P_t(dBm)+G_t(dB)+G_r(dB)-L_{dB}
+        $$
+
+        En nuestro caso $G_t=1$ y $G_r=2$. Convertimos esa ganancia a dB:
+        $$
+          G_r(dB)=10\log(2)
+        $$
+        $$
+          \boxed{G_r=3.01\,dB}
+        $$
+
+        Entonces, usando el balance en dB:
+        $$
+          P_r(dBm)=P_t(dBm)+G_t(dB)+G_r(dB)-L_{dB}
+        $$
+
+        Por tanto:
+        $$
+          P_r=46.99+0+3.01-111.52
+        $$
+        $$
+          \boxed{P_r=-61.52\,dBm}
+        $$
   \item
 
   \item
 
   \item
 
-  \item
+        Para tener en cuenta el peor caso, suponemos que la antena receptora se encuentra a una altura de 0 m.
+
+        La distancia de transmisión será entonces igual a:
+
+        \[
+          d = 3,57\ \frac{\text{km}}{\sqrt{\text{m}}} \sqrt{Kh}
+        \]
+
+        Donde $K$ es el factor de ajuste que tiene en cuenta la refracción.
+
+        Despejando:
+
+        \[
+          h = \left(\frac{d}{3,57\ \frac{\text{km}}{\sqrt{\text{m}}} \sqrt{K}}\right)^2
+        \]
+
+        $d = 80\ \text{km}$ y $K \approx \frac{4}{3}$.
+
+        \[
+          h = \left(\frac{80\ \text{km}}{3,57\ \frac{\text{km}}{\sqrt{\text{m}}} \sqrt{\frac{4}{3}}}\right)^2
+        \]
+
+        \[
+          h = 376,63\ \text{m}
+        \]
 
   \item
 
