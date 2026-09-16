@@ -121,7 +121,23 @@
   \item
   \item
   \item
+  \textbf{Enumere cuatro topologías comunes para redes LAN y describa brevemente su principio de funcionamiento.}
+
+Algunas de las topologias comunes para redes LAN pueden ser las siguientes:
+\begin{itemize}
+    \item \textbf{Bus:} Todos los dispositivos se conectan directamente a un medio de transmisión compartido de carácter multipunto mediante un cable lineal. Cuando una estación transmite un paquete, este se propaga en ambas direcciones a lo largo del bus y puede ser recibido por todas las demás estaciones, siendo que únicamente la estación de destino es la que procesa el mensaje al reconocer su dirección.
+    
+    \item \textbf{Anillo (Ring):} La red consta de un conjunto de repetidores unidos por enlaces punto a punto formando un bucle cerrado, donde los datos se transmiten en una sola dirección alrededor del anillo, pasando de un nodo al siguiente. Cada repetidor regenera y retransmite los bits del paquete hasta que alcanza la estación de destino y, finalmente, regresa a la estación emisora para ser retirado del medio.
+    
+    \item \textbf{Estrella (Star):} Cada estación se conecta directamente a un nodo central de control mediante un enlace dedicado punto a punto. La comunicación entre dos estaciones se realiza obligatoriamente a través del dispositivo central, encargado de retransmitir el tráfico entrante hacia la línea del destinatario correspondiente.
+    
+    \item \textbf{Árbol (Tree):} Es una generalización de la topología en bus. El medio de transmisión es un cable ramificado sin bucles cerrados que comienza en un punto central llamado raíz. Las transmisiones emitidas por cualquier estación se propagan a través del medio a todas las ramas del árbol y pueden ser escuchadas por el resto de los dispositivos conectados.
+\end{itemize}
+
   \item
+  \textbf{¿Cuál es el propósito del comité IEEE 802?}
+
+El propósito principal del comité IEEE 802 fue desarrollar y definir estándares internacionales para redes de área local (LAN) y redes de área metropolitana (MAN). Se centraron en estandarizar las capas inferiores del modelo OSI, específicamente la capa física y la capa de enlace de datos, dividiendo a esta última en dos subcapas: el Control de Enlace Lógico (LLC) y el Control de Acceso al Medio (MAC), para garantizar la interoperabilidad entre productos de diferentes fabricantes.
   \item
   \item
   \item
