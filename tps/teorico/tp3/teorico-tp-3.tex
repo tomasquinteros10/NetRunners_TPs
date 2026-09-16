@@ -7,6 +7,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{enumitem}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
@@ -119,14 +121,54 @@
   \item
   \item
   \item
+  \textbf{Enumere cuatro topologías comunes para redes LAN y describa brevemente su principio de funcionamiento.}
+
+Algunas de las topologias comunes para redes LAN pueden ser las siguientes:
+\begin{itemize}
+    \item \textbf{Bus:} Todos los dispositivos se conectan directamente a un medio de transmisión compartido de carácter multipunto mediante un cable lineal. Cuando una estación transmite un paquete, este se propaga en ambas direcciones a lo largo del bus y puede ser recibido por todas las demás estaciones, siendo que únicamente la estación de destino es la que procesa el mensaje al reconocer su dirección.
+    
+    \item \textbf{Anillo (Ring):} La red consta de un conjunto de repetidores unidos por enlaces punto a punto formando un bucle cerrado, donde los datos se transmiten en una sola dirección alrededor del anillo, pasando de un nodo al siguiente. Cada repetidor regenera y retransmite los bits del paquete hasta que alcanza la estación de destino y, finalmente, regresa a la estación emisora para ser retirado del medio.
+    
+    \item \textbf{Estrella (Star):} Cada estación se conecta directamente a un nodo central de control mediante un enlace dedicado punto a punto. La comunicación entre dos estaciones se realiza obligatoriamente a través del dispositivo central, encargado de retransmitir el tráfico entrante hacia la línea del destinatario correspondiente.
+    
+    \item \textbf{Árbol (Tree):} Es una generalización de la topología en bus. El medio de transmisión es un cable ramificado sin bucles cerrados que comienza en un punto central llamado raíz. Las transmisiones emitidas por cualquier estación se propagan a través del medio a todas las ramas del árbol y pueden ser escuchadas por el resto de los dispositivos conectados.
+\end{itemize}
+
+  \item
+  \textbf{¿Cuál es el propósito del comité IEEE 802?}
+
+El propósito principal del comité IEEE 802 fue desarrollar y definir estándares internacionales para redes de área local (LAN) y redes de área metropolitana (MAN). Se centraron en estandarizar las capas inferiores del modelo OSI, específicamente la capa física y la capa de enlace de datos, dividiendo a esta última en dos subcapas: el Control de Enlace Lógico (LLC) y el Control de Acceso al Medio (MAC), para garantizar la interoperabilidad entre productos de diferentes fabricantes.
   \item
   \item
   \item
+  \textbf{Enumere y describa brevemente los modos de operación proporcionados por el protocolo LLC.}
+
+        El protocolo LLC (Control de Enlace Lógico) define tres modos de operación para gestionar el intercambio de datos entre los puntos de acceso al servicio (SAP) de la capa de enlace:
+
+        \begin{enumerate}[label=\arabic*., itemsep=0.2cm]
+          \item \textbf{Tipo 1: servicio no orientado a conexión sin confirmación.} Es un servicio de datagramas que no incluye mecanismos de control de flujo ni de control de errores, por lo que la recepción de los datos no está garantizada a este nivel. Los datos se transmiten mediante PDU de información no numerada (UI).
+
+          \item \textbf{Tipo 2: servicio orientado a conexión.} Establece una conexión lógica entre los SAP de las estaciones antes de transferir datos. Utiliza el modo balanceado asíncrono (ABM) de HDLC y proporciona control de flujo, control de errores y numeración secuencial de tramas.
+
+          \item \textbf{Tipo 3: servicio no orientado a conexión con confirmación.} No requiere establecer previamente una conexión lógica, pero cada PDU de datos enviada es confirmada individualmente por el receptor. Utiliza PDU de información no orientada a conexión con confirmación (AC) y un número de secuencia de 1 bit para el control de entrega.
+        \end{enumerate}
+        
   \item
   \item
   \item
-  \item
-  \item
+  \item 
+  \textbf{¿Qué diferencias existen entre un concentrador y un conmutador de capa 2?}
+
+        Aunque ambos dispositivos se utilizan como nodo central en topologías en estrella, presentan diferencias en su funcionamiento y rendimiento:
+
+        \begin{itemize}
+          \item \textbf{Funcionamiento y tratamiento de la señal:} El concentrador (\textit{hub}) opera en la capa física como un repetidor multipuerto: retransmite la señal recibida por un puerto hacia todos los demás, sin analizar la dirección de destino. El conmutador de capa 2 (\textit{switch}) opera en la capa de enlace de datos: analiza la dirección MAC de destino de la trama y, si conoce el puerto asociado, la reenvía únicamente por ese puerto.
+
+          \item \textbf{Capacidad del medio y colisiones:} En un concentrador, todas las estaciones comparten el ancho de banda y un mismo dominio de colisión; solo una puede transmitir a la vez sin provocar colisiones. En un conmutador, cada puerto constituye un dominio de colisión separado y dispone de capacidad dedicada. Esto permite varias comunicaciones simultáneas entre puertos distintos y, en enlaces \textit{full-duplex}, elimina las colisiones.
+
+          \item \textbf{Procesamiento y modos de transmisión:} El concentrador no almacena ni procesa tramas individualmente. El conmutador realiza el reenvío mediante hardware especializado y puede gestionar búferes de tramas. Según el equipo, puede funcionar mediante almacenamiento y envío (\textit{store-and-forward}) o conmutación rápida (\textit{cut-through}), además de admitir enlaces \textit{full-duplex}.
+        \end{itemize}
+        
   \item
 
 \end{enumerate}
