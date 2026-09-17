@@ -139,6 +139,14 @@
 
     La diferencia clave radica en el propósito: las redes de salas de computadores buscan velocidad extrema y baja latencia entre servidores, mientras que las LANs de PCs priorizan la conectividad práctica y económica para los usuarios.
   \item
+  \textbf{¿Qué diferencias hay entre una red LAN de respaldo, una red SAN y una red LAN troncal?}
+
+  Una LAN de respaldo sirve para conectar grandes dispositivos tales como supercomputadoras o computadoras centrales. La cantidad de dispositivos es limitada y, por lo general, están confinados en un área física reducida.
+
+  Una SAN está, de cierta forma, relacionada con las LAN de respaldo, pero la principal diferencia es que, mediante una SAN, se crea un servicio de almacenamiento que centraliza esta tarea para todos los servidores que tienen acceso a él.
+
+  Las redes troncales surgen de la necesidad de separar redes por oficina o edificio. Esto ya plantea una de sus principales diferencias con las otras dos. El objetivo de las troncales es evitar la fragilidad de una única LAN cuando las distancias o la cantidad de dispositivos se vuelven grandes. Por eso, se secciona en LANs más pequeñas y todas se conectan a esta LAN troncal.
+
   \item
   \item
   \textbf{Enumere cuatro topologías comunes para redes LAN y describa brevemente su principio de funcionamiento.}
@@ -160,6 +168,15 @@ Algunas de las topologias comunes para redes LAN pueden ser las siguientes:
 El propósito principal del comité IEEE 802 fue desarrollar y definir estándares internacionales para redes de área local (LAN) y redes de área metropolitana (MAN). Se centraron en estandarizar las capas inferiores del modelo OSI, específicamente la capa física y la capa de enlace de datos, dividiendo a esta última en dos subcapas: el Control de Enlace Lógico (LLC) y el Control de Acceso al Medio (MAC), para garantizar la interoperabilidad entre productos de diferentes fabricantes.
   \item
   \item
+  \textbf{Enumere y describa brevemente los servicios proporcionados por LLC.}
+
+  Los servicios que ofrece LLC son:
+  \begin{itemize}
+    \item No orientado a conexión sin confirmación: se envían datagramas sin control de flujo ni control de errores.
+    \item En modo conexión: se produce una conexión lógica entre los usuarios y existen mecanismos para detectar y manejar errores o pérdida de datos.
+    \item No orientado a conexión con confirmación: se envían datagramas que son confirmados, pero no se establece una conexión previa entre los usuarios que se comunican.
+  \end{itemize}
+
   \item
   \textbf{Enumere y describa brevemente los modos de operación proporcionados por el protocolo LLC.}
 
