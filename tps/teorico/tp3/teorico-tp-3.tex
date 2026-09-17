@@ -117,7 +117,27 @@
 
 \begin{enumerate}[label=15.\arabic*), itemsep=0.3cm]
 
-  \item
+  \item 
+    Las redes para salas de computadores y las LANs de ordenadores personales responden a necesidades totalmente distintas según el tipo de equipos que conectan y el uso que se les da:
+
+    \begin{enumerate}
+      \item \textbf{Velocidad de transferencia:}
+      Las salas de computadores requieren velocidades muy altas porque mueven enormes volúmenes de datos entre servidores y almacenamiento. En cambio, las LANs de PCs manejan un tráfico más variable e intermitente, adaptado al ritmo de trabajo de los usuarios.
+
+      \item \textbf{Distancia y cobertura:}
+      Las redes de salas de computadores cubren distancias muy cortas (dentro del mismo cuarto o centro de cómputo) para reducir la latencia al mínimo. Las LANs de PCs se extienden por áreas más grandes, como pisos enteros o edificios completos.
+
+      \item \textbf{Dispositivos conectados:}
+      En una sala de computadores se interconectan equipos centrales como mainframes, servidores y discos de almacenamiento masivo. En una LAN de PCs se conectan principalmente computadoras de escritorio, laptops, impresoras y dispositivos de usuario.
+
+      \item \textbf{Confiabilidad y tolerancia a fallos:}
+      Las salas de computadores exigen máxima disponibilidad y redundancia, ya que una caída detiene servicios críticos. En las LANs tradicionales de PCs, aunque la disponibilidad importa, se tolera mejor una interrupción puntual y se prioriza reducir el costo por puerto.
+
+      \item \textbf{Tipo de tráfico:}
+      En las salas de cómputo predomina el tráfico masivo entre sistemas (respaldos, acceso a bases de datos y comunicación inter-procesador). En las LANs de PCs predomina el tráfico generado por las tareas diarias del usuario, como navegar por internet, enviar correos o compartir archivos.
+    \end{enumerate}
+
+    La diferencia clave radica en el propósito: las redes de salas de computadores buscan velocidad extrema y baja latencia entre servidores, mientras que las LANs de PCs priorizan la conectividad práctica y económica para los usuarios.
   \item
   \item
   \item
@@ -154,6 +174,24 @@ El propósito principal del comité IEEE 802 fue desarrollar y definir estándar
         \end{enumerate}
         
   \item
+    La subcapa MAC se encarga de gestionar cómo los dispositivos comparten el canal físico y cómo se estructuran los datos para enviarse por la red. Sus funciones principales son:
+
+    \begin{enumerate}
+        \item \textbf{Control del acceso al medio:}
+        Organiza el uso del canal compartido entre varias computadoras para evitar que transmitan al mismo tiempo o para resolver los conflictos cuando ocurren (usando métodos como CSMA/CD o CSMA/CA).
+
+        \item \textbf{Construcción y desarmado de tramas:}
+        Toma los datos de las capas superiores y les añade la información necesaria para el envío (direcciones, control y checksum). Al recibir una trama, realiza el proceso inverso: verifica la estructura y le quita la cabecera para entregar solo el contenido útil.
+
+        \item \textbf{Direccionamiento físico:}
+        Utiliza las direcciones físicas (direcciones MAC) de origen y destino para asegurarse de que cada paquete llegue exactamente a la tarjeta de red que corresponde.
+
+        \item \textbf{Detección de errores:}
+        Calcula un código de verificación (CRC o FCS) antes de transmitir la trama. El receptor vuelve a calcularlo al recibirla para comprobar si algún bit se corrompió en el camino y, de ser así, descartarla.
+
+        \item \textbf{Delimitación de tramas:}
+        Añade marcas especiales (como un preámbulo) al inicio y al final de cada envío para que la placa receptora sepa exactamente dónde empieza y termina cada paquete de datos.
+    \end{enumerate}
   \item
   \item
   \item 
