@@ -117,7 +117,7 @@
 
 \begin{enumerate}[label=15.\arabic*), itemsep=0.3cm]
 
-  \item \textbf{¿Qué difernecias hay entre los requisitos clave para las redes existentes en salas de computadores de aquellos necesarios para redes de area local de comptadores personales?}
+  \item \textbf{¿Qué diferencias hay entre los requisitos clave para las redes existentes en salas de computadores de aquellos necesarios para redes de area local de comptadores personales?}
     Las redes para salas de computadores y las LANs de ordenadores personales responden a necesidades totalmente distintas según el tipo de equipos que conectan y el uso que se les da:
 
     \begin{enumerate}
@@ -139,7 +139,16 @@
 
     La diferencia clave radica en el propósito: las redes de salas de computadores buscan velocidad extrema y baja latencia entre servidores, mientras que las LANs de PCs priorizan la conectividad práctica y económica para los usuarios.
   \item
+  \textbf{¿Qué diferencias hay entre una red LAN de respaldo, una red SAN y una red LAN troncal?}
+
+  Una LAN de respaldo sirve para conectar grandes dispositivos tales como supercomputadoras o computadoras centrales. La cantidad de dispositivos es limitada y, por lo general, están confinados en un área física reducida.
+
+  Una SAN está, de cierta forma, relacionada con las LAN de respaldo, pero la principal diferencia es que, mediante una SAN, se crea un servicio de almacenamiento que centraliza esta tarea para todos los servidores que tienen acceso a él.
+
+  Las redes troncales surgen de la necesidad de separar redes por oficina o edificio. Esto ya plantea una de sus principales diferencias con las otras dos. El objetivo de las troncales es evitar la fragilidad de una única LAN cuando las distancias o la cantidad de dispositivos se vuelven grandes. Por eso, se secciona en LANs más pequeñas y todas se conectan a esta LAN troncal.
+
   \item
+      La topología de una red es el patrón en el que están interconectados los dispositivos o estaciones de la red; es decir, la disposición física/lógica de estas conexiones.
   \item
   \textbf{Enumere cuatro topologías comunes para redes LAN y describa brevemente su principio de funcionamiento.}
 
@@ -158,8 +167,22 @@ Algunas de las topologias comunes para redes LAN pueden ser las siguientes:
   \textbf{¿Cuál es el propósito del comité IEEE 802?}
 
 El propósito principal del comité IEEE 802 fue desarrollar y definir estándares internacionales para redes de área local (LAN) y redes de área metropolitana (MAN). Se centraron en estandarizar las capas inferiores del modelo OSI, específicamente la capa física y la capa de enlace de datos, dividiendo a esta última en dos subcapas: el Control de Enlace Lógico (LLC) y el Control de Acceso al Medio (MAC), para garantizar la interoperabilidad entre productos de diferentes fabricantes.
+
+\item
+\textbf{¿Por qué existen diferentes normativas para redes LAN?}
+
+Existen diferentes normativas para redes LAN porque estas pueden utilizar diferentes topologías, medios de transmisión, disposiciones y técnicas de control de acceso al medio. La elección de estos elementos determina características como el coste, la capacidad, la velocidad y la eficiencia de las comunicaciones, por lo que estas normativas deben adaptarse a las distintas configuraciones de las redes LAN.
+
   \item
-  \item
+  \textbf{Enumere y describa brevemente los servicios proporcionados por LLC.}
+
+  Los servicios que ofrece LLC son:
+  \begin{itemize}
+    \item No orientado a conexión sin confirmación: se envían datagramas sin control de flujo ni control de errores.
+    \item En modo conexión: se produce una conexión lógica entre los usuarios y existen mecanismos para detectar y manejar errores o pérdida de datos.
+    \item No orientado a conexión con confirmación: se envían datagramas que son confirmados, pero no se establece una conexión previa entre los usuarios que se comunican.
+  \end{itemize}
+
   \item
   \textbf{Enumere y describa brevemente los modos de operación proporcionados por el protocolo LLC.}
 
@@ -193,7 +216,17 @@ El propósito principal del comité IEEE 802 fue desarrollar y definir estándar
         Añade marcas especiales (como un preámbulo) al inicio y al final de cada envío para que la placa receptora sepa exactamente dónde empieza y termina cada paquete de datos.
     \end{enumerate}
   \item
-  \item
+  \textbf{¿Qué funciones lleva a cabo un puente?}
+
+  El puente permite una ampliación de las LAN sin necesidad de modificar el software de comunicaciones de las estaciones conectadas. Desde el punto de vista de las estaciones, parece como si sólo existiese una única red LAN, y no necesitan discriminar entre estaciones de la misma o de diferentes LAN; el puente se encarga de ello.
+
+  \item 
+  \textbf{¿Qué es un árbol de expansión?}
+
+  Un árbol de expansión (spanning tree) es, en teoría de grafos, un subconjunto de las conexiones de un grafo que mantiene todos sus nodos conectados, pero sin formar bucles cerrados. 
+  
+  En una red, cada LAN puede considerarse un nodo y cada puente una arista. Por lo tanto, aunque originalmente existan varios caminos entre las LAN, se selecciona un conjunto de enlaces que conserve la conectividad pero elimine los ciclos. Este arbol se utiliza en el algoritmo de IEEE 802.1. La existencia de bucles entre puentes puede provocar que una misma trama sea retransmitida varias veces e incluso que los puentes aprendan información incorrecta sobre las ubicación de los dispositivos finales.
+
   \item 
   \textbf{¿Qué diferencias existen entre un concentrador y un conmutador de capa 2?}
 
@@ -208,6 +241,11 @@ El propósito principal del comité IEEE 802 fue desarrollar y definir estándar
         \end{itemize}
         
   \item
+        Ambos son switches de la capa 2, pero las diferencias centrales son:
+        El de almacenamiento y envío acepta la trama completa, la guarda por un tiempo en un buffer y luego la encamina hacia la línea de salida;
+en cambio, el conmutador rápido lee la trama MAC, observa la dirección de destino que está al comienzo de esta  y la retransmite sin recibirla por completo.
+
+        Básicamente, el conmutador rápido alcanza el mayor rendimiento posible, pero con el riesgo de transmitir una trama errónea.
 
 \end{enumerate}
 
