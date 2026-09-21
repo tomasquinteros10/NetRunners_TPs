@@ -138,7 +138,16 @@
           \item \textbf{VLAN de niveles superiores:} se clasifican por uso de aplicaci\'on. Por ejemplo, FTP, email, etc. Adem\'as, la pertenencia a una VLAN puede basarse en varios factores, como puertos, horas del d\'ia, subredes, formas de acceso, etc.
         \end{itemize}
       \item
+        Es un protocolo que se ide\'o para generar un mecanismo que permita a m\'ultiples redes compartir un mismo medio f\'isico. Se usa para definir el encapsulamiento usado para implementar este mecanismo en redes Ethernet. El protocolo consiste en modificar la trama de Ethernet para agregar cuatro bytes y modificar el campo EtherType para identificar que se modific\'o la trama. Estos cambios obligan tambi\'en a recalcular el campo FCS.
+
+        Cada dispositivo de interconexi\'on que desee soportar VLAN debe implementar este protocolo.
       \item
+        Es la forma que define el protocolo para diferenciar tramas de distintas VLAN. Se agregan cuatro bytes a la trama Ethernet: los dos primeros bytes redefinen el EtherType a 0x8100, pero no se sobreescribe el original, ya que queda inmediatamente a continuaci\'on de estos cuatro bytes. Los otros dos bytes (16 bits) que se insertan en el proceso de tagging incluyen:
+        \begin{itemize}
+          \item \textbf{PCP (Priority Code Point, 3 bits):} sirve para definir la prioridad de la trama.
+          \item \textbf{DEI (Drop Eligible Indicator, 1 bit):} si se encuentra en 1, da indicativo a una red saturada de que la trama es elegible para ser descartada y evitar la saturaci\'on.
+          \item \textbf{VID (VLAN Identifier, 12 bits):} permite identificar la red VLAN a la que pertenece la trama.
+        \end{itemize}
     \end{enumerate}
   \item
     \begin{enumerate}
