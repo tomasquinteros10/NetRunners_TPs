@@ -7,6 +7,7 @@
 \usepackage{enumitem}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{float}
 \usepackage{booktabs}
 \usepackage[T1]{fontenc}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
@@ -21,6 +22,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\usepackage{listings}
 
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
@@ -152,19 +154,206 @@
   \item
     \begin{enumerate}
       \item
+      \textbf{Acceso a Terminal y cambio de nombres (Hostname)} \\[0.5em]
+          Se accedió a la CLI de cada switch mediante el cable de consola ($RS\text{-}232 \to \text{Console}$) utilizando la aplicación Terminal en las computadoras respectivas.
+
+          \textbf{\textit{En SW-1:}}
+          \begin{lstlisting}
+          switch> enable
+          switch# configure terminal
+          switch(config)# hostname sw1
+          \end{lstlisting}
+
+          \textbf{\textit{En SW-2:}}
+          \begin{lstlisting}
+          Switch> enable
+          Switch# configure terminal
+          Switch(config)# hostname sw2
+          \end{lstlisting}
       \item
+      \textbf{Asignación de contraseñas de acceso} \\[0.5em]
+        Se protegieron los accesos al modo privilegiado (EXEC), al puerto de consola física y a las líneas de terminal virtual (VTY) para la administración remota.
+
+        \textbf{\textit{Comandos aplicados en ambos switches (sw1 y sw2):}}
+        \begin{lstlisting}
+        sw1(config)# enable secret redes2026
+        sw1(config)# line console 0
+        sw1(config-line)# password redes2026
+        sw1(config-line)# login
+        sw1(config-line)# exit
+        sw1(config)# line vty 0 15
+        sw1(config-line)# password redes2026
+        sw1(config-line)# login
+        sw1(config-line)# exit
+        \end{lstlisting}
       \item
+      \textbf{Encriptación de contraseñas} \\[0.5em]
+        Se habilitó el servicio global de encriptación para evitar que las contraseñas configuradas queden visibles en texto plano al consultar la configuración del equipo.
+
+        \textbf{\textit{Comando aplicado en ambos switches:}}
+        \begin{lstlisting}
+        sw1(config)# service password-encryption
+        \end{lstlisting}
       \item
+      \textbf{Configuración de direcciones IP en VLAN 1} \\[0.5em]
+        Se asignaron las direcciones de administración iniciales en la interfaz virtual de la VLAN 1 según la tabla de direccionamiento provista.
+
+          \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{tabla_ruteo.png}
+                \label{fig:ping_final}
+          \end{figure}
+
+        \textbf{\textit{En SW-1:}}
+        \begin{lstlisting}
+        sw1(config)# interface vlan 1
+        sw1(config-if)# ip address 192.168.1.11 255.255.255.0
+        sw1(config-if)# no shutdown
+        sw1(config-if)# exit
+        \end{lstlisting}
+
+        \textbf{\textit{En SW-2:}}
+        \begin{lstlisting}
+        sw2(config)# interface vlan 1
+        sw2(config-if)# ip address 192.168.1.12 255.255.255.0
+        sw2(config-if)# no shutdown
+        sw2(config-if)# exit
+        \end{lstlisting}
       \item
+        \textbf{Desactivación de interfaces no utilizadas} \\[0.5em]
+          Por buenas prácticas de seguridad en la red, se procedió a apagar administrativamente todas las interfaces FastEthernet y GigabitEthernet que no están conectadas a ningún dispositivo.
+
+          \textbf{\textit{En SW-1 (mantiene activas F0/1 y F0/6):}}
+          \begin{lstlisting}
+          sw1(config)# interface range fastEthernet 0/2 - 5, fastEthernet 0/7 - 24, gigabitEthernet 0/1 - 2
+          sw1(config-if-range)# shutdown
+          sw1(config-if-range)# exit
+          \end{lstlisting}
+
+          \textbf{\textit{En SW-2 (mantiene activas F0/1 y F0/18):}}
+          \begin{lstlisting}
+          sw2(config)# interface range fastEthernet 0/2 - 17, fastEthernet 0/19 - 24, gigabitEthernet 0/1 - 2
+          sw2(config-if-range)# shutdown
+          sw2(config-if-range)# exit
+          \end{lstlisting}  
       \item
+          \textbf{Guardado de la configuración} \\[0.5em]
+            Se procedió a guardar la configuración del archivo activo en memoria RAM (\textit{running-config}) a la memoria no volátil NVRAM (\textit{startup-config}) para mantener los cambios tras un reinicio del equipo.
       \item
+          \textbf{Prueba de conectividad (Pings entre computadoras)} \\[0.5em]
+          Se realizó un \textit{ping} desde la consola de comandos de la \textbf{PC-A} hacia la \textbf{PC-B} para verificar la comunicación en el estado por defecto de los switches.
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{pingA_B.png}
+                \label{fig:ping_final}
+            \end{figure}
+
+          \textbf{Interpretación del resultado:} El \textit{ping} resultó exitoso ($100\%$). Esto ocurre porque, en el estado inicial, todas las interfaces de ambos switches pertenecen por defecto a la \textbf{VLAN 1} y ambas PCs se encuentran configuradas dentro de la misma subred IP (\texttt{192.168.10.0/24}).
       \item
+          \textbf{Creación de VLANs} \\[0.5em]
+            Se crearon e identificaron las tres VLANs solicitadas en la consigna en ambos switches.
+
+            \textbf{\textit{Comandos aplicados en SW-1 y SW-2:}}
+            \begin{lstlisting}
+            sw1(config)# vlan 10
+            sw1(config-vlan)# name Laboratorio
+            sw1(config-vlan)# vlan 20
+            sw1(config-vlan)# name Bar
+            sw1(config-vlan)# vlan 99
+            sw1(config-vlan)# name Management
+            sw1(config-vlan)# exit
+            \end{lstlisting}
       \item
+            \textbf{Visualización de la VLAN por defecto} \\[0.5em]
+              La VLAN utilizada por defecto en los switches es la \textbf{VLAN 1}. Todos los puertos físicos pertenecen a ella de forma predeterminada.
+
+                \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{vlan_def.png}
+                \label{fig:ping_final}
+                \end{figure}
       \item
+            \textbf{Asignación de PC-A a la VLAN Laboratorio} \\[0.5em]
+              Se configuró el puerto \texttt{FastEthernet 0/6} de SW-1 en modo acceso para asignarlo a la VLAN 10.
+
+             \textbf{\textit{En SW-1:}}
+              \begin{lstlisting}
+              sw1(config)# interface f0/6
+              sw1(config-if)# switchport mode access
+              sw1(config-if)# switchport access vlan 10
+              sw1(config-if)# exit
+              \end{lstlisting}
       \item
+            \textbf{Reubicación de la IP de Management a la VLAN 99} \\[0.5em]
+              Se retiró la dirección IP de gestión de la VLAN 1 y se le asignó a la VLAN 99.
+
+              \textbf{\textit{En SW-1:}}
+              \begin{lstlisting}
+              sw1(config)# interface vlan 1
+              sw1(config-if)# no ip address
+              sw1(config-if)# interface vlan 99
+              sw1(config-if)# ip address 192.168.1.11 255.255.255.0
+              sw1(config-if)# no shutdown
+              sw1(config-if)# exit
+              \end{lstlisting}
       \item
+            \textbf{Verificación con comandos de estado} \\[0.5em]
+              Se ejecutó la comprobación de VLANs e interfaces.
+
+                \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{vlan_brief.png}
+                \label{fig:ping_final}
+                \end{figure}
+
+                \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{vlan_ip.png}
+                \label{fig:ping_final}
+                \end{figure}
+
+              El puerto \texttt{Fa0/6} pasó a integrar la VLAN 10 (Laboratorio). La interfaz virtual de la VLAN 99 quedó activa con la IP de administración, dejando la VLAN 1 sin IP (\textit{unassigned}).
       \item
+            \textbf{Configuración de PC-B y migración de IP en SW-2} \\[0.5em]
+              Se asoció la interfaz de PC-B (\texttt{FastEthernet 0/18}) a la VLAN 10 y se migró la IP de administración del SW-2 a la VLAN 99.
+
+              \textbf{\textit{En SW-2:}}
+              \begin{lstlisting}
+              sw2(config)# interface f0/18
+              sw2(config-if)# switchport mode access
+              sw2(config-if)# switchport access vlan 10
+              sw2(config-if)# exit
+              sw2(config)# interface vlan 1
+              sw2(config-if)# no ip address
+              sw2(config-if)# interface vlan 99
+              sw2(config-if)# ip address 192.168.1.12 255.255.255.0
+              sw2(config-if)# no shutdown
+              sw2(config-if)# exit
+              \end{lstlisting}
+
+              Adicionalmente, la interfaz inter-switch (\texttt{FastEthernet 0/1}) en ambos equipos se configuró en modo Trunk (\texttt{switchport mode trunk}) para posibilitar el transporte del tráfico multi-VLAN etiquetado (802.1Q).
       \item
+              \textbf{Pruebas de conectividad finales e Interpretación} \\[0.5em]
+                Se ejecutaron las pruebas de \textit{ping} finales para verificar el correcto aislamiento y el transporte del troncal.
+
+                \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{pingFinalA_B.png}
+                \label{fig:ping_final}
+                \end{figure}
+
+                \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.85\linewidth]{pingSWA_B.png}
+                \label{fig:ping_final}
+                \end{figure}
+
+                \textbf{Interpretación de los resultados:}
+                \begin{itemize}
+                    \item \textbf{Ping de PC-A (192.168.10.3) a PC-B (192.168.10.4):} Exitoso ($100\%$). Al estar ambas en la subred \texttt{192.168.10.0/24} y pertenecer a la VLAN 10, la comunicación se realiza sin problemas mediante el enlace troncal.
+                    \item \textbf{Ping de SW-1 (192.168.1.11) a SW-2 (192.168.1.12):} Exitoso. Las interfaces de gestión operan en la VLAN 99 en la subred \texttt{192.168.1.0/24}, confirmando que existe conectividad de administración remota entre los switches.
+                \end{itemize}
     \end{enumerate}
   \item
     \begin{enumerate}[label=\roman*)]
