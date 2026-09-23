@@ -1,0 +1,177 @@
+\documentclass[11pt,a4paper]{article}
+
+% -----------------------------------------------------------------------------
+% Paquetes: todos forman parte de una instalacion estandar de LaTeX.
+% -----------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+% Fecha en espanol sin depender de babel ni de spanish.ldf.
+\newcommand{\FechaEnEspanol}{%
+  \number\day\space de\space
+  \ifcase\month
+    \or enero\or febrero\or marzo\or abril\or mayo\or junio\or
+    julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
+  \fi\space de\space\number\year
+}
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+% lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
+\newif\ifHayUltimaPagina
+\IfFileExists{lastpage.sty}{
+  \usepackage{lastpage}
+  \HayUltimaPaginatrue
+}{
+  \HayUltimaPaginafalse
+}
+
+% -----------------------------------------------------------------------------
+% CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
+% -----------------------------------------------------------------------------
+\newcommand{\NombreMateria}{Redes de Computadoras}
+\newcommand{\TipoTrabajo}{Trabajo Práctico}
+\newcommand{\NumeroTrabajo}{4}
+% Cambiar por "Teórico" o "Práctico" según corresponda.
+\newcommand{\TipoTP}{Práctico}
+\newcommand{\NombreTrabajo}{Capas de Acceso y VLANs}
+\newcommand{\NombreGrupo}{NetRunners}
+\newcommand{\Docente}{SANTIAGO MARTIN HENN}
+\newcommand{\LogoArchivo}{logo.png}
+\newcommand{\LogoRuta}{\LogoArchivo}
+
+% Una linea por integrante. Se pueden agregar o quitar filas.
+\newcommand{\Integrantes}{%
+  \begin{tabular}{ll}
+    Bastida, Lucas Ramiro & DNI 39444511 \\
+    Contessi, Ruben Andres & DNI 33315235 \\
+    Garay, Ignacio Hernan & DNI 44191925 \\
+    Giraudo, Juan Pablo & DNI 34970089 \\
+    Peñaloza, Gonzalo Adrian & DNI 40441355 \\
+    Quinteros del Castillo, Tomás Agustín & DNI 46169739 \\
+    Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
+  \end{tabular}%
+}
+
+% -----------------------------------------------------------------------------
+% Elementos comunes de caratula y encabezado.
+% -----------------------------------------------------------------------------
+\newcommand{\InsertarLogo}[1][0.24\textwidth]{%
+  \ifx\LogoRuta\empty
+    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
+  \else
+    \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
+  \fi
+}
+
+\newcommand{\TituloCorto}{TP \NumeroTrabajo (\TipoTP): \NombreTrabajo}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\InsertarLogo[1.4cm]}
+\fancyhead[C]{\small\textbf{\TituloCorto}}
+\fancyhead[R]{\small\NombreGrupo}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    \InsertarLogo[0.32\textwidth]
+
+    \vfill
+    {\Large\textsc{\NombreMateria}\par}
+    \vspace{1.5cm}
+    {\Huge\bfseries \TipoTrabajo\par}
+    \vspace{0.35cm}
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo (\TipoTP)\par}
+    \vspace{0.8cm}
+    {\Large\NombreTrabajo\par}
+
+    \vfill
+    \begin{tabular}{rl}
+      \textbf{Grupo:} & \NombreGrupo \\
+      \textbf{Docente:} & \Docente
+    \end{tabular}
+
+    \vspace{1cm}
+    \begin{center}
+      \textbf{Integrantes}\\[0.2cm]
+      \Integrantes
+    \end{center}
+
+    \vfill
+    {\large \FechaEnEspanol\par}
+  \end{center}
+\end{titlepage}
+
+\section{Desarrollo}
+\begin{enumerate}
+  \item
+    \begin{enumerate}
+      \item
+        Las redes se clasifican seg\'un su alcance de la siguiente manera:
+        \begin{itemize}
+          \item \textbf{PAN (Personal Area Network):} cubre solo unos metros y sirve para conectar los dispositivos cercanos de una sola persona. Por lo general, usa tecnolog\'ias como Bluetooth y USB.
+          \item \textbf{LAN (Local Area Network):} son redes limitadas a un espacio f\'isico peque\~no, como una casa, una oficina o un edificio. Buscan ofrecer una alta velocidad y baja latencia.
+          \item \textbf{CAN (Campus Area Network):} de tama\~no intermedio, busca conectar varias LAN de edificios cercanos, como un campus universitario o un conjunto de edificios cercanos de una empresa. Suele ser propiedad de un solo ente, que es el mismo que la utiliza.
+          \item \textbf{MAN (Metropolitan Area Network):} cubre un pueblo o una ciudad entera. Conecta m\'ultiples redes LAN a trav\'es de conexiones de alta velocidad, como fibra \'optica. Su infraestructura est\'a desarrollada, por lo general, por empresas que luego cobran por su acceso a la red.
+          \item \textbf{WAN (Wide Area Network):} tiene un alcance muy amplio: abarca pa\'ises, continentes o el mundo entero. Internet es el ejemplo m\'as grande de una WAN. Interconecta redes m\'as peque\~nas entre ellas utilizando l\'ineas telef\'onicas, sat\'elites o cables submarinos.
+        \end{itemize}
+      \item
+        Una VLAN es una tecnolog\'ia mediante la cual se pueden separar l\'ogicamente dos o m\'as redes que se encuentran conectadas a un mismo conmutador f\'isico para que funcionen como redes independientes.
+
+        Se clasifican en:
+        \begin{itemize}
+          \item \textbf{VLAN nivel 1:} se especifica qu\'e puerto del switch pertenece a cada VLAN; el usuario que se conecte a ese puerto pertenecer\'a a esa VLAN. Esto genera que el usuario pierda movilidad, ya que si se conecta a otro puerto en otro lugar de la red puede pasar a pertenecer a una VLAN diferente.
+          \item \textbf{VLAN nivel 2:} se asocian mediante la MAC del dispositivo que se conecta. Esto permite la movilidad de los usuarios, aunque vuelve la configuraci\'on inicial un reto si existen m\'ultiples dispositivos.
+          \item \textbf{VLAN nivel 3:} se segmentan las redes por el protocolo especificado en la trama MAC. Existir\'a una VLAN para protocolo IPv4, IPv6, etc.
+          \item \textbf{VLAN nivel 4:} en este nivel, el switch se basa en la cabecera de nivel 3 para identificar a qu\'e subred pertenece la direcci\'on de origen del paquete. En este nivel no se define qu\'e estaci\'on pertenece a qu\'e VLAN, sino qu\'e paquete pertenece a qu\'e VLAN. Por lo que una misma estaci\'on enviar\'a paquetes a diferentes VLAN seg\'un qu\'e datos lleve la cabecera.
+          \item \textbf{VLAN de niveles superiores:} se clasifican por uso de aplicaci\'on. Por ejemplo, FTP, email, etc. Adem\'as, la pertenencia a una VLAN puede basarse en varios factores, como puertos, horas del d\'ia, subredes, formas de acceso, etc.
+        \end{itemize}
+      \item
+        Es un protocolo que se ide\'o para generar un mecanismo que permita a m\'ultiples redes compartir un mismo medio f\'isico. Se usa para definir el encapsulamiento usado para implementar este mecanismo en redes Ethernet. El protocolo consiste en modificar la trama de Ethernet para agregar cuatro bytes y modificar el campo EtherType para identificar que se modific\'o la trama. Estos cambios obligan tambi\'en a recalcular el campo FCS.
+
+        Cada dispositivo de interconexi\'on que desee soportar VLAN debe implementar este protocolo.
+      \item
+        Es la forma que define el protocolo para diferenciar tramas de distintas VLAN. Se agregan cuatro bytes a la trama Ethernet: los dos primeros bytes redefinen el EtherType a 0x8100, pero no se sobreescribe el original, ya que queda inmediatamente a continuaci\'on de estos cuatro bytes. Los otros dos bytes (16 bits) que se insertan en el proceso de tagging incluyen:
+        \begin{itemize}
+          \item \textbf{PCP (Priority Code Point, 3 bits):} sirve para definir la prioridad de la trama.
+          \item \textbf{DEI (Drop Eligible Indicator, 1 bit):} si se encuentra en 1, da indicativo a una red saturada de que la trama es elegible para ser descartada y evitar la saturaci\'on.
+          \item \textbf{VID (VLAN Identifier, 12 bits):} permite identificar la red VLAN a la que pertenece la trama.
+        \end{itemize}
+    \end{enumerate}
+  \item
+    \begin{enumerate}
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+      \item
+    \end{enumerate}
+  \item
+    \begin{enumerate}[label=\roman*)]
+      \item
+      \item
+      \item
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}
