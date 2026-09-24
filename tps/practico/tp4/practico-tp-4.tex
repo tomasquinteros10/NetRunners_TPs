@@ -23,6 +23,7 @@
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 \usepackage{listings}
+\lstset{breaklines=true, breakatwhitespace=false, basicstyle=\ttfamily\small}
 
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
@@ -235,7 +236,7 @@
           sw2(config)# interface range fastEthernet 0/2 - 17, fastEthernet 0/19 - 24, gigabitEthernet 0/1 - 2
           sw2(config-if-range)# shutdown
           sw2(config-if-range)# exit
-          \end{lstlisting}  
+          \end{lstlisting}
       \item
           \textbf{Guardado de la configuración} \\[0.5em]
             Se procedió a guardar la configuración del archivo activo en memoria RAM (\textit{running-config}) a la memoria no volátil NVRAM (\textit{startup-config}) para mantener los cambios tras un reinicio del equipo.
@@ -356,10 +357,247 @@
                 \end{itemize}
     \end{enumerate}
   \item
-    \begin{enumerate}[label=\roman*)]
+    \begin{enumerate}
       \item
+      \textbf{Idea general y topología} \\[0.5em]
+        La consigna pide simular el despliegue de una red LAN a bordo de un avión, compuesta por tres segmentos con distinto nivel de acceso: \textbf{i) Clase Turista}, con acceso solo a un sistema de entretenimiento (servidor local); \textbf{ii) Clase Business}, con acceso al sistema de entretenimiento e Internet; y \textbf{iii) Administración}, con acceso total. Para lograrlo se utilizó el concepto de \textit{VLANs}, complementado con \textit{NAT} y \textit{ACLs} para controlar el acceso de cada segmento.
+
+        Se tomó como base la topología sugerida en la consigna, adaptando algunos aspectos al hardware disponible en Packet Tracer. Los PC0, PC3 y PC4 corresponden a la clase Turista; PC1 y PC5, a Business; y PC2, a Administración.
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\linewidth]{avion_topologia.png}
+        \label{fig:avion_topologia}
+        \end{figure}
+
+        A continuación, la tabla de direccionamiento utilizada, tal cual la pide la consigna:
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\linewidth]{avion_tabla_direccionamiento.png}
+        \label{fig:avion_tabla_direccionamiento}
+        \end{figure}
+
       \item
+      \textbf{Configuración de VLANs y Switch} \\[0.5em]
+        Se crearon las VLANs 10 (Turista), 20 (Business) y 99 (Administración) en el switch. El puerto \texttt{Fa0/1}, conectado al router, se configuró en modo \textit{trunk} (802.1Q) para permitir el paso del tráfico etiquetado de las tres VLANs; el resto de los puertos se configuraron en modo \textit{access}, cada uno asociado a la VLAN correspondiente según el dispositivo conectado. La diferencia central entre ambos modos es cuántas VLANs pueden viajar por el puerto en cuestión.
+
+        \begin{lstlisting}
+        Switch(config)# vlan 10
+        Switch(config-vlan)# name Turista
+        Switch(config-vlan)# vlan 20
+        Switch(config-vlan)# name Business
+        Switch(config-vlan)# vlan 99
+        Switch(config-vlan)# name Admin
+        Switch(config-vlan)# exit
+        Switch(config)# interface FastEthernet0/1
+        Switch(config-if)# switchport mode trunk
+        Switch(config-if)# exit
+        Switch(config)# interface FastEthernet0/2
+        Switch(config-if)# switchport mode access
+        Switch(config-if)# switchport access vlan 10
+        \end{lstlisting}
+
+        Verificación del trunk hacia el router y de la asignación final de VLANs a cada puerto:
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\linewidth]{avion_switch_trunk.png}
+        \label{fig:avion_switch_trunk}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\linewidth]{avion_switch_vlan_brief.png}
+        \label{fig:avion_switch_vlan_brief}
+        \end{figure}
+
       \item
+      \textbf{Configuración del Router (router-on-a-stick)} \\[0.5em]
+        Se utilizaron subinterfaces sobre una única interfaz física del router (\texttt{Gi0/0.10}, \texttt{Gi0/0.20}, \texttt{Gi0/0.99}), cada una actuando como \textit{gateway} de su VLAN correspondiente. Cabe destacar que la consigna asumía interfaces \texttt{FastEthernet}, pero el modelo de router utilizado (Cisco 2911) solo dispone de interfaces \texttt{GigabitEthernet}, por lo que se adaptaron los comandos en consecuencia.
+
+        \begin{lstlisting}
+        Router1(config)# interface GigabitEthernet0/0.10
+        Router1(config-subif)# encapsulation dot1Q 10
+        Router1(config-subif)# ip address 10.10.10.1 255.255.255.0
+        Router1(config-subif)# exit
+        Router1(config)# interface GigabitEthernet0/0.20
+        Router1(config-subif)# encapsulation dot1Q 20
+        Router1(config-subif)# ip address 10.10.20.1 255.255.255.0
+        Router1(config-subif)# exit
+        Router1(config)# interface GigabitEthernet0/0.99
+        Router1(config-subif)# encapsulation dot1Q 99
+        Router1(config-subif)# ip address 10.10.99.1 255.255.255.0
+        Router1(config-subif)# exit
+        Router1(config)# interface GigabitEthernet0/0
+        Router1(config-if)# no shutdown
+        \end{lstlisting}
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\linewidth]{avion_router_subinterfaces.png}
+        \label{fig:avion_router_subinterfaces}
+        \end{figure}
+
+      \item
+      \textbf{DHCP y configuración de pools} \\[0.5em]
+        Se configuró el Router1 como servidor DHCP de las tres VLANs, con un \textit{pool} por cada una. Cada pedido de un PC llega al router a través de la subinterfaz correspondiente, que le contesta con una IP disponible de esa red. Cada \textit{pool} define la red a repartir (\texttt{network}), el \textit{gateway} a informar (\texttt{default-router}) y un servidor DNS (\texttt{dns-server}, se usó \texttt{8.8.8.8} como ejemplo genérico). Además, se excluyeron las primeras diez direcciones de cada subred para reservarlas a asignaciones manuales, como el servidor.
+
+        \begin{lstlisting}
+        Router1(config)# ip dhcp excluded-address 10.10.10.1 10.10.10.10
+        Router1(config)# ip dhcp excluded-address 10.10.20.1 10.10.20.10
+        Router1(config)# ip dhcp excluded-address 10.10.99.1 10.10.99.10
+        Router1(config)# ip dhcp pool TURISTA
+        Router1(dhcp-config)# network 10.10.10.0 255.255.255.0
+        Router1(dhcp-config)# default-router 10.10.10.1
+        Router1(dhcp-config)# dns-server 8.8.8.8
+        Router1(dhcp-config)# exit
+        Router1(config)# ip dhcp pool BUSINESS
+        Router1(dhcp-config)# network 10.10.20.0 255.255.255.0
+        Router1(dhcp-config)# default-router 10.10.20.1
+        Router1(dhcp-config)# dns-server 8.8.8.8
+        Router1(dhcp-config)# exit
+        Router1(config)# ip dhcp pool ADMIN
+        Router1(dhcp-config)# network 10.10.99.0 255.255.255.0
+        Router1(dhcp-config)# default-router 10.10.99.1
+        Router1(dhcp-config)# dns-server 8.8.8.8
+        \end{lstlisting}
+
+        Así queda la configuración IP obtenida automáticamente por DHCP en cada PC:
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.48\linewidth]{avion_dhcp_pc0_turista.png}
+        \includegraphics[width=0.48\linewidth]{avion_dhcp_pc1_business.png}
+        \label{fig:avion_dhcp_1}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.48\linewidth]{avion_dhcp_pc2_admin.png}
+        \includegraphics[width=0.48\linewidth]{avion_dhcp_pc3_turista.png}
+        \label{fig:avion_dhcp_2}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.48\linewidth]{avion_dhcp_pc4_turista.png}
+        \includegraphics[width=0.48\linewidth]{avion_dhcp_pc5_business.png}
+        \label{fig:avion_dhcp_3}
+        \end{figure}
+
+      \item
+      \textbf{Problema encontrado: cableado físico cruzado} \\[0.5em]
+        Durante la implementación nos encontramos con que el cableado físico no siempre coincidía con la asignación planeada de puertos. En vez de recablear, corregimos invirtiendo la VLAN asignada al puerto del switch correspondiente, ya que el comportamiento de una VLAN depende del puerto físico, no del nombre asignado al PC en Packet Tracer. Esta situación se presentó en dos oportunidades: entre PC1/PC2 y, luego, entre PC4/PC5.
+
+      \item
+      \textbf{Pruebas de conectividad interna (ping al servidor desde las tres VLANs)} \\[0.5em]
+        Antes de configurar NAT y ACLs, se verificó que las tres VLANs pudieran alcanzar el servidor de entretenimiento (\texttt{10.10.99.2}), gracias al ruteo entre VLANs provisto por las subinterfaces del router.
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.32\linewidth]{avion_ping_servidor_turista.png}
+        \includegraphics[width=0.32\linewidth]{avion_ping_servidor_business.png}
+        \includegraphics[width=0.32\linewidth]{avion_ping_servidor_admin.png}
+        \label{fig:avion_ping_servidor}
+        \end{figure}
+
+      \item
+      \textbf{NAT e Internet} \\[0.5em]
+        Dado que Packet Tracer no dispone de salida real a Internet, se simuló un host externo mediante una interfaz \textit{Loopback} en Router2 (que actúa como ISP), con la dirección pública \texttt{4.2.2.2}.
+
+        \begin{lstlisting}
+        Router2(config)# interface Loopback0
+        Router2(config-if)# ip address 4.2.2.2 255.255.255.255
+        \end{lstlisting}
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\linewidth]{avion_router2_loopback.png}
+        \label{fig:avion_router2_loopback}
+        \end{figure}
+
+        Para dar salida a Internet a Business y a Administración (Turista no debe tenerla), se configuró NAT con sobrecarga (\textit{overload}/PAT) sobre la interfaz pública del router. \textit{NAT} reescribe la IP de origen del paquete, cambiándola de la privada del PC a la IP pública del router antes de enviarlo, y realiza el proceso inverso al recibir la respuesta.
+
+        \begin{lstlisting}
+        Router1(config)# access-list 20 permit 10.10.20.0 0.0.0.255
+        Router1(config)# access-list 20 permit 10.10.99.0 0.0.0.255
+        Router1(config)# ip nat inside source list 20 interface GigabitEthernet0/1 overload
+        Router1(config)# interface GigabitEthernet0/0.10
+        Router1(config-subif)# ip nat inside
+        Router1(config-subif)# interface GigabitEthernet0/0.20
+        Router1(config-subif)# ip nat inside
+        Router1(config-subif)# interface GigabitEthernet0/0.99
+        Router1(config-subif)# ip nat inside
+        Router1(config-subif)# interface GigabitEthernet0/1
+        Router1(config-if)# ip nat outside
+        Router1(config)# ip route 0.0.0.0 0.0.0.0 200.0.0.2
+        \end{lstlisting}
+
+        Cabe destacar que la red de Administración (\texttt{10.10.99.0/24}) también se agregó a la \texttt{access-list 20}, ya que la consigna exige que ese segmento tenga ``acceso total'', incluyendo Internet.
+
+      \item
+      \textbf{ACL: el hallazgo más importante del laboratorio} \\[0.5em]
+        La consigna sugiere bloquear el acceso a Internet de Turista aplicando una ACL en sentido \textit{out} sobre la subinterfaz de esa VLAN, filtrando por dirección de origen \texttt{10.10.10.0/24}. Sin embargo, comprobamos que esa configuración, aplicada tal cual, \textbf{no bloquea nada real}: una ACL en sentido \textit{out} sobre una interfaz filtra el tráfico que está por \textit{salir} hacia esa red (es decir, tráfico \textbf{destinado} a Turista), mientras que la regla sugerida filtra por \textbf{origen}, condición que prácticamente nunca se cumple en ese sentido de tráfico. De hecho, durante nuestras pruebas el bloqueo de Turista hacia Internet se debía en realidad a la ausencia de una regla NAT para esa VLAN (el tráfico salía sin traducir y el router del ISP no podía devolver la respuesta), no a la ACL.
+
+        La solución correcta consiste en aplicar la ACL sobre la interfaz de salida hacia el ISP, filtrando por origen en sentido saliente, que es la única ubicación donde efectivamente intercepta el tráfico de Turista antes de abandonar la red local:
+
+        \begin{lstlisting}
+        Router1(config)# access-list 100 deny ip 10.10.10.0 0.0.0.255 any
+        Router1(config)# access-list 100 permit ip any any
+        Router1(config)# interface GigabitEthernet0/1
+        Router1(config-if)# ip access-group 100 out
+        \end{lstlisting}
+
+      \item
+      \textbf{Pruebas de ping y HTTP (según tabla de la consigna)} \\[0.5em]
+        Se presentan las capturas en el mismo orden que la tabla de pruebas del enunciado. Aclaramos que la tabla usa \texttt{10.10.99.10} como IP de ejemplo del servidor, mientras que en nuestra implementación configuramos \texttt{10.10.99.2}.
+
+        Ping al servidor de entretenimiento desde PC Turista (responde):
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\linewidth]{avion_prueba_ping_servidor.png}
+        \label{fig:avion_prueba1}
+        \end{figure}
+
+        Acceso HTTP al servidor local desde PC Turista (carga la página):
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\linewidth]{avion_prueba_http_turista.png}
+        \label{fig:avion_prueba2}
+        \end{figure}
+
+        Ping a Internet desde PC Turista (bloqueado):
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\linewidth]{avion_prueba_ping_internet_turista.png}
+        \label{fig:avion_prueba3}
+        \end{figure}
+
+        Acceso HTTP al servidor local desde PC Business (carga):
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\linewidth]{avion_prueba_http_business.png}
+        \label{fig:avion_prueba4}
+        \end{figure}
+
+        Ping a Internet desde PC Business (funciona):
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\linewidth]{avion_prueba_ping_internet_business.png}
+        \label{fig:avion_prueba5}
+        \end{figure}
+
+        Ping entre Admin y todos --- hacia Turista (\texttt{10.10.10.11}) y hacia Business (\texttt{10.10.20.12}):
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\linewidth]{avion_prueba_ping_admin_todos.png}
+        \label{fig:avion_prueba6}
+        \end{figure}
+
+      \item
+      \textbf{Conclusión} \\[0.5em]
+        A nuestro criterio, la conclusión más importante de este punto es que, si se seguía la configuración sugerida en el enunciado al pie de la letra, la ACL no lograba bloquear nada real: al estar aplicada en sentido \textit{out} sobre la subinterfaz de Turista y filtrar por dirección de \textbf{origen}, nunca coincidía con el tráfico real saliente hacia esa red. El bloqueo observado durante nuestras primeras pruebas se debía, en realidad, a la ausencia de una regla NAT para la VLAN de Turista. La solución correcta fue trasladar la ACL a la interfaz de salida hacia el ISP, donde sí logramos bloquear específicamente el tráfico de Turista que intenta salir a Internet, de forma explícita e independiente de la configuración de NAT.
     \end{enumerate}
 \end{enumerate}
 
