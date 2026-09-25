@@ -171,6 +171,19 @@
           Switch# configure terminal
           Switch(config)# hostname sw2
           \end{lstlisting}
+
+          \begin{figure}[H]
+                  \centering
+                  \includegraphics[width=0.85\linewidth]{pcA.png}
+                  \label{fig:ping_final}
+          \end{figure}
+
+          \begin{figure}[H]
+                      \centering
+                      \includegraphics[width=0.85\linewidth]{pcB.png}
+                      \label{fig:ping_final}
+          \end{figure}
+      
       \item
       \textbf{Asignación de contraseñas de acceso} \\[0.5em]
         Se protegieron los accesos al modo privilegiado (EXEC), al puerto de consola física y a las líneas de terminal virtual (VTY) para la administración remota.
@@ -250,7 +263,7 @@
                 \label{fig:ping_final}
             \end{figure}
 
-          \textbf{Interpretación del resultado:} El \textit{ping} resultó exitoso ($100\%$). Esto ocurre porque, en el estado inicial, todas las interfaces de ambos switches pertenecen por defecto a la \textbf{VLAN 1} y ambas PCs se encuentran configuradas dentro de la misma subred IP (\texttt{192.168.10.0/24}).
+          El \textit{ping} resultó exitoso ($100\%$). Esto ocurre porque, en el estado inicial, todas las interfaces de ambos switches pertenecen por defecto a la \textbf{VLAN 1} y ambas PCs se encuentran configuradas dentro de la misma subred IP (\texttt{192.168.10.0/24}).
       \item
           \textbf{Creación de VLANs} \\[0.5em]
             Se crearon e identificaron las tres VLANs solicitadas en la consigna en ambos switches.
