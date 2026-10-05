@@ -141,6 +141,25 @@ Para identificar al usuario TS destino se necesita:
   \item 
   \item 
   \item 
+  \item El establecimiento de una conexión debe tener en cuenta la falta de fiabilidad del servicio de red. Si A envía un SYN a B, pueden ocurrir dos problemas:
+  \begin{enumerate}
+    \item Que se pierda el SYN de A o 
+    \item Que se pierda la respuesta de B
+  \end{enumerate}
+  Esto se puede resolver retransmitiendo SYN. Sin embargo puede generar duplicados. Por ejemplo, si la respuesta de B solamente estaba retrasada, A enviara otra solicitud que B ya recibió.
+
+  
+  También pueden quedar segmentos de datos viejos. Si una nueva conexión utiliza los mismos números de secuencia que una anterior, estos segmentos podrían confundirse. Cada conexión debe comenzar con un numero de secuencia diferente al anterior.
+
+
+  También un SYN viejo puede llegar después del cierre de una conexión y ser interpretado como una solicitud nueva y es conectan aunque estén esperando números de secuencia distintos.
+  Esto se resuelve con el dialogo en tres pasos:
+  \begin{enumerate}
+    \item A envía un SYN on numero de secuencia inicial.
+    \item B confirma el SYN de A y envía su propio SYN con numero de secuencia inicial propio.
+    \item A confirma el SYN de B.
+  \end{enumerate}
+  El beneficio es que cada extremo confirma explícitamente el SYN y numero de secuencia inicial del otro antes de considerarse establecida la conexión. De esta manera evita conexiones incorrectas por la solicitud vieja o duplicada y se asegura sobre los umeros de secuencia que van a utilizar
   \item 
   \item 
   \item 
