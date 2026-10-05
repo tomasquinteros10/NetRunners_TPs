@@ -198,7 +198,24 @@
     \item A confirma el SYN de B.
   \end{enumerate}
   El beneficio es que cada extremo confirma explícitamente el SYN y numero de secuencia inicial del otro antes de considerarse establecida la conexión. De esta manera evita conexiones incorrectas por la solicitud vieja o duplicada y se asegura sobre los números de secuencia que van a utilizar
-  \item 
+  \item \textbf{Defina las características de urgencia y forzado de TCP.}
+
+  TCP almacena temporalmente los datos tanto al enviarlos como al recibirlos. Normalmente, decide cuándo formar un segmento para transmitirlo y cuándo entregar los datos recibidos a la aplicación. Además, ofrece dos servicios útiles para etiquetar los datos: forzado y urgente.
+
+  \begin{itemize}
+      \item \textbf{Flujo de datos forzados:} permite solicitar que TCP envíe los datos pendientes sin esperar a acumular más. En el extremo receptor, indica que los datos deben entregarse a la aplicación sin seguir reteniéndose a la espera de más datos. Esto resulta útil cuando se termina una parte lógica de la información y se necesita que el receptor pueda procesarla.
+
+      \item \textbf{Señalización de datos urgentes:} permite avisar a la aplicación receptora que hay datos que requieren atención especial. TCP utiliza un puntero de urgente para señalar el final del bloque de datos urgentes. Estos se transmiten dentro del flujo de datos normal. La aplicación receptora es responsable de decidir qué acción realizar.
+  \end{itemize}
+  
+  En la cabecera TCP se encuentran los indicadores correspondientes de 6 bits:
+  \begin{itemize}
+      \item \textbf{PSH:} señala la función de forzado.
+      \item \textbf{URG:} indica que el campo de puntero urgente es válido.
+  \end{itemize}
+
+  La diferencia es que el forzado busca evitar la espera por acumulación de datos, mientras que la urgencia señala que una parte de los datos requiere atención especial.
+
   \item 
   \item 
   \item 
