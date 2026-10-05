@@ -118,7 +118,36 @@
   \item 
   \item 
   \item 
+  \textbf{Explique el uso de la multiplexación en el contexto de un protocolo de transporte.}
+
+    La \textbf{multiplexación} permite que el protocolo de transporte utilice de manera más eficiente las conexiones de red. La idea es que varias conexiones de transporte puedan compartir una misma conexión de red, o que una conexión de transporte pueda utilizar varias conexiones de red.
+
+    Se pueden distinguir dos casos:
+
+    \begin{itemize}
+    \item \textbf{Multiplexación hacia arriba (upward multiplexing):} varias conexiones de transporte utilizan una única conexión de red. Esto permite reducir la cantidad de conexiones de red necesarias, compartiendo una misma conexión entre diferentes conexiones de transporte.
+
+    ```
+    \item \textbf{Multiplexación hacia abajo (downward multiplexing):} una única conexión de transporte utiliza varias conexiones de red. Los datos pueden distribuirse entre estas conexiones, lo que permite aprovecharlas simultáneamente y puede mejorar el rendimiento.
+    ```
+
+    \end{itemize}
+
+    En resumen la multiplexación permite aprovechar mejor los recursos de la red, ya sea haciendo que varias conexiones de transporte compartan una misma conexión de red, o utilizando varias conexiones de red para una misma conexión de transporte.
   \item 
+
+    \textbf{Describa brevemente el esquema de créditos utilizado por TCP para el control de flujo.}
+
+    TCP utiliza un \textbf{esquema de créditos} para realizar el control de flujo y evitar que el emisor envíe más datos de los que el receptor puede almacenar.
+
+    Cada octeto de datos posee un número de secuencia, y los segmentos TCP incluyen un número de secuencia, un número de confirmación (\textit{ACK}) y un tamaño de ventana. El receptor utiliza la ventana para indicar al emisor cuántos octetos adicionales está preparado para recibir.
+
+    Por ejemplo, si un ACK contiene \(AN=i\) y una ventana \(W=j\), significa que todos los octetos anteriores a \(i\) fueron recibidos correctamente, que se espera recibir el octeto \(i\) y que el emisor tiene permiso para enviar hasta \(j\) octetos adicionales.
+
+    De esta manera, el receptor puede informar dinámicamente cuánto espacio disponible tiene en su buffer. Si la ventana es pequeña, el emisor debe reducir la cantidad de datos que envía; si aumenta, puede enviar más datos.
+
+    Una característica importante del esquema de créditos de TCP es que \textbf{el control de flujo está desacoplado de las confirmaciones}. Es decir, un segmento puede confirmar datos recibidos sin necesariamente otorgar nuevos créditos, o puede otorgar créditos sin confirmar nuevos datos.
+
   \item 
   \item 
   \item 
