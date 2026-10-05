@@ -169,9 +169,13 @@
 
     Una característica importante del esquema de créditos de TCP es que \textbf{el control de flujo está desacoplado de las confirmaciones}. Es decir, un segmento puede confirmar datos recibidos sin necesariamente otorgar nuevos créditos, o puede otorgar créditos sin confirmar nuevos datos.
 
-  \item En el esquema de ventana deslizante, la confirmación o ACK de la llegada de datos habilita al emisor inmediatamente a enviar más datos. En cambio, en el sistema de créditos se puede dar el ACK de que los datos llegaron, pero la habilitación para enviar más datos es independiente. Por lo tanto, el emisor puede recibir la confirmación de la llegada de los datos, pero no tener permitido enviar más hasta recibir créditos adicionales para continuar la comunicación.
+  \item \textbf{¿Cuál es la diferencia principal entre el esquema de créditos de TCP y el esquema de control de flujo de ventana deslizante utilizada por muchos otros protocolos, como por ejemplo HDLC?}
 
-  \item En un diálogo en dos pasos entre dos interlocutores A y B, A inicia la solicitud de conexión con un mensaje SYN i. B responderá con un SYN j y confirmará la recepción del SYN de A con un ACK (i + 1). En el diálogo de tres pasos, A enviará un SYN i, B lo recibe y responde con SYN j y ACK (i + 1). Cuando A recibe el SYN de B, responde con ACK (j + 1). Los valores i y j serán números de secuencia elegidos de forma independiente por cada uno de los interlocutores.
+  En el esquema de ventana deslizante, la confirmación o ACK de la llegada de datos habilita al emisor inmediatamente a enviar más datos. En cambio, en el sistema de créditos se puede dar el ACK de que los datos llegaron, pero la habilitación para enviar más datos es independiente. Por lo tanto, el emisor puede recibir la confirmación de la llegada de los datos, pero no tener permitido enviar más hasta recibir créditos adicionales para continuar la comunicación.
+
+  \item \textbf{Explique los mecanismos de diálogo en dos y tres pasos.}
+
+  En un diálogo en dos pasos entre dos interlocutores A y B, A inicia la solicitud de conexión con un mensaje SYN i. B responderá con un SYN j y confirmará la recepción del SYN de A con un ACK (i + 1). En el diálogo de tres pasos, A enviará un SYN i, B lo recibe y responde con SYN j y ACK (i + 1). Cuando A recibe el SYN de B, responde con ACK (j + 1). Los valores i y j serán números de secuencia elegidos de forma independiente por cada uno de los interlocutores.
 
   \item \textbf{¿Cuál es el beneficio del mecanismo de diálogo en tres pasos?}
   
