@@ -155,8 +155,8 @@
     \end{itemize}
 
     En resumen la multiplexación permite aprovechar mejor los recursos de la red, ya sea haciendo que varias conexiones de transporte compartan una misma conexión de red, o utilizando varias conexiones de red para una misma conexión de transporte.
-  \item 
 
+  \item
     \textbf{Describa brevemente el esquema de créditos utilizado por TCP para el control de flujo.}
 
     TCP utiliza un \textbf{esquema de créditos} para realizar el control de flujo y evitar que el emisor envíe más datos de los que el receptor puede almacenar.
@@ -169,10 +169,53 @@
 
     Una característica importante del esquema de créditos de TCP es que \textbf{el control de flujo está desacoplado de las confirmaciones}. Es decir, un segmento puede confirmar datos recibidos sin necesariamente otorgar nuevos créditos, o puede otorgar créditos sin confirmar nuevos datos.
 
-  \item 
-  \item 
-  \item 
-  \item 
+  \item \textbf{¿Cuál es la diferencia principal entre el esquema de créditos de TCP y el esquema de control de flujo de ventana deslizante utilizada por muchos otros protocolos, como por ejemplo HDLC?}
+
+  En el esquema de ventana deslizante, la confirmación o ACK de la llegada de datos habilita al emisor inmediatamente a enviar más datos. En cambio, en el sistema de créditos se puede dar el ACK de que los datos llegaron, pero la habilitación para enviar más datos es independiente. Por lo tanto, el emisor puede recibir la confirmación de la llegada de los datos, pero no tener permitido enviar más hasta recibir créditos adicionales para continuar la comunicación.
+
+  \item \textbf{Explique los mecanismos de diálogo en dos y tres pasos.}
+
+  En un diálogo en dos pasos entre dos interlocutores A y B, A inicia la solicitud de conexión con un mensaje SYN i. B responderá con un SYN j y confirmará la recepción del SYN de A con un ACK (i + 1). En el diálogo de tres pasos, A enviará un SYN i, B lo recibe y responde con SYN j y ACK (i + 1). Cuando A recibe el SYN de B, responde con ACK (j + 1). Los valores i y j serán números de secuencia elegidos de forma independiente por cada uno de los interlocutores.
+
+  \item \textbf{¿Cuál es el beneficio del mecanismo de diálogo en tres pasos?}
+  
+  El establecimiento de una conexión debe tener en cuenta la falta de fiabilidad del servicio de red. Si A envía un SYN a B, pueden ocurrir dos problemas:
+  \begin{enumerate}
+    \item Que se pierda el SYN de A o 
+    \item Que se pierda la respuesta de B
+  \end{enumerate}
+  Esto se puede resolver retransmitiendo SYN. Sin embargo puede generar duplicados. Por ejemplo, si la respuesta de B solamente estaba retrasada, A enviara otra solicitud que B ya recibió.
+
+  
+  También pueden quedar segmentos de datos viejos. Si una nueva conexión utiliza los mismos números de secuencia que una anterior, estos segmentos podrían confundirse. Cada conexión debe comenzar con un numero de secuencia diferente al anterior.
+
+
+  También un SYN viejo puede llegar después del cierre de una conexión y ser interpretado como una solicitud nueva y es conectan aunque estén esperando números de secuencia distintos.
+  Esto se resuelve con el dialogo en tres pasos:
+  \begin{enumerate}
+    \item A envía un SYN on numero de secuencia inicial.
+    \item B confirma el SYN de A y envía su propio SYN con numero de secuencia inicial propio.
+    \item A confirma el SYN de B.
+  \end{enumerate}
+  El beneficio es que cada extremo confirma explícitamente el SYN y numero de secuencia inicial del otro antes de considerarse establecida la conexión. De esta manera evita conexiones incorrectas por la solicitud vieja o duplicada y se asegura sobre los números de secuencia que van a utilizar
+  \item \textbf{Defina las características de urgencia y forzado de TCP.}
+
+  TCP almacena temporalmente los datos tanto al enviarlos como al recibirlos. Normalmente, decide cuándo formar un segmento para transmitirlo y cuándo entregar los datos recibidos a la aplicación. Además, ofrece dos servicios útiles para etiquetar los datos: forzado y urgente.
+
+  \begin{itemize}
+      \item \textbf{Flujo de datos forzados:} permite solicitar que TCP envíe los datos pendientes sin esperar a acumular más. En el extremo receptor, indica que los datos deben entregarse a la aplicación sin seguir reteniéndose a la espera de más datos. Esto resulta útil cuando se termina una parte lógica de la información y se necesita que el receptor pueda procesarla.
+
+      \item \textbf{Señalización de datos urgentes:} permite avisar a la aplicación receptora que hay datos que requieren atención especial. TCP utiliza un puntero de urgente para señalar el final del bloque de datos urgentes. Estos se transmiten dentro del flujo de datos normal. La aplicación receptora es responsable de decidir qué acción realizar.
+  \end{itemize}
+  
+  En la cabecera TCP se encuentran los indicadores correspondientes de 6 bits:
+  \begin{itemize}
+      \item \textbf{PSH:} señala la función de forzado.
+      \item \textbf{URG:} indica que el campo de puntero urgente es válido.
+  \end{itemize}
+
+  La diferencia es que el forzado busca evitar la espera por acumulación de datos, mientras que la urgencia señala que una parte de los datos requiere atención especial.
+
   \item 
   \item 
   \item 
