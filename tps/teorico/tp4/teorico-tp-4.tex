@@ -217,6 +217,17 @@
   La diferencia es que el forzado busca evitar la espera por acumulación de datos, mientras que la urgencia señala que una parte de los datos requiere atención especial.
 
   \item 
+  \textbf{¿Qué es una opción en los criterios de implementación de TCP?}
+
+  El estándar de TCP (RFC 793) especifica el formato de los segmentos y las reglas del protocolo, pero deja libertad en algunos aspectos de implementación: aunque dos TCP elijan opciones distintas, el protocolo sigue funcionando igual, pero el rendimiento puede variar según qué política haya elegido cada uno. Podemos nombrar cinco áreas (las más importantes):
+\begin{itemize}
+      \item \textbf{Política de envío:} cuándo el emisor arma un segmento con los datos que tiene acumulados (enviar apenas tenga algo disponible, o esperar a juntar más datos antes de armar el segmento).
+      \item \textbf{Política de entrega:} lo mismo que en la de envío, pero del lado del receptor (entregar los datos a la aplicación apenas llega cada segmento en orden, o acumular varios segmentos antes de entregarlos).
+      \item \textbf{Política de aceptación:} qué hacer si llegan segmentos desordenados (aceptar lo que llega en secuencia y descartar el resto, o aceptar y guardar cualquier segmento que caiga dentro de la ventana de recepción aunque esté desordenado).
+      \item \textbf{Política de retransmisión:} qué hacer cuando vence el temporizador de un segmento no confirmado.
+      \item \textbf{Política de confirmación:} cuando llega un segmento en orden, se confirma al instante de la llegada o se espera a "pisar" la confirmación sobre el próximo.
+  \end{itemize}
+  
   \item 
   \item 
 
