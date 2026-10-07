@@ -131,13 +131,11 @@
 
     \begin{enumerate}
         \item El usuario TS emisor ya conoce la dirección del usuario destino.
-        
       \item Utilizar direcciones conocidas para servicios comunes.
-        
       \item Utilizar un servidor de nombres para obtener la dirección correspondiente al usuario destino.
-        
       \item Crear el proceso destino cuando se realiza la solicitud, obteniendo su dirección durante este proceso.
     \end{enumerate}
+    
   \item 
   \textbf{Explique el uso de la multiplexación en el contexto de un protocolo de transporte.}
 
@@ -147,11 +145,9 @@
 
     \begin{itemize}
     \item \textbf{Multiplexación hacia arriba (upward multiplexing):} varias conexiones de transporte utilizan una única conexión de red. Esto permite reducir la cantidad de conexiones de red necesarias, compartiendo una misma conexión entre diferentes conexiones de transporte.
-
-    ```
+    
     \item \textbf{Multiplexación hacia abajo (downward multiplexing):} una única conexión de transporte utiliza varias conexiones de red. Los datos pueden distribuirse entre estas conexiones, lo que permite aprovecharlas simultáneamente y puede mejorar el rendimiento.
-    ```
-
+  
     \end{itemize}
 
     En resumen la multiplexación permite aprovechar mejor los recursos de la red, ya sea haciendo que varias conexiones de transporte compartan una misma conexión de red, o utilizando varias conexiones de red para una misma conexión de transporte.
@@ -184,20 +180,18 @@
     \item Que se pierda el SYN de A o 
     \item Que se pierda la respuesta de B
   \end{enumerate}
-  Esto se puede resolver retransmitiendo SYN. Sin embargo puede generar duplicados. Por ejemplo, si la respuesta de B solamente estaba retrasada, A enviara otra solicitud que B ya recibió.
+  Esto se puede resolver retransmitiendo SYN. Sin embargo puede generar duplicados. Por ejemplo, si la respuesta de B solamente estaba retrasada, A enviará otra solicitud que B ya recibió.
 
-  
-  También pueden quedar segmentos de datos viejos. Si una nueva conexión utiliza los mismos números de secuencia que una anterior, estos segmentos podrían confundirse. Cada conexión debe comenzar con un numero de secuencia diferente al anterior.
+  También pueden quedar segmentos de datos viejos. Si una nueva conexión utiliza los mismos números de secuencia que una anterior, estos segmentos podrían confundirse. Cada conexión debe comenzar con un número de secuencia diferente al anterior.
 
-
-  También un SYN viejo puede llegar después del cierre de una conexión y ser interpretado como una solicitud nueva y es conectan aunque estén esperando números de secuencia distintos.
+  También un SYN viejo puede llegar después del cierre de una conexión y ser interpretado como una solicitud nueva y se conectan aunque estén esperando números de secuencia distintos.
   Esto se resuelve con el dialogo en tres pasos:
   \begin{enumerate}
-    \item A envía un SYN on numero de secuencia inicial.
-    \item B confirma el SYN de A y envía su propio SYN con numero de secuencia inicial propio.
+    \item A envía un SYN con número de secuencia inicial.
+    \item B confirma el SYN de A y envía su propio SYN con número de secuencia inicial propio.
     \item A confirma el SYN de B.
   \end{enumerate}
-  El beneficio es que cada extremo confirma explícitamente el SYN y numero de secuencia inicial del otro antes de considerarse establecida la conexión. De esta manera evita conexiones incorrectas por la solicitud vieja o duplicada y se asegura sobre los números de secuencia que van a utilizar
+  El beneficio es que cada extremo confirma explícitamente el SYN y número de secuencia inicial del otro antes de considerarse establecida la conexión. De esta manera evita conexiones incorrectas por la solicitud vieja o duplicada y se asegura sobre los números de secuencia que van a utilizar
   \item \textbf{Defina las características de urgencia y forzado de TCP.}
 
   TCP almacena temporalmente los datos tanto al enviarlos como al recibirlos. Normalmente, decide cuándo formar un segmento para transmitirlo y cuándo entregar los datos recibidos a la aplicación. Además, ofrece dos servicios útiles para etiquetar los datos: forzado y urgente.
@@ -235,13 +229,9 @@ TCP controla la congestión de forma indirecta, ya que no puede controlar direct
 
 \begin{itemize}
     \item \textbf{Ventana de congestión (\(CWND\))}: limita la cantidad de datos que pueden encontrarse en tránsito. La cantidad efectiva de datos enviados está limitada por el mínimo entre \(CWND\) y la ventana anunciada por el receptor (\(RWIN\)).
-
     \item \textbf{Arranque lento (Slow Start)}: al comenzar una conexión o después de una congestión importante, TCP inicia con una ventana pequeña y aumenta rápidamente \(CWND\), buscando determinar progresivamente la capacidad disponible de la red.
-
     \item \textbf{Evitación de congestión (Congestion Avoidance)}: cuando \(CWND\) alcanza el umbral \(ssthresh\), su crecimiento se vuelve más lento y aproximadamente lineal, evitando sobrecargar la red.
-
     \item \textbf{Retransmisión rápida y recuperación rápida (Fast Retransmit / Fast Recovery)}: cuando TCP recibe varios ACKs duplicados, interpreta que probablemente se perdió un segmento. Lo retransmite sin esperar a que expire el temporizador y reduce la ventana de congestión para disminuir la carga sobre la red.
-
     \item \textbf{Temporizador de retransmisión (RTO)}: TCP adapta el tiempo de espera para las retransmisiones en función de las estimaciones del RTT. Si aumenta el retardo de la red, el RTO se ajusta para evitar retransmisiones prematuras que podrían aumentar aún más la congestión.
 \end{itemize}
 
@@ -250,13 +240,11 @@ En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la 
   \item 
     \textbf{¿Qué proporciona UDP que no ofrezca IP?}
 
-    
     El Protocolo de Datagramas de Usuario UDP (User Datagram Protocol) es un protocolo de la capa de transporte orientado a no conexión que ofrece un servicio de entrega de mensajes no confiable y de mínimo esfuerzo sobre la capa de red.
     
     Específicamente, UDP añade sobre el servicio básico de IP dos funciones fundamentales de la capa de transporte:
 \begin{itemize}
      \item \textbf {Puertos de origen y destino:} Permite la multiplexación y desmultiplexación del tráfico, entregando los datos a un proceso o aplicación específica dentro del equipo de destino, a diferencia de IP que solo entrega el paquete de equipo a equipo.
-    
      \item \textbf {Suma de comprobación (Checksum):} Ofrece una verificación de errores de extremo a extremo que protege tanto la cabecera UDP como la carga útil de datos y una pseudo-cabecera IP, asegurando que el mensaje no haya sufrido corrupción en el trayecto. En IPv6, este mecanismo es obligatorio.
 \end{itemize}
 
