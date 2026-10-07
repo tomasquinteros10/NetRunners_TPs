@@ -230,7 +230,22 @@
   
   \item 
    \textbf{¿Cómo puede utilizarse TCP para tratar la congestión de red o de interconexión de red?}
-   
+
+TCP controla la congestión de forma indirecta, ya que no puede controlar directamente los elementos de la red. Detecta posibles situaciones de congestión a partir de la \textbf{pérdida de paquetes, ACKs duplicados o aumentos en los tiempos de espera}. Para regular la cantidad de datos que transmite, utiliza principalmente los siguientes mecanismos:
+
+\begin{itemize}
+    \item \textbf{Ventana de congestión (\(CWND\))}: limita la cantidad de datos que pueden encontrarse en tránsito. La cantidad efectiva de datos enviados está limitada por el mínimo entre \(CWND\) y la ventana anunciada por el receptor (\(RWIN\)).
+
+    \item \textbf{Arranque lento (Slow Start)}: al comenzar una conexión o después de una congestión importante, TCP inicia con una ventana pequeña y aumenta rápidamente \(CWND\), buscando determinar progresivamente la capacidad disponible de la red.
+
+    \item \textbf{Evitación de congestión (Congestion Avoidance)}: cuando \(CWND\) alcanza el umbral \(ssthresh\), su crecimiento se vuelve más lento y aproximadamente lineal, evitando sobrecargar la red.
+
+    \item \textbf{Retransmisión rápida y recuperación rápida (Fast Retransmit / Fast Recovery)}: cuando TCP recibe varios ACKs duplicados, interpreta que probablemente se perdió un segmento. Lo retransmite sin esperar a que expire el temporizador y reduce la ventana de congestión para disminuir la carga sobre la red.
+
+    \item \textbf{Temporizador de retransmisión (RTO)}: TCP adapta el tiempo de espera para las retransmisiones en función de las estimaciones del RTT. Si aumenta el retardo de la red, el RTO se ajusta para evitar retransmisiones prematuras que podrían aumentar aún más la congestión.
+\end{itemize}
+
+En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la velocidad de transmisión a las condiciones de la red}, reduciendo el tráfico cuando detecta congestión y aumentando progresivamente la transmisión cuando la red parece tener capacidad disponible.
   
   \item 
     \textbf{¿Qué proporciona UDP que no ofrezca IP?}
