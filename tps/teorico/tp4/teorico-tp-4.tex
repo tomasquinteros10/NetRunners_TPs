@@ -229,7 +229,21 @@
   \end{itemize}
   
   \item 
+   \textbf{¿Cómo puede utilizarse TCP para tratar la congestión de red o de interconexión de red?}
+   
+  
   \item 
+    \textbf{¿Qué proporciona UDP que no ofrezca IP?}
+
+    
+    El Protocolo de Datagramas de Usuario UDP (User Datagram Protocol) es un protocolo de la capa de transporte orientado a no conexión que ofrece un servicio de entrega de mensajes no confiable y de mínimo esfuerzo sobre la capa de red.
+    
+    Específicamente, UDP añade sobre el servicio básico de IP dos funciones fundamentales de la capa de transporte:
+\begin{itemize}
+     \item \textbf {Puertos de origen y destino:} Permite la multiplexación y desmultiplexación del tráfico, entregando los datos a un proceso o aplicación específica dentro del equipo de destino, a diferencia de IP que solo entrega el paquete de equipo a equipo.
+    
+     \item \textbf {Suma de comprobación (Checksum):} Ofrece una verificación de errores de extremo a extremo que protege tanto la cabecera UDP como la carga útil de datos y una pseudo-cabecera IP, asegurando que el mensaje no haya sufrido corrupción en el trayecto. En IPv6, este mecanismo es obligatorio.
+\end{itemize}
 
 \end{enumerate}
 
