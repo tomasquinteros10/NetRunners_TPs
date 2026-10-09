@@ -9,9 +9,9 @@
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage[T1]{fontenc}
-\usepackage{tabularx} 
-\usepackage{array}    
-\usepackage{float}    
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -19,7 +19,7 @@
 
 % Configuración del paquete caption para textos en gris claro:
 \usepackage{caption}
-\DeclareCaptionFont{grisclaro}{\color{black!45}} 
+\DeclareCaptionFont{grisclaro}{\color{black!45}}
 \captionsetup{font=grisclaro, labelfont={bf,grisclaro}} % Todo el caption en gris claro
 
 % Fecha en español
@@ -120,7 +120,7 @@
 
 %% Punto 1)
 
-\section*{1) ICMP y primer contacto con Wireshark} 
+\section*{1) ICMP y primer contacto con Wireshark}
 
 \begin{enumerate}[label=\alph*)]
 
@@ -178,7 +178,7 @@ Datos / payload & N/A & N/A & N/A \\ \hline
       \label{fig:captura_wireshark1}
     \end{figure}
 
-    No, no es la MAC de 8.8.8.8. Es la dirección MAC de nuestro propio Router. 
+    No, no es la MAC de 8.8.8.8. Es la dirección MAC de nuestro propio Router.
 
     \begin{figure}[H]
     \centering
@@ -219,8 +219,8 @@ Datos / payload & N/A & N/A & N/A \\ \hline
     Los campos identifier y sequence number se mantienen iguales porque le permiten a la herramienta ping asociar inequívocamente cada Echo Reply que llega con el Echo Request específico que envió previamente, calculando así el tiempo de ida y vuelta (RTT) exacto de cada paquete.
 
 \item
-    Se encuentra ubicado al final de la trama, como la carga útil empaquetada dentro del encabezado del protocolo ICMP. Tiene un tamaño de 32 bytes y contiene un patrón de bytes de relleno que consiste en una secuencia alfabética repetitiva de texto en formato ASCII y además es exactamente igual en el Reply. 
-    
+    Se encuentra ubicado al final de la trama, como la carga útil empaquetada dentro del encabezado del protocolo ICMP. Tiene un tamaño de 32 bytes y contiene un patrón de bytes de relleno que consiste en una secuencia alfabética repetitiva de texto en formato ASCII y además es exactamente igual en el Reply.
+
     \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{payload.png}
@@ -231,7 +231,7 @@ Datos / payload & N/A & N/A & N/A \\ \hline
     Windows utiliza 32 bytes de letras ASCII mientras que Linux suele enviar 56 bytes incluyendo una marca de tiempo timestamp. Esto demuestra que la norma ICMP no exige un estándar fijo de contenido para el payload de prueba; cada sistema operativo implementa su propio generador de datos según el software ejecutable ping.
 
 \item
-    El echo request tiene un valor de Time to Live (TTL) de 128 y el del reply 120. Esto se debe a que cada router intermediario en Internet descuenta 1 unidad al campo TTL del paquete IP para evitar bucles de enrutamiento, dado que la respuesta enviada desde el servidor 8.8.8.8 se genera con un TTL = 128 el valor final recibido de 120 nos indica que la trama atravesó 8 saltos de routers intermedios hasta llegar de regreso a nuestro equipo. 
+    El echo request tiene un valor de Time to Live (TTL) de 128 y el del reply 120. Esto se debe a que cada router intermediario en Internet descuenta 1 unidad al campo TTL del paquete IP para evitar bucles de enrutamiento, dado que la respuesta enviada desde el servidor 8.8.8.8 se genera con un TTL = 128 el valor final recibido de 120 nos indica que la trama atravesó 8 saltos de routers intermedios hasta llegar de regreso a nuestro equipo.
 
 \item \leavevmode
     \begin{figure}[H]
@@ -244,21 +244,57 @@ Datos / payload & N/A & N/A & N/A \\ \hline
 \end{enumerate}
 
 \vspace{0.8cm}
-\section*{2) ARP: de una IP a una dirección MAC} 
+\section*{2) ARP: de una IP a una dirección MAC}
 
-\begin{enumerate}[label=\alph*)] 
+\begin{enumerate}[label=\alph*)]
 
-\item 
-\item 
-\item 
-\item 
-\item 
-          
+  \item ARP (Address Resolution Protocol) resuelve el problema de traducir una dirección IP (capa de red) a una dirección MAC (capa de enlace) dentro de una misma red local. Cuando una PC quiere mandarle un paquete a otra máquina de su subred, el sistema operativo sabe de antemano la IP destino, pero para meter esos datos en una trama Ethernet necesita la dirección MAC de destino; ARP es el mecanismo que se encarga de esto.
+
+  Ubicarlo en una capa es discutible porque no encaja bien en el modelo OSI de 7 capas ni en TCP/IP: ``sirve'' a la capa de red (resuelve direcciones IP), pero sus mensajes viajan directamente en tramas Ethernet, sin cabecera IP, es decir que opera al mismo nivel que la capa de enlace. El propio Stallings lo trata como un protocolo auxiliar en vez de como parte de una capa.
+
+  \item Un ARP Request es el mensaje de pregunta: ``¿quién tiene la IP X? decime tu MAC''. Se envía en broadcast Ethernet, porque el emisor todavía no sabe la MAC de nadie en particular. El ARP Reply es la respuesta: la manda únicamente la máquina que tiene esa IP, y se la envía en unicast directamente a la MAC del que preguntó (que ya venía incluida en el Request), porque sabe exactamente a quién contestarle.
+
+  \item La caché ARP es una tabla que cada sistema operativo mantiene en memoria con los pares IP-MAC que ya resolvió recientemente. Existe para evitar tener que hacer un Request/Reply por cada paquete que se manda: sin caché, cada trama hacia un mismo destino implicaría un broadcast ARP previo, generando tráfico innecesario y demoras. Con la caché, una vez resuelta una IP, las tramas siguientes hacia esa misma MAC se arman directamente sin volver a preguntar, hasta que la entrada expira.
+
+  \item Primero se consulta la caché ARP local: si ya hay una entrada para esa IP, se usa esa MAC directamente. Si no está, el sistema operativo dispara un ARP Request preguntando por esa IP; todas las máquinas del segmento lo reciben, pero solo la dueña responde con un ARP Reply indicando su MAC. Con esa respuesta se arma la trama Ethernet con la MAC destino correspondiente, y se guarda en la caché para no tener que repetir el proceso la próxima vez.
+
+  \item % TODO: falta la comparación entre la MAC del gateway en la caché ARP y la MAC destino observada en la captura (no hay respuesta escrita todavía).
+
+  \item Luego de hacer la captura, habiendo elegido la opción A, haciendo ping a 192.168.1.253 (usamos esta IP ya que nuestra subred es 192.168.1.0/24 con gateway 192.168.1.1, entonces usamos una IP que caiga en el rango; aclaramos que realizamos este punto en otra PC distinta a la del punto 1), podemos observar:
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{arp_capture.png}
+    \caption{Captura de Wireshark: ARP Requests a 192.168.1.253 sin Reply}
+    \label{fig:arp-capture}
+  \end{figure}
+
+  La tabla del Request quedaría:
+  \begin{itemize}
+    \item MAC destino (Ethernet): ff:ff:ff:ff:ff:ff (Broadcast)
+    \item MAC origen (Ethernet): cc:15:31:64:52:8f (Intel\_64:52:8f, nuestra placa)
+    \item Opcode: 1 (request)
+    \item Sender MAC address: cc:15:31:64:52:8f
+    \item Sender IP address: 192.168.1.60
+    \item Target MAC address: 00:00:00:00:00:00
+    \item Target IP address: 192.168.1.253
+  \end{itemize}
+
+  Mientras que la tabla del Reply queda vacía, ¿por qué ocurre esto? Son todos ARP Request idénticos, de la PC hacia Broadcast preguntando por 192.168.1.253, y ninguno tiene su correspondiente Reply. Eso nos dice que como esa IP no existe, nadie contesta. Respondiendo a las preguntas derivadas de esto:
+
+  \begin{enumerate}[label=\alph*)]
+    \item El Request va a broadcast porque nadie sabe todavía quién tiene esa IP, y el Target MAC address aparece en 00:00:00:00:00:00 porque es justamente el dato que se busca.
+    \item Después de las dos direcciones MAC, aparece 08 06; ese es el campo Type de Ethernet, y vale 0x0806, el EtherType reservado para ARP. No hay encabezado IP en el medio; esto nos dice que ARP viaja directo sobre Ethernet, no dentro de IP.
+    \item Aparecieron 6 ARP Request, ningún Reply y ningún ICMP Echo Request en la captura, y esto es porque sin la MAC resuelta, el sistema operativo nunca llega a armar la trama del ping.
+    \item No hizo falta esperar el minuto: como 192.168.1.253 nunca nos contestó, nunca se guardó nada en la caché para esa IP (eso solo pasa cuando hay Reply), así que daba lo mismo pingear de nuevo al instante o esperar. Repetimos el ping y, tal cual esperábamos, salió otro ARP Request en broadcast, sin respuesta; lo confirmamos también con \texttt{arp -a}.
+  \end{enumerate}
+
+  La ventaja de la caché es justamente esa: evita mandar un ARP por cada paquete que se manda a un destino ya conocido. El problema es que si una entrada queda vieja y la MAC real cambió, se van a seguir mandando tramas a una MAC que ya no corresponde, hasta que esa entrada expire sola.
 
 \end{enumerate}
 
 
-\section*{3) TCP y UDP a mano con ncat} 
+\section*{3) TCP y UDP a mano con ncat}
 
 \subsection*{Conceptos previos}
 
@@ -424,13 +460,13 @@ disponible.
 \end{enumerate}
 
 
-\section*{4) Servidor TCP minimo} 
+\section*{4) Servidor TCP minimo}
 
-\begin{enumerate}[label=\alph*)] 
+\begin{enumerate}[label=\alph*)]
 
-\item 
+\item
 
-          
+
 
 \end{enumerate}
 
