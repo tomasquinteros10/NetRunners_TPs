@@ -258,7 +258,7 @@ Datos / payload & N/A & N/A & N/A \\ \hline
 
   \item Primero se consulta la caché ARP local: si ya hay una entrada para esa IP, se usa esa MAC directamente. Si no está, el sistema operativo dispara un ARP Request preguntando por esa IP; todas las máquinas del segmento lo reciben, pero solo la dueña responde con un ARP Reply indicando su MAC. Con esa respuesta se arma la trama Ethernet con la MAC destino correspondiente, y se guarda en la caché para no tener que repetir el proceso la próxima vez.
 
-  \item % TODO: falta la comparación entre la MAC del gateway en la caché ARP y la MAC destino observada en la captura (no hay respuesta escrita todavía).
+  \item Sí, la dirección MAC coincide con la que vimos anteriormente en el punto 1.
 
   \item Luego de hacer la captura, habiendo elegido la opción A, haciendo ping a 192.168.1.253 (usamos esta IP ya que nuestra subred es 192.168.1.0/24 con gateway 192.168.1.1, entonces usamos una IP que caiga en el rango; aclaramos que realizamos este punto en otra PC distinta a la del punto 1), podemos observar:
 
