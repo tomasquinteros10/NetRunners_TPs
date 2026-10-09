@@ -260,18 +260,166 @@ Datos / payload & N/A & N/A & N/A \\ \hline
 
 \section*{3) TCP y UDP a mano con ncat} 
 
-\begin{enumerate}[label=\alph*)] 
+\subsection*{Conceptos previos}
 
-\item 
-\item 
-\item 
-\item 
-\item 
-\item 
-\item 
-\item 
-\item 
-          
+\begin{enumerate}[label=\alph*)]
+
+\item \textbf{¿Qué significa establecer una conexión? ¿Dónde existe una conexión TCP?}
+
+Establecer una conexión TCP significa realizar un intercambio inicial de segmentos entre los extremos para iniciar la comunicación. Este establecimiento se realiza mediante tres pasos: SYN, SYN-ACK y ACK. La conexión es una asociación lógica entre los extremos, no algo que exista en los cables o routers.
+
+\item \textbf{¿Qué es un puerto? ¿Qué identifica el par (IP, puerto)?}
+
+Un puerto es un punto de acceso que permite identificar un proceso o servicio dentro de un equipo. El par (IP, puerto) permite identificar un extremo de comunicación, indicando el equipo y el proceso o servicio al que se dirige el tráfico.
+
+\item \textbf{¿Qué significa que un proceso esté escuchando en un puerto?}
+
+Significa que el proceso está preparado para recibir comunicaciones dirigidas a ese puerto. En TCP, el servidor espera solicitudes de conexión de los clientes para poder establecer una conexión y comenzar el intercambio de datos.
+
+\end{enumerate}
+
+\subsection*{Experimento TCP}
+
+Se ejecutó un servidor con \texttt{ncat} escuchando en el puerto TCP 12000 y un cliente que se conectó a la dirección \texttt{127.0.0.1}. La captura se realizó con Wireshark utilizando el filtro \texttt{tcp.port == 12000}.
+
+En la captura se identificaron las siguientes etapas:
+
+\begin{itemize}
+  \item \textbf{Establecimiento de la conexión:} se observan los segmentos SYN, SYN-ACK y ACK, que conforman el establecimiento de la conexión TCP.
+  \item \textbf{Intercambio de datos:} aparecen segmentos con las banderas PSH y ACK que transportan los mensajes enviados entre el cliente y el servidor. También se observan segmentos ACK sin datos de aplicación.
+  \item \textbf{Cierre de la conexión:} se identifican segmentos FIN-ACK y ACK que intervienen en el cierre de la conexión.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{Experimento_TCP}
+  \caption{Captura del intercambio TCP con Wireshark.}
+  \label{fig:experimento-tcp}
+\end{figure}
+
+\subsection*{Experimento UDP}
+
+Se realizó una comunicación UDP utilizando el puerto 12001. El servidor quedó a la espera de datagramas y el cliente envió el mensaje ``Hola servidor''. Luego, el servidor respondió con el mensaje ``Hola cliente''. El tráfico se capturó con Wireshark.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{udp_cliente_servidor.png}
+  \caption{Datagrama UDP enviado desde el cliente al servidor.}
+  \label{fig:udp-cliente-servidor}
+\end{figure}
+
+En esta captura se observa un datagrama con puerto de origen 53742 y puerto de destino 12001. Los datos transmitidos ocupan 11 bytes y corresponden al mensaje ``Hola servidor''.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{udp_servidor_cliente.png}
+  \caption{Datagrama UDP enviado desde el servidor al cliente.}
+  \label{fig:udp-servidor-cliente}
+\end{figure}
+
+En esta captura se observa el sentido inverso: el puerto de origen es 12001 y el puerto de destino es 53742. Los datos transmitidos ocupan 10 bytes y corresponden al mensaje ``Hola cliente''.
+
+En ambas capturas, aunque la columna \textit{Protocol} de Wireshark muestra LLC, el panel de detalles permite identificar los encabezados IPv4 y UDP, junto con los puertos de origen y destino.
+
+\subsection*{Comparación entre TCP y UDP}
+
+\begin{enumerate}[label=\alph*)]
+
+\item Antes de enviar el primer mensaje, UDP no necesita establecer una conexión. En cambio, TCP realiza un intercambio inicial de tres segmentos (SYN, SYN-ACK y ACK) antes de transmitir los datos.
+
+\item En la captura UDP, cada uno de los mensajes observados se transmite en un datagrama independiente. No se observan confirmaciones ACK propias de UDP. En TCP, en cambio, se observan segmentos de confirmación durante el intercambio de datos.
+
+\item Comparación de las cabeceras TCP y UDP.
+
+La cabecera TCP observada en Wireshark tiene un tamaño de
+20 bytes (160 bits), mientras que la cabecera UDP tiene un
+tamaño fijo de 8 bytes (64 bits). Ambos protocolos incluyen
+los puertos de origen y destino. TCP incorpora además campos
+como números de secuencia, confirmación y banderas de control,
+mientras que UDP posee una cabecera más simple, con campos
+de longitud y suma de comprobación.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{tcp_cabecera.png}
+  \caption{Detalle de la cabecera TCP en Wireshark.}
+  \label{fig:tcp-cabecera}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{udp_cabecera.png}
+  \caption{Detalle de la cabecera UDP en Wireshark.}
+  \label{fig:udp-cabecera}
+\end{figure}
+
+\item Al cerrar el cliente UDP con Ctrl+C, no se realiza un
+intercambio de mensajes de cierre, ya que UDP no establece
+una conexión. En cambio, al cerrar la conexión TCP se
+observa un intercambio de segmentos FIN y ACK para finalizar
+la comunicación de forma ordenada.
+
+\item \leavevmode % Completar con el conteo de paquetes capturados al enviar
+En ambas pruebas se envió el mensaje ``hola'' desde el cliente
+hacia el servidor.
+
+En la captura TCP se observan 9 paquetes en total: 3 para
+establecer la conexión, 2 correspondientes al envío del mensaje
+y su confirmación, y 4 para cerrar la conexión. En la captura
+UDP se observa un datagrama para enviar el mensaje.
+
+Los paquetes adicionales de TCP permiten establecer y cerrar
+la conexión, además de confirmar la recepción de los datos.
+Estos mecanismos contribuyen a ofrecer una comunicación
+confiable y ordenada, mientras que UDP no requiere establecer
+una conexión ni utiliza confirmaciones de recepción propias
+del protocolo.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{tcp_pt_3e.png}
+  \caption{Captura TCP del envío del mensaje ``hola'' desde
+  el cliente al servidor, incluyendo el establecimiento y
+  el cierre de la conexión.}
+  \label{fig:tcp-punto-e}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{udp_pt_3e.png}
+  \caption{Captura UDP del envío del mensaje ``hola'' desde
+  el cliente al servidor.}
+  \label{fig:udp-punto-e}
+\end{figure}
+
+\item \leavevmode % Completar después de realizar la prueba sin servidores escuchando
+Al intentar establecer una conexión TCP con el puerto 12000,
+el cliente envía segmentos SYN y recibe respuestas RST, ACK,
+indicando que la conexión es rechazada porque no hay ningún
+proceso escuchando en ese puerto.
+
+En el caso de UDP, el cliente puede enviar un datagrama al
+puerto 12001 sin establecer previamente una conexión. Como
+no hay ningún proceso escuchando en ese puerto, se recibe un
+mensaje ICMP \textit{Destination unreachable (Port
+unreachable)}, que indica que el puerto de destino no está
+disponible.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{pws_pt_3f.png}
+  \caption{Salida de PowerShell al intentar comunicarse con
+  los puertos TCP y UDP sin un servidor escuchando.}
+  \label{fig:powershell-punto-f}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{ws_pt_3f.png}
+  \caption{Captura de Wireshark con los intentos de conexión
+  TCP y el mensaje ICMP de puerto UDP inaccesible.}
+  \label{fig:wireshark-punto-f}
+\end{figure}
 
 \end{enumerate}
 
