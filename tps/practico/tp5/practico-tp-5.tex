@@ -13,6 +13,7 @@
 \usepackage{array}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{fvextra}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 \usepackage[a4paper,margin=2.5cm,headheight=48pt]{geometry}
@@ -466,6 +467,52 @@ disponible.
 
 \item
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{tp5_4_1.png}
+  \caption{Captura de la ejecución del servidor y cliente TCP.}
+  \label{fig:tp5-4-1}
+\end{figure}
+
+\noindent\textbf{Salida de consola del servidor:}
+\begin{Verbatim}[frame=single,fontsize=\small,breaklines=true,breakanywhere=true]
+python3 tcp_server.py
+[13:07:33.301010] [servidor TCP] escuchando en 127.0.0.1:12000 ...
+[13:07:41.866240] [servidor TCP] conexión aceptada desde 127.0.0.1:54622
+[13:07:41.866317] [servidor TCP] recibido (22 bytes): 'Hola desde mi programa'
+[13:07:41.866433] [servidor TCP] respuesta enviada: 'Recibido: Hola desde mi programa'
+[13:07:41.866505] [servidor TCP] el cliente cerró la conexión
+\end{Verbatim}
+
+\noindent\textbf{Salida de consola del cliente:}
+\begin{Verbatim}[frame=single,fontsize=\small,breaklines=true,breakanywhere=true]
+python3 tcp_client.py 127.0.0.1 "Hola desde mi programa"
+[13:07:41.866208] [cliente TCP] conectado a 127.0.0.1:12000 desde 127.0.0.1:54622
+[13:07:41.866309] [cliente TCP] enviado: 'Hola desde mi programa'
+[13:07:41.866438] [cliente TCP] respuesta (32 bytes): 'Recibido: Hola desde mi programa'
+\end{Verbatim}
+
+\setcounter{enumi}{3}
+\item Para cada llamada, se indica si genera tráfico y, en caso afirmativo, los segmentos observados en la captura.
+
+\begin{table}[H]
+  \centering
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}p{2.6cm}|X|}
+    \hline
+    \textbf{Llamada} & \textbf{¿Dónde se ejecuta?} & \textbf{¿Genera tráfico?} & \textbf{Segmentos que se observan} \\ \hline
+    \texttt{socket()} & Servidor y cliente & No & -- \\ \hline
+    \texttt{bind()} & Servidor & No & -- \\ \hline
+    \texttt{listen()} & Servidor & No & -- \\ \hline
+    \texttt{connect()} & Cliente & Sí & N.º 180: SYN (cliente a servidor), N.º 181: SYN, ACK (servidor a cliente) y N.º 182: ACK (cliente a servidor) \\ \hline
+    \texttt{accept()} & Servidor & No & -- \\ \hline
+    \texttt{sendall()} & Servidor & Sí & N.º 185: PSH, ACK con la respuesta; N.º 186: ACK del cliente \\ \hline
+    \texttt{recv()} & Servidor & No & -- \\ \hline
+    \texttt{close()} & Ambos & Sí & N.º 187: FIN, ACK del cliente; N.º 188: FIN, ACK del servidor; N.º 189: ACK final del cliente \\ \hline
+  \end{tabularx}
+  \caption{Relación entre las llamadas de socket y el tráfico TCP observado.}
+  \label{tab:tp5-llamadas-trafico}
+\end{table}
 
 
 \end{enumerate}
