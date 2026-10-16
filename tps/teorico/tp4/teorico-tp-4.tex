@@ -135,8 +135,8 @@
       \item Utilizar un servidor de nombres para obtener la dirección correspondiente al usuario destino.
       \item Crear el proceso destino cuando se realiza la solicitud, obteniendo su dirección durante este proceso.
     \end{enumerate}
-    
-  \item 
+
+  \item
   \textbf{Explique el uso de la multiplexación en el contexto de un protocolo de transporte.}
 
     La \textbf{multiplexación} permite que el protocolo de transporte utilice de manera más eficiente las conexiones de red. La idea es que varias conexiones de transporte puedan compartir una misma conexión de red, o que una conexión de transporte pueda utilizar varias conexiones de red.
@@ -145,9 +145,9 @@
 
     \begin{itemize}
     \item \textbf{Multiplexación hacia arriba (upward multiplexing):} varias conexiones de transporte utilizan una única conexión de red. Esto permite reducir la cantidad de conexiones de red necesarias, compartiendo una misma conexión entre diferentes conexiones de transporte.
-    
+
     \item \textbf{Multiplexación hacia abajo (downward multiplexing):} una única conexión de transporte utiliza varias conexiones de red. Los datos pueden distribuirse entre estas conexiones, lo que permite aprovecharlas simultáneamente y puede mejorar el rendimiento.
-  
+
     \end{itemize}
 
     En resumen la multiplexación permite aprovechar mejor los recursos de la red, ya sea haciendo que varias conexiones de transporte compartan una misma conexión de red, o utilizando varias conexiones de red para una misma conexión de transporte.
@@ -174,10 +174,10 @@
   En un diálogo en dos pasos entre dos interlocutores A y B, A inicia la solicitud de conexión con un mensaje SYN i. B responderá con un SYN j y confirmará la recepción del SYN de A con un ACK (i + 1). En el diálogo de tres pasos, A enviará un SYN i, B lo recibe y responde con SYN j y ACK (i + 1). Cuando A recibe el SYN de B, responde con ACK (j + 1). Los valores i y j serán números de secuencia elegidos de forma independiente por cada uno de los interlocutores.
 
   \item \textbf{¿Cuál es el beneficio del mecanismo de diálogo en tres pasos?}
-  
+
   El establecimiento de una conexión debe tener en cuenta la falta de fiabilidad del servicio de red. Si A envía un SYN a B, pueden ocurrir dos problemas:
   \begin{enumerate}
-    \item Que se pierda el SYN de A o 
+    \item Que se pierda el SYN de A o
     \item Que se pierda la respuesta de B
   \end{enumerate}
   Esto se puede resolver retransmitiendo SYN. Sin embargo puede generar duplicados. Por ejemplo, si la respuesta de B solamente estaba retrasada, A enviará otra solicitud que B ya recibió.
@@ -201,7 +201,7 @@
 
       \item \textbf{Señalización de datos urgentes:} permite avisar a la aplicación receptora que hay datos que requieren atención especial. TCP utiliza un puntero de urgente para señalar el final del bloque de datos urgentes. Estos se transmiten dentro del flujo de datos normal. La aplicación receptora es responsable de decidir qué acción realizar.
   \end{itemize}
-  
+
   En la cabecera TCP se encuentran los indicadores correspondientes de 6 bits:
   \begin{itemize}
       \item \textbf{PSH:} señala la función de forzado.
@@ -210,7 +210,7 @@
 
   La diferencia es que el forzado busca evitar la espera por acumulación de datos, mientras que la urgencia señala que una parte de los datos requiere atención especial.
 
-  \item 
+  \item
   \textbf{¿Qué es una opción en los criterios de implementación de TCP?}
 
   El estándar de TCP (RFC 793) especifica el formato de los segmentos y las reglas del protocolo, pero deja libertad en algunos aspectos de implementación: aunque dos TCP elijan opciones distintas, el protocolo sigue funcionando igual, pero el rendimiento puede variar según qué política haya elegido cada uno. Podemos nombrar cinco áreas (las más importantes):
@@ -221,8 +221,8 @@
       \item \textbf{Política de retransmisión:} qué hacer cuando vence el temporizador de un segmento no confirmado.
       \item \textbf{Política de confirmación:} cuando llega un segmento en orden, se confirma al instante de la llegada o se espera a pisar la confirmación sobre el próximo.
   \end{itemize}
-  
-  \item 
+
+  \item
    \textbf{¿Cómo puede utilizarse TCP para tratar la congestión de red o de interconexión de red?}
 
 TCP controla la congestión de forma indirecta, ya que no puede controlar directamente los elementos de la red. Detecta posibles situaciones de congestión a partir de la \textbf{pérdida de paquetes, ACKs duplicados o aumentos en los tiempos de espera}. Para regular la cantidad de datos que transmite, utiliza principalmente los siguientes mecanismos:
@@ -236,12 +236,12 @@ TCP controla la congestión de forma indirecta, ya que no puede controlar direct
 \end{itemize}
 
 En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la velocidad de transmisión a las condiciones de la red}, reduciendo el tráfico cuando detecta congestión y aumentando progresivamente la transmisión cuando la red parece tener capacidad disponible.
-  
-  \item 
+
+  \item
     \textbf{¿Qué proporciona UDP que no ofrezca IP?}
 
     El Protocolo de Datagramas de Usuario UDP (User Datagram Protocol) es un protocolo de la capa de transporte orientado a no conexión que ofrece un servicio de entrega de mensajes no confiable y de mínimo esfuerzo sobre la capa de red.
-    
+
     Específicamente, UDP añade sobre el servicio básico de IP dos funciones fundamentales de la capa de transporte:
 \begin{itemize}
      \item \textbf {Puertos de origen y destino:} Permite la multiplexación y desmultiplexación del tráfico, entregando los datos a un proceso o aplicación específica dentro del equipo de destino, a diferencia de IP que solo entrega el paquete de equipo a equipo.
@@ -256,6 +256,16 @@ En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la 
 \begin{enumerate}
     \item[\textbf{20.1}] \textbf{Es una práctica común en la mayoría de los protocolos de transporte (en realidad, en la mayoría de los protocolos de todas las capas) que los datos y la señalización de control se multiplexen sobre el mismo canal lógico en cada conexión por usuario. Una alternativa consiste en establecer una única conexión de control de transporte entre cada par de entidades de transporte que se comuniquen. Esta conexión se usaría para transmitir las señales de control de todas las conexiones de los usuarios de transporte entre las dos entidades. Discuta las implicaciones de esta estrategia.}
 
+    Pensamos que juntar toda la señalización de control en una única conexión de transporte entre cada par de entidades, en lugar de llevarla mezclada con los datos de cada conexión de usuario como se hace normalmente, trae alguna ventaja pero también complica bastante las cosas.
+
+    Lo positivo es que la entidad de transporte dejaría de manejar un canal de control por cada conexión de usuario y pasaría a tener uno solo por cada par de entidades que se comunican. Eso simplifica en parte la cantidad de recursos que hay que reservar para señalización y evita duplicar mecanismos de control en cada conexión que se abre.
+
+    El problema es que esa única conexión se transforma en un cuello de botella y en un punto único de falla: si se pierde un mensaje de control ahí o si el canal se congestiona, puede afectar a todas las conexiones de usuario que dependen de él para coordinarse, aunque sus datos viajen por canales totalmente distintos. Además, cada mensaje de control tendría que indicar explícitamente a qué conexión de usuario corresponde, porque ya no existe una asociación directa entre canal y conexión como pasa cuando todo va junto. Eso suma una capa de identificación que antes no hacía falta.
+
+    También se pierde algo de aislamiento entre conexiones. Si una conexión de usuario genera mucha señalización, por ejemplo porque está retransmitiendo seguido, podría demorar el control de las demás conexiones que comparten ese mismo canal, generando una interferencia cruzada que no existiría si cada una llevara su propia señalización por separado.
+
+    En resumen, nos parece que esta estrategia no elimina la complejidad sino que la traslada: ahorra en cantidad de conexiones de control pero suma trabajo de identificación de mensajes y crea una dependencia compartida entre conexiones que en el esquema habitual son completamente independientes entre sí.
+
     \item[\textbf{20.2}] \textbf{La discusión sobre control de flujo con un servicio de red fiable, referido como mecanismo de contrapresión, utiliza un protocolo de control de flujo de una capa inferior. Discuta las desventajas de esta estrategia.}
 
     \item[\textbf{20.5}] \textbf{Con un servicio de red fiable y ordenado, ¿son estrictamente necesarios los números de secuencia de los segmentos? ¿Qué capacidad se pierde sin ellos?}
@@ -268,18 +278,37 @@ Sin embargo, al prescindir de los números de secuencia se pierde la capacidad d
 
     \item[\textbf{20.7}] \textbf{La discusión de la política de retransmisión hizo referencia a tres problemas asociados con el cálculo dinámico del valor del temporizador. ¿Qué modificaciones sobre la política ayudarían a aliviar estos problemas?}
 
+    El libro plantea que no se puede confiar del todo en un temporizador calculado dinámicamente a partir del promedio de los retardos observados, por tres razones puntuales: que la entidad remota puede no confirmar cada segmento de inmediato porque está usando confirmaciones acumuladas, que si un segmento fue retransmitido el emisor no tiene forma de saber si el ACK que llegó corresponde a la transmisión original o a la retransmisión, y que las condiciones de la red pueden cambiar de un momento a otro.
+
+    Para el primer problema, el de las confirmaciones acumuladas que retrasan o agrupan los ACK, ayuda no depender de una sola muestra de RTT para ajustar el temporizador, sino promediar varias observaciones dándole más peso a las últimas, tal como hace el promediado exponencial en vez de un promedio simple.
+
+    Para el segundo, el de no saber si un ACK corresponde a la transmisión original o a una retransmisión, la modificación más directa es el algoritmo de Karn: directamente se descarta la muestra de RTT de cualquier segmento que haya sido retransmitido y no se usa para actualizar la estimación. En su lugar se aplica un valor de temporizador por decaimiento exponencial, que va creciendo con cada retransmisión sucesiva del mismo segmento, hasta que llega la confirmación de uno que no tuvo que retransmitirse y recién ahí se retoma el cálculo normal.
+
+    Y para el tercero, los cambios bruscos en las condiciones de la red, conviene que la estimación reaccione rápido en lugar de promediar todo por igual. El algoritmo de Jacobson apunta justamente a esto: además de suavizar el RTT (SRTT) estima su variabilidad (SDEV) y la suma al cálculo del RTO, de forma que si el retardo empieza a variar mucho de golpe el temporizador crece enseguida, en vez de tardar varias muestras en adaptarse como pasaría con un promedio simple.
+
     \item[\textbf{20.8}] \textbf{Considere un protocolo de transporte que usa un servicio de red orientado a conexión. Suponga que ese protocolo de transporte utiliza un esquema de asignación de créditos para el control de flujo y que el protocolo de red usa un esquema de ventana deslizante. ¿Qué relación, si existe, debería haber entre la ventana dinámica del protocolo de transporte y la ventana fija del protocolo de red?}
 
-    No existe una relación matemática ni un acoplamiento estricto entre ambas ventanas, ya que la ventana fija de red gestiona el flujo entre nodos intermedios mientras que la ventana dinámica de transporte controla el flujo extremo a extremo entre los procesos. Desde el punto de vista del rendimiento, la ventana de la red establece un límite práctico sobre los datos en tránsito; si la ventana de transporte supera a la de red, los segmentos se acumularán en los buffers del emisor o se descartarán por saturación. Por esto, la ventana de transporte no debería exceder la capacidad de transporte de la ventana de red. 
+    No existe una relación matemática ni un acoplamiento estricto entre ambas ventanas, ya que la ventana fija de red gestiona el flujo entre nodos intermedios mientras que la ventana dinámica de transporte controla el flujo extremo a extremo entre los procesos. Desde el punto de vista del rendimiento, la ventana de la red establece un límite práctico sobre los datos en tránsito; si la ventana de transporte supera a la de red, los segmentos se acumularán en los buffers del emisor o se descartarán por saturación. Por esto, la ventana de transporte no debería exceder la capacidad de transporte de la ventana de red.
 
     \item[\textbf{20.10}] \textbf{¿Es posible que se produzca un bloqueo mutuo utilizando un diálogo en dos pasos en lugar de un diálogo en tres pasos? Dé un ejemplo o demuéstrelo en caso contrario.}
 
     \item[\textbf{20.11}] \textbf{A continuación, se enumeran cuatro estrategias que se pueden utilizar para proporcionar a un usuario de transporte las direcciones de un usuario de transporte destino. Para cada una, describa una analogía con el usuario del servicio de correo postal:}
     \begin{enumerate}[label=\alph*)]
         \item \textbf{Conocer la dirección de antemano.}
+
+        Es como cuando ya tenemos anotada en nuestra agenda la dirección postal de alguien porque nos la dieron en algún momento anterior: no hace falta preguntarle a nadie ni averiguar nada, directamente ponemos esa dirección en el sobre y lo despachamos.
+
         \item \textbf{Hacer uso de una dirección «bien conocida».}
+
+        Se parece a mandarle una carta a una dependencia pública fija, como la municipalidad de una ciudad o la oficina de correos central: no importa quién esté trabajando ahí en ese momento, todo el mundo sabe que esa es la dirección a la que hay que escribirle para ese trámite en particular.
+
         \item \textbf{Utilizar un servidor de nombres.}
+
+        Es equivalente a llamar a informaciones, o buscar en una guía, para pedir la dirección de una persona o empresa de la que sólo tenemos el nombre: un tercero de confianza nos devuelve el dato que nos falta para poder mandar la carta.
+
         \item \textbf{El destinatario se genera al realizar la solicitud.}
+
+        Sería como mandarle una carta al sector de «Atención al Cliente» de una empresa: el destinatario puntual que termina recibiéndola y haciéndose cargo del caso recién queda definido cuando la carta llega y se abre, no antes de eso.
     \end{enumerate}
 
     \item[\textbf{20.12}] \textbf{En un esquema de créditos para control de flujo como el de TCP, ¿qué provisión de créditos se podría hacer para la asignación de créditos que se pierdan o se desordenen durante la transmisión?}
@@ -288,10 +317,14 @@ Para hacer frente a la pérdida o desorden de las asignaciones de crédito, la e
 
     \item[\textbf{20.13}] \textbf{¿Qué ocurre en la Figura 20.3 si llega un SYN mientras el usuario solicitado está en el estado CLOSED? ¿Hay alguna forma de llamar la atención del usuario cuando no esté preparado?}
 
+    En la Figura 20.3, para que la llegada de un SYN derive en una conexión establecida, el usuario TS que lo recibe tiene que estar en el estado LISTEN esperando ese pedido. Si en cambio ese usuario está en CLOSED, es decir, inactivo y sin haber avisado que está disponible, el libro plantea tres caminos posibles para resolverlo.
+
+    Uno es que la entidad de transporte directamente rechace la solicitud mandando un segmento RST a quien la envió, cortando el intento ahí mismo. Otro es poner la solicitud en una cola y dejarla esperando hasta que el usuario local decida emitir una orden Open y recién ahí se la atienda. Y el tercero, que es justamente la forma de llamarle la atención al usuario cuando no está preparado, consiste en que la entidad de transporte lo interrumpa para avisarle que hay una solicitud pendiente, en lugar de rechazarla sin más o dejarla esperando sin que nadie se entere. En este último caso ni siquiera hace falta que el usuario haya emitido antes una orden Passive Open: alcanza con que responda a esa interrupción con una orden Accept para aceptar la conexión.
+
     \item[\textbf{20.14}] \textbf{En la discusión sobre el cierre de la conexión con referencia a la Figura 20.8, se estableció que además de recibir una confirmación de su segmento FIN y enviar una confirmación del segmento FIN recibido, una entidad TCP debe esperar un intervalo de tiempo igual al doble del máximo tiempo de vida esperado de un segmento (el estado TIME WAIT). La recepción de un ACK de su segmento FIN le asegura que todos los segmentos que ha enviado han sido recibidos por el otro extremo. El envío de un ACK del segmento FIN del otro extremo asegura a la otra entidad que todos sus segmentos han sido recibidos. Dé una razón por la que se necesite aún esperar antes de cerrar la conexión.}
 
     \item[\textbf{20.15}] \textbf{Normalmente, el campo «ventana» de la cabecera TCP da una asignación de créditos en octetos. Cuando se utiliza la opción de «escalado de ventana», el valor del campo «ventana» se multiplica por $2^F$, donde $F$ es el valor de la opción de escalado de ventana. El valor máximo de $F$ que acepta TCP es 14. ¿Por qué se limita esta opción a 14?}
-   
+
     La opción se limita a $F = 14$ para evitar el solapamiento y la ambigüedad en los números de secuencia de TCP. Dado que el campo de ventana estándar tiene 16 bits ($65.535$ octetos como máximo), un factor de escala $F = 14$ permite alcanzar una ventana máxima de $65.535 \times 2^{14} \approx 1$ gigabyte ($2^{30}$ bytes).
 
 La cabecera de TCP define un campo de número de secuencia de 32 bits ($2^{32}$ bytes de espacio total) y una ventana con un factor $F > 14$ superaría los $2^{30}$ bytes y excedería la mitad de dicho espacio ($2^{31}$ bytes). Esto violaría la regla fundamental de TCP que exige que la ventana no abarque más de la mitad del espacio de números de secuencia, garantizando que el receptor pueda distinguir unívocamente entre segmentos nuevos y antiguos retransmitidos.
