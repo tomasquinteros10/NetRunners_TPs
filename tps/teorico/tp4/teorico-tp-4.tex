@@ -260,11 +260,17 @@ En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la 
 
     \item[\textbf{20.5}] \textbf{Con un servicio de red fiable y ordenado, ¿son estrictamente necesarios los números de secuencia de los segmentos? ¿Qué capacidad se pierde sin ellos?}
 
+No, los números de secuencia de los segmentos no son estrictamente necesarios para garantizar la entrega en orden ni la integridad de los datos ya que el servicio de red subyacente asume la responsabilidad de entregar los paquetes de forma fiable y en la secuencia correcta.
+
+Sin embargo, al prescindir de los números de secuencia se pierde la capacidad de implementar mecanismos avanzados de control de flujo en la capa de transporte como la asignación de créditos basada en octetos o segmentos específicos, el reconocimiento explicito o diferenciado de unidades de datos (ACKs individuales/acumulativos), y la capacidad de detectar o recuperarse ante incidencias no previstas por la red, como reinicios del servicio de red, pérdida de mensajes de control o saturación de buffers en los extremos
+
     \item[\textbf{20.6}] \textbf{Considere un servicio de red orientado a conexión que sufre un reinicio. ¿Cómo podría ser tratado por un protocolo de transporte que suponga que el servicio de red es fiable excepto en el caso de un reinicio?}
 
     \item[\textbf{20.7}] \textbf{La discusión de la política de retransmisión hizo referencia a tres problemas asociados con el cálculo dinámico del valor del temporizador. ¿Qué modificaciones sobre la política ayudarían a aliviar estos problemas?}
 
     \item[\textbf{20.8}] \textbf{Considere un protocolo de transporte que usa un servicio de red orientado a conexión. Suponga que ese protocolo de transporte utiliza un esquema de asignación de créditos para el control de flujo y que el protocolo de red usa un esquema de ventana deslizante. ¿Qué relación, si existe, debería haber entre la ventana dinámica del protocolo de transporte y la ventana fija del protocolo de red?}
+
+    No existe una relación matemática ni un acoplamiento estricto entre ambas ventanas, ya que la ventana fija de red gestiona el flujo entre nodos intermedios mientras que la ventana dinámica de transporte controla el flujo extremo a extremo entre los procesos. Desde el punto de vista del rendimiento, la ventana de la red establece un límite práctico sobre los datos en tránsito; si la ventana de transporte supera a la de red, los segmentos se acumularán en los buffers del emisor o se descartarán por saturación. Por esto, la ventana de transporte no debería exceder la capacidad de transporte de la ventana de red. 
 
     \item[\textbf{20.10}] \textbf{¿Es posible que se produzca un bloqueo mutuo utilizando un diálogo en dos pasos en lugar de un diálogo en tres pasos? Dé un ejemplo o demuéstrelo en caso contrario.}
 
@@ -278,11 +284,17 @@ En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la 
 
     \item[\textbf{20.12}] \textbf{En un esquema de créditos para control de flujo como el de TCP, ¿qué provisión de créditos se podría hacer para la asignación de créditos que se pierdan o se desordenen durante la transmisión?}
 
+Para hacer frente a la pérdida o desorden de las asignaciones de crédito, la entidad de transporte puede implementar un temporizador de retransmisión de créditos o enviar actualizaciones de ventana periódicas o acumulativas. Si una asignación de créditos se pierde o llega fuera de orden, la recepción de un segmento subsiguiente con un número de confirmación o valor de ventana actualizado reasigna el estado correcto. Asimismo, si el emisor se queda sin créditos por la pérdida de un mensaje, puede enviar un segmento de sondeo para forzar al receptor a reemitir su asignación de créditos actual y evitar un bloqueo mutuo (deadlock).
+
     \item[\textbf{20.13}] \textbf{¿Qué ocurre en la Figura 20.3 si llega un SYN mientras el usuario solicitado está en el estado CLOSED? ¿Hay alguna forma de llamar la atención del usuario cuando no esté preparado?}
 
     \item[\textbf{20.14}] \textbf{En la discusión sobre el cierre de la conexión con referencia a la Figura 20.8, se estableció que además de recibir una confirmación de su segmento FIN y enviar una confirmación del segmento FIN recibido, una entidad TCP debe esperar un intervalo de tiempo igual al doble del máximo tiempo de vida esperado de un segmento (el estado TIME WAIT). La recepción de un ACK de su segmento FIN le asegura que todos los segmentos que ha enviado han sido recibidos por el otro extremo. El envío de un ACK del segmento FIN del otro extremo asegura a la otra entidad que todos sus segmentos han sido recibidos. Dé una razón por la que se necesite aún esperar antes de cerrar la conexión.}
 
     \item[\textbf{20.15}] \textbf{Normalmente, el campo «ventana» de la cabecera TCP da una asignación de créditos en octetos. Cuando se utiliza la opción de «escalado de ventana», el valor del campo «ventana» se multiplica por $2^F$, donde $F$ es el valor de la opción de escalado de ventana. El valor máximo de $F$ que acepta TCP es 14. ¿Por qué se limita esta opción a 14?}
+   
+    La opción se limita a $F = 14$ para evitar el solapamiento y la ambigüedad en los números de secuencia de TCP. Dado que el campo de ventana estándar tiene 16 bits ($65.535$ octetos como máximo), un factor de escala $F = 14$ permite alcanzar una ventana máxima de $65.535 \times 2^{14} \approx 1$ gigabyte ($2^{30}$ bytes).
+
+La cabecera de TCP define un campo de número de secuencia de 32 bits ($2^{32}$ bytes de espacio total) y una ventana con un factor $F > 14$ superaría los $2^{30}$ bytes y excedería la mitad de dicho espacio ($2^{31}$ bytes). Esto violaría la regla fundamental de TCP que exige que la ventana no abarque más de la mitad del espacio de números de secuencia, garantizando que el receptor pueda distinguir unívocamente entre segmentos nuevos y antiguos retransmitidos.
 \end{enumerate}
 
 \end{document}
