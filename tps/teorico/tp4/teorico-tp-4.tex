@@ -249,5 +249,40 @@ En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la 
 \end{itemize}
 
 \end{enumerate}
+\textbf{Actividad 2: Responder por lo menos 11 preguntas (a su elección) de la sección EJERCICIOS, pag 719, del Capítulo 20. Protocolos de transporte, Stallings - Comunicaciones y Redes de Computadores 7ed.}
+
+\section{Consignas}
+
+\begin{enumerate}
+    \item[\textbf{20.1}] \textbf{Es una práctica común en la mayoría de los protocolos de transporte (en realidad, en la mayoría de los protocolos de todas las capas) que los datos y la señalización de control se multiplexen sobre el mismo canal lógico en cada conexión por usuario. Una alternativa consiste en establecer una única conexión de control de transporte entre cada par de entidades de transporte que se comuniquen. Esta conexión se usaría para transmitir las señales de control de todas las conexiones de los usuarios de transporte entre las dos entidades. Discuta las implicaciones de esta estrategia.}
+
+    \item[\textbf{20.2}] \textbf{La discusión sobre control de flujo con un servicio de red fiable, referido como mecanismo de contrapresión, utiliza un protocolo de control de flujo de una capa inferior. Discuta las desventajas de esta estrategia.}
+
+    \item[\textbf{20.5}] \textbf{Con un servicio de red fiable y ordenado, ¿son estrictamente necesarios los números de secuencia de los segmentos? ¿Qué capacidad se pierde sin ellos?}
+
+    \item[\textbf{20.6}] \textbf{Considere un servicio de red orientado a conexión que sufre un reinicio. ¿Cómo podría ser tratado por un protocolo de transporte que suponga que el servicio de red es fiable excepto en el caso de un reinicio?}
+
+    \item[\textbf{20.7}] \textbf{La discusión de la política de retransmisión hizo referencia a tres problemas asociados con el cálculo dinámico del valor del temporizador. ¿Qué modificaciones sobre la política ayudarían a aliviar estos problemas?}
+
+    \item[\textbf{20.8}] \textbf{Considere un protocolo de transporte que usa un servicio de red orientado a conexión. Suponga que ese protocolo de transporte utiliza un esquema de asignación de créditos para el control de flujo y que el protocolo de red usa un esquema de ventana deslizante. ¿Qué relación, si existe, debería haber entre la ventana dinámica del protocolo de transporte y la ventana fija del protocolo de red?}
+
+    \item[\textbf{20.10}] \textbf{¿Es posible que se produzca un bloqueo mutuo utilizando un diálogo en dos pasos en lugar de un diálogo en tres pasos? Dé un ejemplo o demuéstrelo en caso contrario.}
+
+    \item[\textbf{20.11}] \textbf{A continuación, se enumeran cuatro estrategias que se pueden utilizar para proporcionar a un usuario de transporte las direcciones de un usuario de transporte destino. Para cada una, describa una analogía con el usuario del servicio de correo postal:}
+    \begin{enumerate}[label=\alph*)]
+        \item \textbf{Conocer la dirección de antemano.}
+        \item \textbf{Hacer uso de una dirección «bien conocida».}
+        \item \textbf{Utilizar un servidor de nombres.}
+        \item \textbf{El destinatario se genera al realizar la solicitud.}
+    \end{enumerate}
+
+    \item[\textbf{20.12}] \textbf{En un esquema de créditos para control de flujo como el de TCP, ¿qué provisión de créditos se podría hacer para la asignación de créditos que se pierdan o se desordenen durante la transmisión?}
+
+    \item[\textbf{20.13}] \textbf{¿Qué ocurre en la Figura 20.3 si llega un SYN mientras el usuario solicitado está en el estado CLOSED? ¿Hay alguna forma de llamar la atención del usuario cuando no esté preparado?}
+
+    \item[\textbf{20.14}] \textbf{En la discusión sobre el cierre de la conexión con referencia a la Figura 20.8, se estableció que además de recibir una confirmación de su segmento FIN y enviar una confirmación del segmento FIN recibido, una entidad TCP debe esperar un intervalo de tiempo igual al doble del máximo tiempo de vida esperado de un segmento (el estado TIME WAIT). La recepción de un ACK de su segmento FIN le asegura que todos los segmentos que ha enviado han sido recibidos por el otro extremo. El envío de un ACK del segmento FIN del otro extremo asegura a la otra entidad que todos sus segmentos han sido recibidos. Dé una razón por la que se necesite aún esperar antes de cerrar la conexión.}
+
+    \item[\textbf{20.15}] \textbf{Normalmente, el campo «ventana» de la cabecera TCP da una asignación de créditos en octetos. Cuando se utiliza la opción de «escalado de ventana», el valor del campo «ventana» se multiplica por $2^F$, donde $F$ es el valor de la opción de escalado de ventana. El valor máximo de $F$ que acepta TCP es 14. ¿Por qué se limita esta opción a 14?}
+\end{enumerate}
 
 \end{document}
