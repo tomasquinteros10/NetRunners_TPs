@@ -268,6 +268,18 @@ En conjunto, estos mecanismos permiten que TCP \textbf{adapte dinámicamente la 
 
     \item[\textbf{20.2}] \textbf{La discusión sobre control de flujo con un servicio de red fiable, referido como mecanismo de contrapresión, utiliza un protocolo de control de flujo de una capa inferior. Discuta las desventajas de esta estrategia.}
 
+    La \textbf{contrapresión} delega el control de flujo de la capa de transporte a la capa de red rechazando paquetes cuando el \textit{buffer} se satura. Sus principales desventajas son:
+
+\begin{enumerate}
+    \item \textbf{Falta de granularidad (multiplexación):} Al compartir varias conexiones de transporte un mismo circuito virtual de red, la contrapresión frena todo el circuito, afectando injustamente a las conexiones que no están saturadas.
+    
+    \item \textbf{Mecanismo impreciso:} Es tosco comparado con las ventanas deslizantes; no permite indicar la cantidad exacta de espacio libre disponible en el \textit{buffer}.
+    
+    \item \textbf{Propagación de la congestión:} Acumula paquetes en los nodos intermedios de la red, generando un efecto dominó que bloquea otras zonas no relacionadas.
+    
+    \item \textbf{Incompatibilidad:} No se puede aplicar en redes no orientadas a conexión o sin control de flujo interno (como redes datagrama o IP).
+\end{enumerate}
+
     \item[\textbf{20.5}] \textbf{Con un servicio de red fiable y ordenado, ¿son estrictamente necesarios los números de secuencia de los segmentos? ¿Qué capacidad se pierde sin ellos?}
 
 No, los números de secuencia de los segmentos no son estrictamente necesarios para garantizar la entrega en orden ni la integridad de los datos ya que el servicio de red subyacente asume la responsabilidad de entregar los paquetes de forma fiable y en la secuencia correcta.
@@ -276,6 +288,16 @@ Sin embargo, al prescindir de los números de secuencia se pierde la capacidad d
 
     \item[\textbf{20.6}] \textbf{Considere un servicio de red orientado a conexión que sufre un reinicio. ¿Cómo podría ser tratado por un protocolo de transporte que suponga que el servicio de red es fiable excepto en el caso de un reinicio?}
 
+Cuando un servicio de red orientado a conexión sufre un \textbf{reinicio} (\textit{reset}), la capa de red notifica la anomalía a las entidades de transporte en ambos extremos. Dado que los paquetes en tránsito no confirmados pueden haberse perdido o descartado, el protocolo de transporte responde de la siguiente manera:
+
+\begin{enumerate}
+    \item \textbf{Retransmisión de paquetes pendientes:} La entidad emisora asume que todos los segmentos transmitidos sin confirmación previa al reinicio se han perdido y procede a su retransmisión.
+    
+    \item \textbf{Resincronización de estado:} Ambos extremos intercambian mensajes de control para reordenar los números de secuencia y restablecer los parámetros de la ventana deslizante/créditos.
+    
+    \item \textbf{Notificación al usuario del servicio (capa superior):} Si la resincronización falla o no es posible garantizar la entrega limpia de datos, la capa de transporte aborta la conexión e informa al nivel superior (aplicación/sesión) para que ejecute un mecanismo de recuperación (por ejemplo, mediante puntos de control o \textit{checkpoints}).
+\end{enumerate}
+    
     \item[\textbf{20.7}] \textbf{La discusión de la política de retransmisión hizo referencia a tres problemas asociados con el cálculo dinámico del valor del temporizador. ¿Qué modificaciones sobre la política ayudarían a aliviar estos problemas?}
 
     El libro plantea que no se puede confiar del todo en un temporizador calculado dinámicamente a partir del promedio de los retardos observados, por tres razones puntuales: que la entidad remota puede no confirmar cada segmento de inmediato porque está usando confirmaciones acumuladas, que si un segmento fue retransmitido el emisor no tiene forma de saber si el ACK que llegó corresponde a la transmisión original o a la retransmisión, y que las condiciones de la red pueden cambiar de un momento a otro.
@@ -291,6 +313,40 @@ Sin embargo, al prescindir de los números de secuencia se pierde la capacidad d
     No existe una relación matemática ni un acoplamiento estricto entre ambas ventanas, ya que la ventana fija de red gestiona el flujo entre nodos intermedios mientras que la ventana dinámica de transporte controla el flujo extremo a extremo entre los procesos. Desde el punto de vista del rendimiento, la ventana de la red establece un límite práctico sobre los datos en tránsito; si la ventana de transporte supera a la de red, los segmentos se acumularán en los buffers del emisor o se descartarán por saturación. Por esto, la ventana de transporte no debería exceder la capacidad de transporte de la ventana de red.
 
     \item[\textbf{20.10}] \textbf{¿Es posible que se produzca un bloqueo mutuo utilizando un diálogo en dos pasos en lugar de un diálogo en tres pasos? Dé un ejemplo o demuéstrelo en caso contrario.}
+
+    \textbf{Sí, es posible.} Cuando se utiliza un diálogo en dos pasos (\textit{two-way handshake}) sobre un servicio de red no fiable, pueden producirse situaciones de bloqueo mutuo o asignación indefinida de recursos no sincronizada.
+
+\section*{Ejemplos y Demostración}
+
+\subsection*{1. Arribo de un segmento SYN obsoleto o retrasado}
+\begin{enumerate}
+    \item La estación \textbf{A} envía una solicitud de conexión (\texttt{SYN i}) a la estación \textbf{B}.
+    \item El paquete \texttt{SYN i} sufre un gran retardo en la red. El temporizador de \textbf{A} expira y \textbf{A} desiste del intento de conexión.
+    \item Tiempo después, el paquete \texttt{SYN i} obsoleto llega finalmente a \textbf{B}.
+    \item En un diálogo en dos pasos, \textbf{B} supone que es una solicitud nueva, asigna recursos y responde con un \texttt{SYN j}, pasando a estado \textit{establecido}.
+    \item \textbf{A} recibe el \texttt{SYN j} inesperado y lo descarta, ya que no tiene ninguna solicitud activa.
+    \item \textbf{Resultado:} \textbf{B} queda convencido de que la conexión está abierta y se mantiene esperando datos indefinidamente, bloqueando recursos para un diálogo que nunca ocurrirá.
+\end{enumerate}
+
+\subsection*{2. Pérdida del mensaje de confirmación de B}
+\begin{enumerate}
+    \item \textbf{A} envía un \texttt{SYN} a \textbf{B}.
+    \item \textbf{B} recibe la solicitud, asigna recursos, pasa a estado \textit{establecido} y envía su respuesta de aceptación.
+    \item La respuesta de \textbf{B} se pierde en la red.
+    \item \textbf{A} nunca recibe la respuesta, su temporizador expira y permanece en estado \textit{cerrado}.
+    \item \textbf{Resultado:} \textbf{B} permanece bloqueado en estado establecido esperando tráfico de \textbf{A}, mientras que \textbf{A} considera que la conexión jamás se estableció.
+\end{enumerate}
+
+\section*{Solución: El diálogo en tres pasos (\textit{Three-Way Handshake})}
+
+Para prevenir el bloqueo mutuo, protocolos como TCP requieren un tercer paso:
+\begin{enumerate}
+    \item \textbf{A $\rightarrow$ B:} Envía \texttt{SYN i}.
+    \item \textbf{B $\rightarrow$ A:} Responde con \texttt{SYN j, ACK i+1} y pasa a un estado intermedio (\texttt{SYN RECEIVED}), \textbf{sin} declarar la conexión establecida.
+    \item \textbf{A $\rightarrow$ B:} Envía \texttt{ACK j+1}. Solo al recibir esta confirmación, \textbf{B} pasa al estado \textit{establecido}.
+\end{enumerate}
+
+Si llega un \texttt{SYN} obsoleto, \textbf{A} responderá con un segmento de reinicio (\texttt{RST}), haciendo que \textbf{B} abandone la espera y libere inmediatamente sus recursos.
 
     \item[\textbf{20.11}] \textbf{A continuación, se enumeran cuatro estrategias que se pueden utilizar para proporcionar a un usuario de transporte las direcciones de un usuario de transporte destino. Para cada una, describa una analogía con el usuario del servicio de correo postal:}
     \begin{enumerate}[label=\alph*)]
@@ -322,6 +378,16 @@ Para hacer frente a la pérdida o desorden de las asignaciones de crédito, la e
     Uno es que la entidad de transporte directamente rechace la solicitud mandando un segmento RST a quien la envió, cortando el intento ahí mismo. Otro es poner la solicitud en una cola y dejarla esperando hasta que el usuario local decida emitir una orden Open y recién ahí se la atienda. Y el tercero, que es justamente la forma de llamarle la atención al usuario cuando no está preparado, consiste en que la entidad de transporte lo interrumpa para avisarle que hay una solicitud pendiente, en lugar de rechazarla sin más o dejarla esperando sin que nadie se entere. En este último caso ni siquiera hace falta que el usuario haya emitido antes una orden Passive Open: alcanza con que responda a esa interrupción con una orden Accept para aceptar la conexión.
 
     \item[\textbf{20.14}] \textbf{En la discusión sobre el cierre de la conexión con referencia a la Figura 20.8, se estableció que además de recibir una confirmación de su segmento FIN y enviar una confirmación del segmento FIN recibido, una entidad TCP debe esperar un intervalo de tiempo igual al doble del máximo tiempo de vida esperado de un segmento (el estado TIME WAIT). La recepción de un ACK de su segmento FIN le asegura que todos los segmentos que ha enviado han sido recibidos por el otro extremo. El envío de un ACK del segmento FIN del otro extremo asegura a la otra entidad que todos sus segmentos han sido recibidos. Dé una razón por la que se necesite aún esperar antes de cerrar la conexión.}
+
+    A pesar de haber recibido la confirmación de su segmento \texttt{FIN} y haber confirmado el \texttt{FIN} del otro extremo, una entidad TCP debe permanecer en el estado \textbf{\texttt{TIME\_WAIT}} durante un intervalo de $2 \times \text{MSL}$ (el doble del tiempo máximo de vida esperado de un segmento) por dos razones técnicas fundamentales:
+
+\begin{enumerate}
+    \item \textbf{Garantizar la entrega fiable del último \texttt{ACK}:} 
+    El envío del \texttt{ACK} final no asegura que este haya llegado a su destino. Si se pierde en la red, la entidad remota retransmitirá su segmento \texttt{FIN}. Mantenerse en \texttt{TIME\_WAIT} le permite a la entidad local conservar el contexto de la conexión para detectar el \texttt{FIN} retransmitido y responder con otro \texttt{ACK}, garantizando un cierre ordenado en ambos extremos. Si se cerrara la conexión de inmediato, el \texttt{FIN} retransmitido recibiría un segmento de reinicio (\texttt{RST}).
+
+    \item \textbf{Permitir la disipación de segmentos duplicados u obsoletos:} 
+    Asegura que cualquier segmento retrasado perteneciente a la sesión que continúe en tránsito sea descartado por los encaminadores antes de que expire su tiempo de vida. Esto previene que una nueva conexión reutilice el mismo par de conectores (\textit{sockets}) y reciba accidentalmente datos viejos interpretándolos como válidos.
+\end{enumerate}
 
     \item[\textbf{20.15}] \textbf{Normalmente, el campo «ventana» de la cabecera TCP da una asignación de créditos en octetos. Cuando se utiliza la opción de «escalado de ventana», el valor del campo «ventana» se multiplica por $2^F$, donde $F$ es el valor de la opción de escalado de ventana. El valor máximo de $F$ que acepta TCP es 14. ¿Por qué se limita esta opción a 14?}
 
