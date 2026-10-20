@@ -231,9 +231,12 @@ La fase indica la posición relativa de una señal dentro de su ciclo respecto d
 \end{figure}
 
 \vspace{0.3cm}
-\noindent\textbf{3.4. ¿Cuántos radianes hay en 360°?}\par
-En $360^\circ$ hay $2\pi$ radianes (aproximadamente $6{,}2832$ radianes).
-
+\noindent\textbf{3.4. ¿Cuántos radianes hay en $360^\circ$?}\par
+Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la circunferencia completa mide $2\pi r$, una vuelta tiene
+\[
+  360^\circ = \frac{2\pi r}{r} = 2\pi~\text{rad} \approx 6{,}2832~\text{rad}
+\]
+ 
 \vspace{0.3cm}
 \noindent\textbf{3.5. ¿Cuál es la relación entre la longitud de onda y la frecuencia en una onda seno?}\par
 La relación está dada por la expresión $\lambda \cdot f = v$, o de forma equivalente $\lambda = \frac{v}{f}$, donde $\lambda$ es la longitud de onda, $f$ es la frecuencia y $v$ es la velocidad de propagación de la onda en el medio. Existe una relación inversamente proporcional: a mayor frecuencia, menor es la longitud de onda.
@@ -505,36 +508,77 @@ Si se elimina la fundamental $f$ y se conserva únicamente el armónico $3f$, la
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.10}\par
-Un pulso cuadrado perfecto posee un ancho de banda absoluto infinito. Dado que ningún medio físico posee ancho de banda infinito, la señal transmitida debe ser limitada en banda. Esta limitación introduce distorsión en los bordes del pulso. Sin embargo, dado que la mayor parte de la energía se concentra en la armónica fundamental y en las primeras armónicas impares, al transmitir este rango de frecuencias principal, el receptor puede recuperar la información digital con una tasa de error aceptable.
-
+Un pulso rectangular de amplitud $A$ y duración $\tau$ tiene como espectro
+\[
+  X(f) = A\tau \,\frac{\sin(\pi f \tau)}{\pi f \tau}
+\]
+que se extiende hasta frecuencia infinita, por lo que su ancho de banda absoluto es infinito. Ningún medio real lo puede transmitir: todo canal tiene un ancho de banda limitado, y además los transmisores y receptores son más caros cuanto más ancho de banda manejan. En la práctica la señal se limita en banda y eso deforma el pulso, que pierde los flancos verticales y se redondea.
+ 
+Esto no impide la transmisión, porque la energía no está repartida por igual. Cerca del 90\,\% está en el lóbulo principal, hasta $f = 1/\tau$. Alcanza con transmitir esa banda para que el receptor distinga un 1 de un 0, aunque la forma no sea exacta. Lo mismo ocurre con una secuencia de pulsos: una onda cuadrada se forma con la fundamental y sus armónicos impares, y con unos pocos ya queda bien aproximada.
+ 
+\begin{center}
+\begin{tikzpicture}[xscale=4, yscale=1.4, font=\small]
+  \draw[->, gray] (0,0) -- (2.1,0) node[right] {$t$};
+  \draw[->, gray] (0,-1.3) -- (0,1.4);
+  % Onda cuadrada ideal
+  \draw[gray!60, thick] (0,0) -- (0,1) -- (0.5,1) -- (0.5,-1) -- (1,-1) -- (1,1) -- (1.5,1) -- (1.5,-1) -- (2,-1) -- (2,0);
+  % Solo fundamental
+  \draw[blue!70!black, dashed, domain=0:2, samples=120, smooth]
+       plot (\x, {4/pi*sin(360*\x)});
+  % Fundamental + 3er + 5to armónico
+  \draw[red!70!black, thick, domain=0:2, samples=300, smooth]
+       plot (\x, {4/pi*(sin(360*\x) + sin(3*360*\x)/3 + sin(5*360*\x)/5)});
+  \node[gray, right] at (2.05,1) {ideal};
+  \node[blue!70!black, right] at (2.05,0.55) {$k = 1$};
+  \node[red!70!black, right] at (2.05,-0.6) {$k = 1, 3, 5$};
+\end{tikzpicture}
+\end{center}
+ 
+La implicación principal es el compromiso entre velocidad y ancho de banda. Cuanto más cortos son los pulsos, es decir, cuanto mayor es la tasa de bits, más se ensancha el espectro. Para un ancho de banda dado, aumentar la velocidad deforma más los pulsos, hasta que se superponen entre sí (interferencia entre símbolos) y aumentan los errores. Por ejemplo, con una onda cuadrada de 1~MHz y sus armónicos de 3 y 5~MHz, que ocupan $B = 4$~MHz, se transmiten 2~Mbps, porque cada período lleva dos bits.
+ 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.11}\par
-Para representar aproximadamente 100 caracteres con un código de 6 bits (que dispone de solo $2^6 = 64$ combinaciones posibles), se recurre al uso de caracteres de control o de desplazamiento (Shift characters).
-Se reservan una o dos combinaciones específicas para cambiar el modo de interpretación del receptor (por ejemplo, "Shift to Alpha" y "Shift to Special/Numeric"). De este modo, los patrones de bits restantes adquieren un significado dual según el último carácter de control recibido, expandiendo la capacidad práctica a casi 120 caracteres distintos.
-
+Con 6 bits hay $2^6 = 64$ combinaciones, que no alcanzan para 100 caracteres. La solución es usar caracteres de cambio (\emph{shift}): se reservan algunos códigos que no representan ningún carácter, sino que le indican al receptor cómo interpretar los que siguen. Por ejemplo, ``mayúsculas'' y ``minúsculas''. Cada uno de los códigos restantes tiene entonces un significado distinto según el modo vigente, hasta que llega otro carácter de cambio. Es el mismo mecanismo del código Baudot de 5 bits, con sus caracteres LTRS y FIGS.
+ 
+Con $s$ códigos reservados para cambiar entre $s$ modos, la cantidad de caracteres es
+\[
+  N = s\,(64 - s)
+\]
+Con dos modos, $N = 2 \cdot 62 = 124$, que alcanza para los 100 caracteres. Algunos códigos, como el espacio, el retorno de carro o el avance de línea, suelen valer lo mismo en ambos modos, así que la cifra útil es algo menor.
+ 
+La desventaja es que la interpretación depende del estado. Si un carácter de cambio se pierde o llega con error, todo el texto hasta el próximo cambio se decodifica mal.
+ 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.12}\par
-Partiendo de los parámetros estándar de vídeo (4,2 MHz, 525 líneas totales, 483 líneas activas, 30 cuadros/s, tiempo activo por línea $52{,}5\,\mu\mathrm{s}$, retroceso horizontal $11\,\mu\mathrm{s}$):
-
-\noindent\underline{\textbf{Incremento de resolución horizontal:}}
-\begin{enumerate}
-  \item Ancho de banda $B = 5\,\mathrm{MHz}$, tiempo activo $T_{\text{activo}} = 52{,}5\,\mu\mathrm{s}$.
-  \item Ciclos por línea: $5\times10^6\,\mathrm{Hz} \cdot 52{,}5\times10^{-6}\,\mathrm{s} = 262{,}5$ ciclos.
-  \item Elementos horizontales (2 por ciclo): $262{,}5 \times 2 = 525$ elementos.
-  \item Incremento respecto del estándar (450 elementos): $525 - 450 = 75$ elementos adicionales.
-\end{enumerate}
-
-\noindent\underline{\textbf{Incremento de resolución vertical:}}
-\begin{enumerate}
-  \item Fijando la resolución horizontal en 450 elementos (225 ciclos):
-  \[
-    T_{\text{activo}} = \frac{225}{5\times10^6\,\mathrm{Hz}} = 45\,\mu\mathrm{s}
-  \]
-  \item Tiempo total por línea: $45\,\mu\mathrm{s} + 11\,\mu\mathrm{s} = 56\,\mu\mathrm{s}$.
-  \item Líneas totales por segundo: $\frac{1}{56\times10^{-6}\,\mathrm{s} \cdot 30} \approx 595{,}2$ líneas.
-  \item Líneas activas (proporción $483/525$): $595{,}2 \cdot \frac{483}{525} \approx 547{,}6$ líneas.
-  \item Incremento vertical: $547{,}6 - 483 \approx 64{,}6$ líneas adicionales ($\approx 65$ líneas).
-\end{enumerate}
+Se parte de los parámetros de vídeo del texto: 525 líneas por cuadro (483 visibles y 42 de retroceso vertical), 30 cuadros/s, $63{,}5~\mu$s por línea, de los cuales $11~\mu$s son de retroceso horizontal y $52{,}5~\mu$s son activos. Con 4{,}2~MHz se obtienen unos 450 elementos por línea.
+ 
+La resolución se calcula considerando que un ciclo de la señal permite representar dos elementos, uno claro y uno oscuro. Por lo tanto, con un ancho de banda $B$ y un tiempo activo $T$ hay $2BT$ elementos por línea.
+ 
+\noindent\underline{\textbf{Incremento de resolución horizontal}} (se mantienen las líneas):
+\[
+  N_h = 2 \cdot (5 \times 10^6~\text{Hz}) \cdot (52{,}5 \times 10^{-6}~\text{s}) = 525~\text{elementos}
+\]
+Son $525 - 450 = \boxed{75~\text{elementos más por línea}}$, un aumento de aproximadamente $17\,\%$.
+ 
+\noindent\underline{\textbf{Incremento de resolución vertical}} (con 450 elementos por línea):
+ 
+Con 5~MHz, los 225 ciclos de cada línea se recorren en menos tiempo:
+\[
+  T_{\text{activo}} = \frac{225}{5 \times 10^6~\text{Hz}} = 45~\mu\text{s}
+  \qquad\Longrightarrow\qquad
+  T_{\text{línea}} = 45 + 11 = 56~\mu\text{s}
+\]
+Las líneas por cuadro pasan a ser
+\[
+  \frac{1/30~\text{s}}{56 \times 10^{-6}~\text{s}} \approx 595~\text{líneas}
+\]
+El retroceso vertical dura lo mismo que antes ($42 \cdot 63{,}5~\mu\text{s} \approx 2{,}67$~ms), así que el tiempo útil por cuadro es $33{,}33 - 2{,}67 = 30{,}67$~ms. Las líneas visibles resultan
+\[
+  N_v = \frac{30{,}67 \times 10^{-3}~\text{s}}{56 \times 10^{-6}~\text{s}} \approx 548~\text{líneas}
+\]
+Son $548 - 483 \approx \boxed{65~\text{líneas visibles más}}$, un aumento de aproximadamente $13\,\%$.
+ 
+El aumento vertical es menor que el horizontal. Esto se debe a que los $11~\mu$s de retroceso horizontal no se acortan con el ancho de banda, y pesan más cuando la línea es más corta.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.13}\par
