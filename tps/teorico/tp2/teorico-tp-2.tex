@@ -6,8 +6,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
 \usepackage{amsmath}
+\usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usetikzlibrary{arrows.meta,decorations.pathmorphing}
 \usepackage[T1]{fontenc}
 \usepackage[spanish]{babel}
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
@@ -154,8 +156,61 @@
           \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
           \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
         \end{itemize}
-  \item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
-        La difusión directa por satélite (DBS, Direct Broadcast Satellite) es una tecnología de distribución de televisión en la que la señal de vídeo se transmite directamente desde el satélite hasta los domicilios de los usuarios finales.
+\item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
+Es la distribución de televisión en la que la señal de vídeo se transmite desde el satélite directamente al domicilio del usuario, sin pasar por la cabecera de un operador de cable. El usuario la recibe con una antena parabólica propia.
+ 
+El sistema tiene tres partes:
+ 
+\begin{itemize}
+  \item \textbf{Estación terrena (centro de emisión):} multiplexa los canales y los envía al satélite por el enlace ascendente, en la banda de 17{,}3--17{,}8~GHz.
+  \item \textbf{Satélite geoestacionario:} está a $\approx 35\,786$~km sobre el ecuador, por lo que se ve fijo desde tierra y la antena del usuario no necesita seguimiento. Sus transpondedores, de 24--36~MHz de ancho de banda cada uno, reciben la señal, la trasladan de frecuencia, la amplifican y la reemiten sobre la huella de cobertura en banda Ku (12{,}2--12{,}7~GHz en América).
+  \item \textbf{Equipo del usuario:} incluye un plato de 45--90~cm, un LNB (\emph{Low Noise Block}) en el foco, que amplifica y baja la señal a una frecuencia intermedia de 950--2150~MHz para llevarla por coaxial, y un decodificador que demodula y descifra los canales.
+\end{itemize}
+ 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth, font=\small]
+  % Superficie terrestre
+  \fill[green!15] (-6,0) arc[start angle=120, end angle=60, radius=12] -- (6,-0.8) -- (-6,-0.8) -- cycle;
+  \draw[thick] (-6,0) arc[start angle=120, end angle=60, radius=12];
+ 
+  % Satélite
+  \begin{scope}[shift={(0,5.2)}]
+    \fill[gray!60] (-0.35,-0.3) rectangle (0.35,0.3);
+    \fill[blue!40] (-1.4,-0.15) rectangle (-0.45,0.15);
+    \fill[blue!40] (0.45,-0.15) rectangle (1.4,0.15);
+    \draw (-0.45,0) -- (-0.35,0);
+    \draw (0.35,0) -- (0.45,0);
+    \node[above=6pt] at (0,0.3) {Satélite geoestacionario ($\approx 35\,786$ km)};
+  \end{scope}
+ 
+  % Estación terrena de subida
+  \begin{scope}[shift={(-4.6,1.2)}]
+    \fill[gray!40] (-0.5,-0.55) rectangle (0.5,0.05);
+    \draw[thick] (-0.35,0.25) arc[start angle=200, end angle=340, radius=0.4];
+    \draw (0,0.05) -- (0,0.2);
+    \node[below=14pt, align=center] at (0.3,-0.5) {Centro de emisión\\(estación terrena)};
+  \end{scope}
+ 
+  % Enlace ascendente
+  \draw[->, very thick, red!70!black, decorate, decoration={snake, amplitude=1.2pt, segment length=8pt, post length=4pt}]
+       (-4.5,1.4) -- (-0.5,4.8) node[midway, left=4pt, align=right] {Enlace ascendente\\(17{,}3--17{,}8 GHz)};
+ 
+  % Huella (enlace descendente)
+  \fill[orange!25, opacity=0.6] (0,4.85) -- (-1.2,1.5) -- (5.6,0.3) -- cycle;
+  \node[orange!50!black, align=center] at (3.9,3.1) {Enlace descendente\\(banda Ku, $\approx 12$ GHz)};
+ 
+  % Casas
+  \foreach \x/\y in {0/2.0, 2.4/1.78, 4.6/1.12} {
+    \begin{scope}[shift={(\x,\y)}]
+      \fill[brown!40] (-0.35,-0.45) rectangle (0.35,0.1);
+      \fill[red!50!black] (-0.45,0.1) -- (0,0.5) -- (0.45,0.1) -- cycle;
+      \draw[thick] (0.25,0.45) arc[start angle=200, end angle=330, radius=0.18];
+    \end{scope}
+  }
+  \node[below=4pt] at (2.4,0.75) {Usuarios con antena de 45--90 cm};
+\end{tikzpicture}
+\end{figure}
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
         Debe usar frecuencias distintas porque, en una transmisión continua y sin interferencias, el satélite no puede transmitir y recibir en el mismo rango de frecuencias. Se produciría una interferencia entre la señal entrante y la saliente.
@@ -179,34 +234,61 @@
         \textbf{¿Cuál es la ventaja de una antena parabólica por reflexión?} \\
         La ventaja es el direccionamiento de la señal en la emisión y en la recepción. Debido a la forma de la antena una señal emitida desde el foco de la parábola y reflejarse en la antena tendrá una dirección de transmisión paralela al eje de la antena, esto generará un haz de señal que podrá viajar casi en línea recta hacia donde apunte la misma. Además, al recibir una señal con haces que lleguen paralelos al eje de la antena, al reflejarse en la parábola todas incidirán en el foco de la parábola, lo que permite concentrar en un solo punto mayor potencia de la señal.
   \item \textbf{¿Qué factores determinan la ganancia de una antena?} \\
-        Los factores físicos y matemáticos que determinan la ganancia de una antena son principalmente el área efectiva y la frecuencia de operación (o longitud de onda).
-
-        \begin{itemize}
-          \item \textbf{Área efectiva $(A_e)$:} está relacionada con el tamaño físico, la geometría y la eficiencia de la antena. En una antena parabólica, un mayor diámetro permite obtener una mayor directividad y, en consecuencia, una mayor ganancia. El área efectiva se puede expresar como:
-
-                \[
-                  A_e = \eta_a A
-                \]
-
-                donde $\eta_a$ es la eficiencia de apertura.
-
-          \item \textbf{Frecuencia de operación $(f)$ o longitud de onda $(\lambda)$:} para un área efectiva constante, la ganancia es inversamente proporcional al cuadrado de la longitud de onda y directamente proporcional al cuadrado de la frecuencia. Por lo tanto, para una misma antena física, una mayor frecuencia de operación generalmente permite obtener una mayor ganancia.
-        \end{itemize}
-
-        La relación fundamental es:
-
+La ganancia mide la directividad de la antena: es la relación entre la potencia radiada en una dirección dada y la que radiaría una antena isotrópica ideal. Se expresa en dBi. La antena no agrega potencia, sino que la concentra en un haz: a mayor ganancia, haz más angosto. Por reciprocidad, la ganancia es la misma al transmitir y al recibir.
+ 
+Depende de dos factores:
+ 
+\begin{itemize}
+  \item \textbf{Área efectiva $(A_e)$:} depende del tamaño físico, la forma y la eficiencia de la antena. Es menor que el área física $A$ por la iluminación no uniforme del reflector, el bloqueo del alimentador y las imperfecciones de la superficie:
         \[
-          \boxed{
-            G = \frac{4\pi A_e}{\lambda^2}
-            = \frac{4\pi f^2 A_e}{c^2}
-          }
+          A_e = \eta_a \, A
         \]
-
-        donde $c$ es la velocidad de propagación de las ondas electromagnéticas en el vacío, aproximadamente:
-
-        \[
-          c \approx 3 \times 10^8 \, \text{m/s}
-        \]
+        En una parabólica, $\eta_a \approx 0{,}55$--$0{,}7$.
+ 
+  \item \textbf{Frecuencia $(f)$ o longitud de onda $(\lambda)$:} para un $A_e$ fijo, la ganancia es proporcional a $f^2$. Lo que importa es el tamaño de la antena medido en longitudes de onda.
+\end{itemize}
+ 
+\[
+  \boxed{
+    G = \frac{4\pi A_e}{\lambda^2}
+      = \frac{4\pi f^2 A_e}{c^2}
+  }
+  \qquad c \approx 3 \times 10^8~\text{m/s}
+\]
+ 
+Para una parabólica de diámetro $D$, reemplazando $A = \pi D^2/4$:
+ 
+\begin{align*}
+  G &= \eta_a \left(\frac{\pi D}{\lambda}\right)^2 \\
+  G_{\text{dBi}} &\approx 20{,}4 + 20\log_{10} f_{\text{GHz}} + 20\log_{10} D_{\text{m}} + 10\log_{10}\eta_a
+\end{align*}
+ 
+Duplicar el diámetro o la frecuencia suma 6~dB. El ancho del haz a $-3$~dB es aproximadamente $\theta \approx 70\,\lambda/D$ grados, así que más ganancia implica apuntamiento más preciso.
+ 
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Tipo de antena} & \textbf{Área efectiva $A_e$} & \textbf{Ganancia $G$} \\
+\midrule
+Isotrópica                     & $\lambda^2/4\pi$    & $1$ \\
+Dipolo de media onda           & $0{,}13\,\lambda^2$ & $1{,}64$ \\
+Bocina, con boca de área $A$   & $0{,}81\,A$         & $10\,A/\lambda^2$ \\
+Parabólica, con apertura $A$   & $0{,}56\,A$         & $7\,A/\lambda^2$ \\
+\bottomrule
+\end{tabular}
+\caption{Área efectiva y ganancia (respecto de la isotrópica) de distintos tipos de antena.}
+\end{table}
+ 
+\textbf{Ejemplo.} Parabólica de $D = 2$~m a 12~GHz ($\lambda = 0{,}025$~m, $A \approx 3{,}14$~m$^2$):
+ 
+\[
+  G = \frac{7A}{\lambda^2} = \frac{7 \cdot 3{,}14}{(0{,}025)^2} \approx 35\,186
+  \;\Longrightarrow\; 45{,}5~\text{dBi},
+  \qquad \theta \approx 70 \cdot \frac{0{,}025}{2} \approx 0{,}9^\circ
+\]
+ 
+La misma antena a 4~GHz da $\approx 35{,}9$~dBi: al dividir la frecuencia por 3, la ganancia cae 9 veces ($\approx 9{,}5$~dB). Por eso un plato DBS de 60~cm a 12~GHz ($\approx 35$~dBi) logra la misma ganancia que una antena de 2~m en banda C.
   \item
         \textbf{¿Cuál es la principal causa de la pérdida de señal en comunicaciones vía satélite?} \\
         La principal causa de pérdida de señal en las comunicaciones vía satélite es la pérdida en el espacio libre, producida por la dispersión de la señal debido a la gran distancia entre las antenas.
@@ -467,56 +549,54 @@
         \end{equation}
 
         Por lo tanto, la longitud típica requerida para la antena es de \textbf{$5\,000\text{ km}$} (o $5 \times 10^6\text{ m}$).
-  \item
-        \textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
-
-        \textbf{a) ¿Cuál debe ser la longitud de una antena, equivalente a la mitad de la longitud de onda, para enviar una señal de 300 Hz?}
-
-        \textbf{b) Una posible alternativa es emplear algún esquema de modulación, como los descritos en el Capítulo 5, de tal manera que la señal a transmitir tenga un ancho de banda estrecho, centrado en torno a la frecuencia portadora. Supóngase que quisiéramos una antena de 1 metro de longitud. ¿Qué frecuencia de portadora debería utilizarse?}
-
-        Para resolver este problema, se utiliza la relación fundamental entre la velocidad de propagación de una onda electromagnética ($c \approx 3 \times 10^8\ \text{m/s}$), la frecuencia ($f$) y la longitud de onda ($\lambda$):
-
-        \[
-          \lambda = \frac{c}{f}
-        \]
-
-        \textbf{a) Longitud de la antena para una señal de 300 Hz}
-
-        Primero calculamos la longitud de onda:
-
-        \[
-          \lambda = \frac{3 \times 10^8\ \text{m/s}}{300\ \text{Hz}}
-          = 1\,000\,000\ \text{m} = 1\,000\ \text{km}
-        \]
-
-        Como la longitud de la antena debe ser la mitad de la longitud de onda ($L = \lambda/2$):
-
-        \[
-          L = \frac{1\,000\,000\ \text{m}}{2}
-          = \boxed{500\,000\ \text{m} = 500\ \text{km}}
-        \]
-
-        Una antena de 500 km es físicamente irrealizable para un sistema de transmisión práctico, lo que justifica la necesidad de utilizar modulación.
-
-        \medskip
-        \textbf{b) Frecuencia portadora requerida para una antena de 1 metro}
-
-        Si la antena mide $L = 1\ \text{m}$ y equivale a la mitad de la longitud de onda ($L = \lambda/2$), la longitud de onda necesaria es:
-
-        \[
-          \lambda = 2L = 2 \times 1\ \text{m} = 2\ \text{m}
-        \]
-
-        Calculamos la frecuencia portadora:
-
-        \[
-          f = \frac{c}{\lambda}
-          = \frac{3 \times 10^8\ \text{m/s}}{2\ \text{m}}
-          = 150\,000\,000\ \text{Hz}
-          = \boxed{150\ \text{MHz}}
-        \]
-
-        Para poder utilizar una antena de 1 metro, la señal de voz debe modularse sobre una frecuencia portadora de \textbf{150 MHz}, perteneciente a la banda VHF.
+ \item \textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
+ 
+\textbf{a) ¿Cuál debe ser la longitud de una antena, equivalente a la mitad de la longitud de onda, para enviar una señal de 300 Hz?}
+ 
+\textbf{b) Una posible alternativa es emplear algún esquema de modulación, como los descritos en el Capítulo 5, de tal manera que la señal a transmitir tenga un ancho de banda estrecho, centrado en torno a la frecuencia portadora. Supóngase que quisiéramos una antena de 1 metro de longitud. ¿Qué frecuencia de portadora debería utilizarse?}
+ 
+La antena pedida es un dipolo de media onda: dos conductores alimentados en el centro, con longitud total $L = \lambda/2$. A esa longitud el dipolo resuena, y la distribución de corriente es máxima en el punto de alimentación y nula en los extremos. En ambos incisos se usa
+\[
+  \lambda = \frac{c}{f}, \qquad c \approx 3 \times 10^8~\text{m/s}
+\]
+ 
+\begin{center}
+\begin{tikzpicture}[>=Stealth, font=\small]
+  % Conductores
+  \draw[line width=2pt] (0,0.15) -- (0,2.2);
+  \draw[line width=2pt] (0,-0.15) -- (0,-2.2);
+  % Alimentación
+  \draw (0,0.15) -- (-0.9,0.15);
+  \draw (0,-0.15) -- (-0.9,-0.15);
+  \node[left] at (-0.9,0) {Línea de alimentación};
+  % Distribución de corriente
+  \draw[thick, red!70!black, domain=-2.2:2.2, samples=60, smooth]
+       plot ({0.9*cos(deg(pi*\x/4.4))}, \x);
+  \node[red!70!black, right] at (0.95,0.5) {$I(z)$};
+  % Cota
+  \draw[<->] (2.0,-2.2) -- (2.0,2.2) node[midway, right] {$L = \lambda/2$};
+  \draw[gray] (0.1,2.2) -- (2.1,2.2);
+  \draw[gray] (0.1,-2.2) -- (2.1,-2.2);
+\end{tikzpicture}
+\end{center}
+ 
+\textbf{a)} Para $f = 300$~Hz:
+\[
+  \lambda = \frac{3 \times 10^8}{300} = 10^6~\text{m} = 1000~\text{km}
+  \qquad\Longrightarrow\qquad
+  L = \frac{\lambda}{2} = \boxed{500~\text{km}}
+\]
+ 
+Una antena de 500~km no se puede construir. Incluso un monopolo de cuarto de onda sobre plano de tierra, que es la mitad de largo, mediría 250~km. Por eso la voz no se transmite en banda base por radio, sino modulando una portadora.
+ 
+\textbf{b)} Con $L = 1$~m:
+\[
+  \lambda = 2L = 2~\text{m}
+  \qquad\Longrightarrow\qquad
+  f = \frac{3 \times 10^8}{2} = \boxed{150~\text{MHz}}
+\]
+ 
+Esta portadora pertenece a la banda VHF (30--300~MHz). Al modular, el espectro de la voz se traslada alrededor de los 150~MHz y ocupa solo unos pocos kHz, por lo que la antena de 1~m sirve para toda la señal.
 
   \item
         Observamos que la longitud de onda completa es $\lambda = 0,005\,\mathrm{m}$, y usando $f = c/\lambda$, despejamos y encontramos que:
