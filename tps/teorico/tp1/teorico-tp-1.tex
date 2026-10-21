@@ -141,17 +141,116 @@ En un medio no guiado la transmisión de las ondas se produce irradiándolas en 
 
 \vspace{0.3cm}
 \noindent\textbf{3.2. ¿Cuáles son las diferencias entre una señal electromagnética analógica y una digital?}\par
-Lo que distingue a una señal analógica de una digital es cuántos valores puede tomar el parámetro representado por dicha señal. En una señal analógica, puede tomar cualquier valor dentro de un rango continuo, reproduciendo fielmente la variación de la información original (por ejemplo, la voz). En una señal digital, en cambio, sólo existe un conjunto finito de estados con significado (típicamente 0 y 1, aunque técnicas avanzadas usan más), y el receptor sólo necesita identificar a cuál de esos estados corresponde lo recibido; no reproduce la señal original, sino que la reconstruye, generalmente a partir de pulsos (toma valores discretos).
+
+Para responder esta pregunta nos pareció importante empezar separando dos ideas que en la cursada se suelen mezclar: una cosa es el dato que se quiere transmitir y otra, distinta, es la señal que efectivamente viaja por el medio físico. Stallings plantea que tanto los datos como la señalización, e incluso la transmisión en sí misma, pueden calificarse de analógicos o digitales, y los tres no necesariamente coinciden entre sí. El enunciado pregunta puntualmente por la señal, así que nos vamos a centrar en eso, aunque más adelante retomamos la relación con los datos porque nos ayudó a entender mejor el porqué de algunas decisiones de diseño.
+
+La diferencia de fondo entre una señal analógica y una digital tiene que ver con cuántos valores puede tomar la magnitud física que transporta la información, que en la mayoría de los casos es una tensión eléctrica. Una señal analógica es una onda electromagnética que varía de forma continua en el tiempo: en cualquier instante puede tomar, en principio, infinitos valores dentro de un rango. Es el caso típico del audio o de la voz humana, donde la intensidad de la señal sigue de manera fiel la variación de la presión sonora original (Figura 3.1a del libro). Una señal digital, en cambio, se construye con pulsos de tensión que sólo pueden tomar un número finito de niveles con significado, generalmente dos (uno representa al 0 y el otro al 1 binario), y permanece en ese nivel constante durante un intervalo de tiempo definido antes de pasar al siguiente (Figura 3.1b).
+
+Esa diferencia en la cantidad de valores posibles trae consecuencias prácticas que nos parecieron las más relevantes para destacar en la respuesta:
+
+\begin{itemize}
+  \item \textbf{Fidelidad frente a interpretación.} La señal analógica busca reproducir exactamente la forma de la información original, por lo que cualquier ruido que se le sume queda incorporado a la señal de manera permanente y se transmite junto con ella. La señal digital no necesita reproducir ninguna forma: el receptor sólo tiene que decidir, para cada intervalo de tiempo, a cuál de los pocos niveles posibles se parece más lo recibido. Esto hace que un sistema digital sea mucho más tolerante al ruido, porque alcanza con distinguir entre un puñado de niveles y no con preservar una forma de onda exacta.
+  \item \textbf{Regeneración frente a amplificación.} Como consecuencia de lo anterior, una señal digital atenuada o con algo de ruido se puede reconstruir por completo con un repetidor: éste interpreta los bits recibidos y genera, a partir de ellos, una señal nueva e idéntica a la original. Con una señal analógica esto no es posible, porque un amplificador sólo puede aumentar la energía de todo lo que llega, incluido el ruido ya acumulado, por lo que en enlaces largos con varios saltos ese ruido se va sumando progresivamente (Tabla 3.1 del libro resume bien estas combinaciones entre dato, señal y transmisión).
+  \item \textbf{Costo y practicidad.} La señalización digital suele ser más económica de generar e implementar que la analógica, y se integra mejor con las técnicas de multiplexación por división en el tiempo, que son más simples y baratas que las de división en frecuencia usadas habitualmente con señales analógicas.
+\end{itemize}
+
+Esto último terminó siendo, de hecho, uno de los motivos por los que buena parte de las redes actuales migraron a transmisión digital aunque el dato de origen sea analógico, como la voz telefónica, que hoy se digitaliza con un \textit{codec} apenas entra a la red: el abaratamiento de la tecnología digital gracias a la integración a gran y muy gran escala (LSI/VLSI), la posibilidad de multiplexar de forma más eficiente, la mayor integridad de los datos en distancias largas y, además, la facilidad para aplicar cifrado sobre información ya digitalizada.
+
+Para completar esta cuestión, además de Stallings consultamos el capítulo sobre señales de Forouzan (\textit{Data Communications and Networking}), que trabaja la misma distinción pero agrega la idea de que tanto los datos como las señales se pueden describir como funciones periódicas o aperiódicas en el tiempo. Esa mirada nos resultó útil para conectar esta cuestión con los ejercicios prácticos del final del trabajo, donde justamente se arma una señal (digital, en ese caso una onda cuadrada) a partir de la suma de componentes analógicas senoidales de distinta frecuencia.
 
 \vspace{0.3cm}
 \noindent\textbf{3.3. ¿Cuáles son las tres características más importantes de una señal periódica?}\par
-\noindent a) \textbf{Amplitud de pico ($A$):} Es el valor máximo de la señal en el tiempo; normalmente se mide en voltios.\par
-\noindent b) \textbf{Frecuencia ($f$):} Es la razón (en ciclos por segundo o Hercios [Hz]) a la que la señal se repite. Un parámetro equivalente es el período ($T$), definido como la cantidad de tiempo transcurrido entre dos repeticiones consecutivas de la señal; por tanto, $T = \frac{1}{f}$.\par
-\noindent c) \textbf{Fase ($\varphi$):} Es una medida de la posición relativa de la señal dentro de un período. Representa el desplazamiento de la señal respecto de un origen arbitrario y suele expresarse en grados o radianes.
+\noindent Las tres características más importantes de una señal periódica son la amplitud de pico, la frecuencia y la fase.
+
+\paragraph{a) Amplitud de pico (\(A\)).}
+La amplitud de pico es el valor máximo que alcanza la señal respecto de su nivel de referencia. Representa la magnitud de la señal y, en el caso de una señal eléctrica, normalmente se mide en voltios (V). Para una señal sinusoidal centrada en cero, los valores extremos son \(A\) y \(-A\).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.82\textwidth, height=5cm,
+  xlabel={Tiempo}, ylabel={Amplitud [V]},
+  xmin=0, xmax=4*pi, ymin=-1.3, ymax=1.3,
+  xtick={0,6.28318,12.56637},
+  xticklabels={$0$,$T$,$2T$},
+  ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+  grid=major, minor tick num=1,
+  axis lines=left, samples=200, domain=0:4*pi
+]
+\addplot[blue, thick] {sin(deg(x))};
+\draw[red,thick,<->] (axis cs:1.5708,0) -- (axis cs:1.5708,1);
+\node[red,above right] at (axis cs:1.5708,0.5) {$A$};
+\end{axis}
+\end{tikzpicture}
+\caption{Amplitud de pico de una señal sinusoidal.}
+\end{figure}
+
+\paragraph{b) Frecuencia (\(f\)) y período (\(T\)).}
+La frecuencia indica cuántos ciclos completos realiza la señal por unidad de tiempo. Se mide en hercios (Hz), donde un hercio equivale a un ciclo por segundo. El período es el tiempo necesario para completar un ciclo. Ambas magnitudes son inversamente proporcionales:
+\[
+f=\frac{1}{T}.
+\]
+Por ejemplo, si una señal tiene un período de \(0{,}01\) s, su frecuencia es \(100\) Hz.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.82\textwidth, height=5cm,
+  xlabel={Tiempo}, ylabel={Amplitud [V]},
+  xmin=0, xmax=6*pi, ymin=-1.3, ymax=1.3,
+  xtick={0,6.28318,12.56637,18.84956},
+  xticklabels={$0$,$T$,$2T$,$3T$},
+  ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+  grid=major, minor tick num=1,
+  axis lines=left, samples=300, domain=0:6*pi
+]
+\addplot[blue, thick] {sin(deg(x))};
+\draw[red,densely dashed] (axis cs:6.28318,0) -- (axis cs:6.28318,1);
+\draw[red,densely dashed] (axis cs:12.56637,0) -- (axis cs:12.56637,1);
+\draw[red,thick,<->] (axis cs:6.28318,1) -- (axis cs:12.56637,1);
+\node[red,above] at (axis cs:9.42478,1) {$T$};
+\end{axis}
+\end{tikzpicture}
+\caption{El período \(T\) es el tiempo entre dos puntos equivalentes consecutivos del ciclo.}
+\end{figure}
+
+\paragraph{c) Fase (\(\varphi\)).}
+La fase indica la posición relativa de una señal dentro de su ciclo respecto de un origen de referencia. Para ilustrarla, el gráfico compara una señal seno y una señal coseno de igual amplitud y frecuencia. La señal coseno alcanza su máximo un cuarto de período antes que la señal seno; por lo tanto, el coseno adelanta al seno en \(T/4\), lo que equivale a una diferencia de fase de \(90^\circ\) o \(\pi/2\) radianes. La fase permite describir el desplazamiento relativo entre señales periódicas.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.82\textwidth, height=5cm,
+  xlabel={Tiempo}, ylabel={Amplitud [V]},
+  xmin=0, xmax=4*pi, ymin=-1.35, ymax=1.6,
+  xtick={0,1.5708,3.14159,4.71239,6.28318,9.42478,12.56637},
+  xticklabels={$0$,$T/4$,$T/2$,$3T/4$,$T$,$3T/2$,$2T$},
+  ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+  grid=major, minor tick num=1,
+  axis lines=left, samples=300, domain=0:4*pi,
+  legend style={at={(0.98,0.98)},anchor=north east,font=\small}
+]
+\addplot[blue, thick] {sin(deg(x))};
+\addlegendentry{Señal seno}
+\addplot[red, dashed, thick] {cos(deg(x))};
+\addlegendentry{Señal coseno}
+\draw[<->,black,thick] (axis cs:0,1.12) -- (axis cs:1.5708,1.12);
+\node[black,above] at (axis cs:0.7854,1.12) {$T/4$};
+\node[black] at (axis cs:2.1,0.93) {$\Delta\varphi=\pi/2$};
+\end{axis}
+\end{tikzpicture}
+\caption{Desfase entre una señal seno y una señal coseno de igual amplitud y frecuencia. El coseno adelanta al seno un cuarto de período.}
+\end{figure}
 
 \vspace{0.3cm}
-\noindent\textbf{3.4. ¿Cuántos radianes hay en 360°?}\par
-En $360^\circ$ hay $2\pi$ radianes (aproximadamente $6{,}2832$ radianes).
+\noindent\textbf{3.4. ¿Cuántos radianes hay en $360^\circ$?}\par
+Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la circunferencia completa mide $2\pi r$, una vuelta tiene
+\[
+  360^\circ = \frac{2\pi r}{r} = 2\pi~\text{rad} \approx 6{,}2832~\text{rad}
+\]
 
 \vspace{0.3cm}
 \noindent\textbf{3.5. ¿Cuál es la relación entre la longitud de onda y la frecuencia en una onda seno?}\par
@@ -297,45 +396,94 @@ El desfase de \(\pi\) hace que \(x_2(t)\) sea la opuesta de \(x_1(t)\). Por ello
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.4}\par
-Calculamos la longitud de onda mediante $v = f \cdot \lambda$ ($\lambda = v/f$) y analizamos la frecuencia relativa de cada nota respecto al DO grave:
+
+Este ejercicio pide comparar, para cada nota de la escala musical, su frecuencia relativa y su longitud de onda, sabiendo que el sonido viaja a $v = 330$ m/s. La herramienta que usamos para pasar de una magnitud a la otra es la relación entre velocidad de propagación, longitud de onda y frecuencia que vimos en la Cuestión 3.5 y que Stallings introduce al definir la longitud de onda de una señal periódica: si una onda avanza a velocidad $v$ y tarda un período $T$ en repetirse, en ese tiempo recorre exactamente una longitud de onda, de donde sale
+
+\[
+  \lambda = vT = \frac{v}{f} \qquad \Longleftrightarrow \qquad \lambda f = v.
+\]
+
+Con esa fórmula calculamos la longitud de onda de cada nota dividiendo la velocidad del sonido por su frecuencia. También agregamos una columna con la frecuencia de cada nota relativa a la del DO grave, porque es la que mejor deja ver la idea de octava.
+
 \begin{center}
-  \includegraphics[width=0.7\textwidth]{tabla-notas.png}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Nota} & DO & RE & MI & FA & SOL & LA & SI & DO \\
+\hline
+\textbf{Frecuencia (Hz)} & 264 & 297 & 330 & 352 & 396 & 440 & 495 & 528 \\
+\hline
+\textbf{$\lambda = v/f$ (m)} & 1{,}250 & 1{,}111 & 1{,}000 & 0{,}938 & 0{,}833 & 0{,}750 & 0{,}667 & 0{,}625 \\
+\hline
+\textbf{$f/f_{\text{DO grave}}$} & 1{,}000 & 1{,}125 & 1{,}250 & 1{,}333 & 1{,}500 & 1{,}667 & 1{,}875 & 2{,}000 \\
+\hline
+\end{tabular}
 \end{center}
-Al observar la tabla, se confirma que el DO agudo tiene el doble de frecuencia que el DO grave (definición de octava), y su longitud de onda es exactamente la mitad, evidenciando la relación inversa existente.
+
+Lo primero que se confirma con la tabla es lo que pide el enunciado: el DO agudo tiene exactamente el doble de frecuencia que el DO grave (528 Hz frente a 264 Hz, es decir, $f/f_{\text{DO grave}}=2$), y su longitud de onda es exactamente la mitad (0,625 m frente a 1,25 m). Esa relación de 2 a 1 entre las frecuencias es, de hecho, la definición física de octava en acústica: dos notas están separadas por una octava cuando una vibra al doble de frecuencia que la otra, y el oído las percibe como "la misma nota" en un registro distinto.
+
+Mirando la tabla con un poco más de detalle, también se puede ver que el salto de frecuencia entre notas consecutivas no es siempre igual: entre DO y RE la razón es $297/264 = 9/8$, entre RE y MI es $330/297 = 10/9$, entre MI y FA es $352/330 = 16/15$, y así se repite el patrón ($9/8$, $10/9$, $9/8$, $16/15$) hasta llegar al DO agudo. Son las razones propias de la afinación justa o natural de la escala diatónica (donde los intervalos se arman con fracciones simples de números enteros), distinta de la afinación temperada que se usa hoy en instrumentos como el piano, donde cada semitono multiplica la frecuencia por $2^{1/12}$. No hacía falta este detalle para resolver el ejercicio, pero nos pareció un buen ejemplo de cómo la relación $\lambda f = v$ que estudiamos para señales eléctricas es la misma que describe, con otro medio y otra velocidad de propagación, al sonido.
+
+En definitiva, como $v$ es constante para todas las notas (viajan por el mismo medio, el aire), la relación entre frecuencia y longitud de onda es estrictamente inversa: cuanto más aguda es la nota, mayor su frecuencia y menor su longitud de onda, y viceversa.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.5}\par
-Observando la gráfica del problema:
+
+Según el enunciado, la curva de línea continua de la Figura 3.17 representa a $\sen(2\pi t)$, es decir, una onda seno genérica $A\sen(2\pi ft+\varphi)$ con $A=1$, $f=1$ y $\varphi=0$ (son los mismos tres parámetros que repasamos en la Cuestión 3.3). Para identificar los parámetros de la curva discontinua, aplicamos el mismo método que describe el libro al introducir esos parámetros: la amplitud se lee directamente de la altura de los picos, la frecuencia se obtiene comparando cuántos ciclos completa la curva discontinua en el mismo intervalo que la continua, y la fase se obtiene midiendo el corrimiento horizontal de un pico de la curva discontinua respecto del pico correspondiente de la curva continua, expresado como fracción del período.
+
 \begin{itemize}
-  \item $A$ (Amplitud): En los picos, $A = 2$.
-  \item $f$ (Frecuencia): $2f$ (el doble de la frecuencia de la línea continua).
-  \item $\varphi$ (Fase): Está adelantada respecto de la continua, desfasada $\pi$ rad.
+  \item \textbf{Amplitud ($A$):} los picos de la curva discontinua llegan hasta $2$ (el doble que la curva continua, que llega a $1$), así que $A=2$.
+  \item \textbf{Frecuencia ($f$):} en el mismo tramo en el que la curva continua completa un ciclo, la discontinua completa dos, de modo que su frecuencia es el doble: $f=2$ (equivalentemente, su período es la mitad).
+  \item \textbf{Fase ($\varphi$):} comparando la posición de los picos, la curva discontinua está desplazada respecto de lo que sería $2\sen(2\pi(2)t)$ sin desfasar. Ese desplazamiento equivale a un adelanto de $\pi$ radianes.
 \end{itemize}
+
+Con esos tres valores, la curva discontinua queda expresada como
+\[
+  2\sen\!\big(2\pi(2)t+\pi\big).
+\]
+
+Vale la pena notar que, usando la misma identidad trigonométrica que ya usamos en el Ejercicio 3.3 ($\sen(\theta+\pi)=-\sen\theta$), esta expresión se puede reescribir de forma equivalente como $-2\sen(4\pi t)$, que es otra manera válida de describir la misma curva. Esto nos sirvió para confirmar el resultado: ambas formas describen exactamente la misma señal, sólo que una usa el parámetro de fase explícito y la otra lo absorbe en el signo.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.6}\par
-Distribuyendo la multiplicación:
+
+El enunciado pide expresar $s(t) = (1 + 0{,}1\cos 5t)\cos 100t$ como combinación lineal de funciones sinusoidales, y da como sugerencia usar la expresión de $\cos a \cos b$. Antes de aplicarla nos pareció importante repasar de dónde sale esa identidad, para no usarla como una fórmula memorizada sin más.
+
+Partimos de las dos identidades de suma y diferencia de ángulos para el coseno, que son las que se demuestran a partir de la definición geométrica del seno y el coseno:
 \[
-  (1 + 0{,}1\cos 5t)\cos 100t = \cos 100t + 0{,}1\cos 5t \cdot \cos 100t
+  \cos(a-b) = \cos a\cos b + \sen a\sen b, \qquad
+  \cos(a+b) = \cos a\cos b - \sen a\sen b.
 \]
-Utilizando la identidad $\cos a \cdot \cos b = \frac{1}{2}[\cos(a-b) + \cos(a+b)]$ con $a = 5t$ y $b = 100t$:
+Sumando ambas expresiones, los términos con $\sen a \sen b$ se cancelan entre sí y queda
 \[
-  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos(-95t) + \cos(105t)\right] = \frac{1}{2}\left[\cos 95t + \cos 105t\right]
+  \cos(a-b) + \cos(a+b) = 2\cos a\cos b
+  \qquad \Longrightarrow \qquad
+  \cos a\cos b = \tfrac{1}{2}\big[\cos(a-b)+\cos(a+b)\big].
 \]
-Sustituyendo el resultado:
+
+Con esta identidad ya demostrada, distribuimos la multiplicación de la señal original:
+\[
+  s(t) = (1 + 0{,}1\cos 5t)\cos 100t = \cos 100t + 0{,}1\cos 5t \cdot \cos 100t
+\]
+y aplicamos la identidad con $a = 5t$ y $b = 100t$:
+\[
+  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos(5t-100t) + \cos(5t+100t)\right] = \frac{1}{2}\left[\cos 95t + \cos 105t\right]
+\]
+(usamos que $\cos(-95t)=\cos(95t)$, porque el coseno es una función par). Sustituyendo el resultado en $s(t)$:
 \[
   s(t) = \cos 100t + 0{,}05\cos 95t + 0{,}05\cos 105t
 \]
-Identificación de parámetros ($f = \omega / 2\pi$):
+
+Esta expresión ya es la combinación lineal de tres sinusoides que pide el enunciado: una componente a la frecuencia original de la portadora (100 rad/s) y dos componentes adicionales, una por debajo y otra por encima, separadas exactamente $5$ rad/s. Es, en miniatura, el mismo fenómeno que Stallings muestra en las Figuras 3.4 y 3.5 del capítulo cuando arma una señal sumando componentes senoidales de distinta frecuencia y después la mira en el dominio de la frecuencia: acá, en vez de sumar dos sinusoides independientes, el término $0{,}1\cos 5t$ multiplicando a la portadora termina generando dos nuevas componentes alrededor de ella. Identificando amplitud, frecuencia angular ($\omega$) y fase de cada término, y pasando la frecuencia angular a hercios con $f=\omega/2\pi$:
+
 \begin{itemize}
-  \item Componente $\cos 100t$: Amplitud $= 1$, $f = \frac{100}{2\pi} \approx 15{,}915\,\mathrm{Hz}$, fase $\varphi = 0$.
-  \item Componente $0{,}05\cos 95t$: Amplitud $= 0{,}05$, $f = \frac{95}{2\pi} \approx 15{,}120\,\mathrm{Hz}$, fase $\varphi = 0$.
-  \item Componente $0{,}05\cos 105t$: Amplitud $= 0{,}05$, $f = \frac{105}{2\pi} \approx 16{,}711\,\mathrm{Hz}$, fase $\varphi = 0$.
+  \item Componente $\cos 100t$: Amplitud $= 1$, $f = \dfrac{100}{2\pi} \approx 15{,}915\,\mathrm{Hz}$, fase $\varphi = 0$.
+  \item Componente $0{,}05\cos 95t$: Amplitud $= 0{,}05$, $f = \dfrac{95}{2\pi} \approx 15{,}120\,\mathrm{Hz}$, fase $\varphi = 0$.
+  \item Componente $0{,}05\cos 105t$: Amplitud $= 0{,}05$, $f = \dfrac{105}{2\pi} \approx 16{,}711\,\mathrm{Hz}$, fase $\varphi = 0$.
 \end{itemize}
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.7}\par
-Desarrollando $f(t) = (10\cos t)^2 = 100\cos^2(t)$. 
+Desarrollando $f(t) = (10\cos t)^2 = 100\cos^2(t)$.
 Para verificar el período $T$, buscamos la menor constante positiva que cumple $f(t+T) = f(t)$:
 \[
   100\cos^2(t+T) = 100\cos^2(t)
@@ -424,36 +572,77 @@ Si se elimina la fundamental $f$ y se conserva únicamente el armónico $3f$, la
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.10}\par
-Un pulso cuadrado perfecto posee un ancho de banda absoluto infinito. Dado que ningún medio físico posee ancho de banda infinito, la señal transmitida debe ser limitada en banda. Esta limitación introduce distorsión en los bordes del pulso. Sin embargo, dado que la mayor parte de la energía se concentra en la armónica fundamental y en las primeras armónicas impares, al transmitir este rango de frecuencias principal, el receptor puede recuperar la información digital con una tasa de error aceptable.
+Un pulso rectangular de amplitud $A$ y duración $\tau$ tiene como espectro
+\[
+  X(f) = A\tau \,\frac{\sin(\pi f \tau)}{\pi f \tau}
+\]
+que se extiende hasta frecuencia infinita, por lo que su ancho de banda absoluto es infinito. Ningún medio real lo puede transmitir: todo canal tiene un ancho de banda limitado, y además los transmisores y receptores son más caros cuanto más ancho de banda manejan. En la práctica la señal se limita en banda y eso deforma el pulso, que pierde los flancos verticales y se redondea.
+
+Esto no impide la transmisión, porque la energía no está repartida por igual. Cerca del 90\,\% está en el lóbulo principal, hasta $f = 1/\tau$. Alcanza con transmitir esa banda para que el receptor distinga un 1 de un 0, aunque la forma no sea exacta. Lo mismo ocurre con una secuencia de pulsos: una onda cuadrada se forma con la fundamental y sus armónicos impares, y con unos pocos ya queda bien aproximada.
+
+\begin{center}
+\begin{tikzpicture}[xscale=4, yscale=1.4, font=\small]
+  \draw[->, gray] (0,0) -- (2.1,0) node[right] {$t$};
+  \draw[->, gray] (0,-1.3) -- (0,1.4);
+  % Onda cuadrada ideal
+  \draw[gray!60, thick] (0,0) -- (0,1) -- (0.5,1) -- (0.5,-1) -- (1,-1) -- (1,1) -- (1.5,1) -- (1.5,-1) -- (2,-1) -- (2,0);
+  % Solo fundamental
+  \draw[blue!70!black, dashed, domain=0:2, samples=120, smooth]
+       plot (\x, {4/pi*sin(360*\x)});
+  % Fundamental + 3er + 5to armónico
+  \draw[red!70!black, thick, domain=0:2, samples=300, smooth]
+       plot (\x, {4/pi*(sin(360*\x) + sin(3*360*\x)/3 + sin(5*360*\x)/5)});
+  \node[gray, right] at (2.05,1) {ideal};
+  \node[blue!70!black, right] at (2.05,0.55) {$k = 1$};
+  \node[red!70!black, right] at (2.05,-0.6) {$k = 1, 3, 5$};
+\end{tikzpicture}
+\end{center}
+
+La implicación principal es el compromiso entre velocidad y ancho de banda. Cuanto más cortos son los pulsos, es decir, cuanto mayor es la tasa de bits, más se ensancha el espectro. Para un ancho de banda dado, aumentar la velocidad deforma más los pulsos, hasta que se superponen entre sí (interferencia entre símbolos) y aumentan los errores. Por ejemplo, con una onda cuadrada de 1~MHz y sus armónicos de 3 y 5~MHz, que ocupan $B = 4$~MHz, se transmiten 2~Mbps, porque cada período lleva dos bits.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.11}\par
-Para representar aproximadamente 100 caracteres con un código de 6 bits (que dispone de solo $2^6 = 64$ combinaciones posibles), se recurre al uso de caracteres de control o de desplazamiento (Shift characters).
-Se reservan una o dos combinaciones específicas para cambiar el modo de interpretación del receptor (por ejemplo, "Shift to Alpha" y "Shift to Special/Numeric"). De este modo, los patrones de bits restantes adquieren un significado dual según el último carácter de control recibido, expandiendo la capacidad práctica a casi 120 caracteres distintos.
+Con 6 bits hay $2^6 = 64$ combinaciones, que no alcanzan para 100 caracteres. La solución es usar caracteres de cambio (\emph{shift}): se reservan algunos códigos que no representan ningún carácter, sino que le indican al receptor cómo interpretar los que siguen. Por ejemplo, ``mayúsculas'' y ``minúsculas''. Cada uno de los códigos restantes tiene entonces un significado distinto según el modo vigente, hasta que llega otro carácter de cambio. Es el mismo mecanismo del código Baudot de 5 bits, con sus caracteres LTRS y FIGS.
+
+Con $s$ códigos reservados para cambiar entre $s$ modos, la cantidad de caracteres es
+\[
+  N = s\,(64 - s)
+\]
+Con dos modos, $N = 2 \cdot 62 = 124$, que alcanza para los 100 caracteres. Algunos códigos, como el espacio, el retorno de carro o el avance de línea, suelen valer lo mismo en ambos modos, así que la cifra útil es algo menor.
+
+La desventaja es que la interpretación depende del estado. Si un carácter de cambio se pierde o llega con error, todo el texto hasta el próximo cambio se decodifica mal.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.12}\par
-Partiendo de los parámetros estándar de vídeo (4,2 MHz, 525 líneas totales, 483 líneas activas, 30 cuadros/s, tiempo activo por línea $52{,}5\,\mu\mathrm{s}$, retroceso horizontal $11\,\mu\mathrm{s}$):
+Se parte de los parámetros de vídeo del texto: 525 líneas por cuadro (483 visibles y 42 de retroceso vertical), 30 cuadros/s, $63{,}5~\mu$s por línea, de los cuales $11~\mu$s son de retroceso horizontal y $52{,}5~\mu$s son activos. Con 4{,}2~MHz se obtienen unos 450 elementos por línea.
 
-\noindent\underline{\textbf{Incremento de resolución horizontal:}}
-\begin{enumerate}
-  \item Ancho de banda $B = 5\,\mathrm{MHz}$, tiempo activo $T_{\text{activo}} = 52{,}5\,\mu\mathrm{s}$.
-  \item Ciclos por línea: $5\times10^6\,\mathrm{Hz} \cdot 52{,}5\times10^{-6}\,\mathrm{s} = 262{,}5$ ciclos.
-  \item Elementos horizontales (2 por ciclo): $262{,}5 \times 2 = 525$ elementos.
-  \item Incremento respecto del estándar (450 elementos): $525 - 450 = 75$ elementos adicionales.
-\end{enumerate}
+La resolución se calcula considerando que un ciclo de la señal permite representar dos elementos, uno claro y uno oscuro. Por lo tanto, con un ancho de banda $B$ y un tiempo activo $T$ hay $2BT$ elementos por línea.
 
-\noindent\underline{\textbf{Incremento de resolución vertical:}}
-\begin{enumerate}
-  \item Fijando la resolución horizontal en 450 elementos (225 ciclos):
-  \[
-    T_{\text{activo}} = \frac{225}{5\times10^6\,\mathrm{Hz}} = 45\,\mu\mathrm{s}
-  \]
-  \item Tiempo total por línea: $45\,\mu\mathrm{s} + 11\,\mu\mathrm{s} = 56\,\mu\mathrm{s}$.
-  \item Líneas totales por segundo: $\frac{1}{56\times10^{-6}\,\mathrm{s} \cdot 30} \approx 595{,}2$ líneas.
-  \item Líneas activas (proporción $483/525$): $595{,}2 \cdot \frac{483}{525} \approx 547{,}6$ líneas.
-  \item Incremento vertical: $547{,}6 - 483 \approx 64{,}6$ líneas adicionales ($\approx 65$ líneas).
-\end{enumerate}
+\noindent\underline{\textbf{Incremento de resolución horizontal}} (se mantienen las líneas):
+\[
+  N_h = 2 \cdot (5 \times 10^6~\text{Hz}) \cdot (52{,}5 \times 10^{-6}~\text{s}) = 525~\text{elementos}
+\]
+Son $525 - 450 = \boxed{75~\text{elementos más por línea}}$, un aumento de aproximadamente $17\,\%$.
+
+\noindent\underline{\textbf{Incremento de resolución vertical}} (con 450 elementos por línea):
+
+Con 5~MHz, los 225 ciclos de cada línea se recorren en menos tiempo:
+\[
+  T_{\text{activo}} = \frac{225}{5 \times 10^6~\text{Hz}} = 45~\mu\text{s}
+  \qquad\Longrightarrow\qquad
+  T_{\text{línea}} = 45 + 11 = 56~\mu\text{s}
+\]
+Las líneas por cuadro pasan a ser
+\[
+  \frac{1/30~\text{s}}{56 \times 10^{-6}~\text{s}} \approx 595~\text{líneas}
+\]
+El retroceso vertical dura lo mismo que antes ($42 \cdot 63{,}5~\mu\text{s} \approx 2{,}67$~ms), así que el tiempo útil por cuadro es $33{,}33 - 2{,}67 = 30{,}67$~ms. Las líneas visibles resultan
+\[
+  N_v = \frac{30{,}67 \times 10^{-3}~\text{s}}{56 \times 10^{-6}~\text{s}} \approx 548~\text{líneas}
+\]
+Son $548 - 483 \approx \boxed{65~\text{líneas visibles más}}$, un aumento de aproximadamente $13\,\%$.
+
+El aumento vertical es menor que el horizontal. Esto se debe a que los $11~\mu$s de retroceso horizontal no se acortan con el ancho de banda, y pesan más cuando la línea es más corta.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.13}\par

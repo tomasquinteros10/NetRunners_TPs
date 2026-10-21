@@ -6,10 +6,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
 \usepackage{amsmath}
+\usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usetikzlibrary{arrows.meta,decorations.pathmorphing}
 \usepackage[T1]{fontenc}
-\usepackage[spanish]{babel}
+% Nota: se omite \usepackage[spanish]{babel} porque el paquete babel-spanish
+% no está disponible en este entorno de compilación; los acentos se escriben
+% directamente en UTF-8 gracias a inputenc+fontenc.
 % Fecha en espanol sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
@@ -126,7 +130,14 @@
         Las principales limitaciones del par trenzado son su menor distancia de transmisión, menor ancho de banda y menor velocidad respecto de otros medios guiados. Además, es muy susceptible a interferencias y ruido, debido a su acoplamiento con campos electromagnéticos externos.
   \item
         \textbf{¿Cuál es la diferencia entre el par trenzado no apantallado y el par trenzado apantallado?} \\
-        La diferencia principal radica en que el par trenzado apantallado consta de una malla interna en la que está embutido, la cual evita la acción del ruido provocado por ondas electromagnéticas; pero la contrapartida es que es más costoso y difícil de ensamblar.
+
+        Para esta cuestión nos pareció importante no quedarnos solo con la definición general, sino mostrar con números por qué el apantallamiento realmente mejora las prestaciones, porque en la primera vuelta la habíamos respondido de forma bastante genérica.
+
+        El par trenzado no apantallado (UTP, \textit{Unshielded Twisted Pair}) es, como dice su nombre, un par de conductores de cobre trenzados entre sí sin ningún tipo de blindaje adicional más allá de la propia cubierta aislante. Es el cable que tradicionalmente se usó en telefonía (el llamado par de calidad telefónica, de 100 ohmios) y, por su bajo costo y facilidad de instalación, terminó siendo también el medio más usado en redes LAN. El par apantallado (STP, \textit{Shielded Twisted Pair}) agrega, además del trenzado, una malla metálica que envuelve a los conductores y que funciona como una especie de jaula protectora: intercepta buena parte de las interferencias electromagnéticas externas y reduce la diafonía con pares vecinos antes de que lleguen a afectar la señal útil.
+
+        Para dimensionar esa diferencia, Stallings trae una tabla comparativa (Tabla 4.2 del libro) con valores medidos de atenuación y de diafonía cercana al extremo para UTP tipo 3, UTP tipo 5 y STP de 150 ohmios, a distintas frecuencias. A 16 MHz, por ejemplo, la atenuación del UTP tipo 3 es de 13,1 dB cada 100 m, mientras que la del STP es de apenas 4,4 dB; en diafonía pasa algo parecido, el STP alcanza 44 dB frente a los 23 dB del UTP tipo 3 (y ahí cuanto mayor es el valor en dB, mejor, porque indica más atenuación de la señal acoplada desde el par vecino). O sea que la mejora no es solo una cuestión cualitativa de ``blinda mejor'': a igual frecuencia, el STP permite usar distancias más largas o velocidades más altas antes de que el ruido se vuelva un problema.
+
+        Ahora bien, esa mejora tiene un costo real, y no solo en dinero. Primero, el STP es efectivamente más caro: la Tabla 4.3 del libro, que compara categorías de cableado de cobre, muestra que si el UTP tipo 5 cuesta 1 (en unidades relativas), un STP tipo 7 (clase F) cuesta 2,2, más del doble. Segundo, es más difícil de instalar y manipular, porque la malla le agrega rigidez al cable, hace más delicado el conexionado (hay que aterrizar correctamente el blindaje en ambos extremos, si no se pierde buena parte del beneficio) y complica el tendido en espacios reducidos. Por eso, en la práctica, la preinstalación por defecto de la mayoría de los edificios de oficinas sigue siendo UTP, y el STP queda reservado para entornos con mucho ruido electromagnético o donde se necesitan las prestaciones más altas.
   \item
         \textbf {Describir los principales componentes del cable de fibra óptica.}\\
         Un cable de fibra óptica posee una estructura cilíndrica concéntrica compuesta por tres elementos principales:
@@ -154,14 +165,76 @@
           \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
           \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
         \end{itemize}
-  \item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
-        La difusión directa por satélite (DBS, Direct Broadcast Satellite) es una tecnología de distribución de televisión en la que la señal de vídeo se transmite directamente desde el satélite hasta los domicilios de los usuarios finales.
+\item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
+Es la distribución de televisión en la que la señal de vídeo se transmite desde el satélite directamente al domicilio del usuario, sin pasar por la cabecera de un operador de cable. El usuario la recibe con una antena parabólica propia.
+
+El sistema tiene tres partes:
+
+\begin{itemize}
+  \item \textbf{Estación terrena (centro de emisión):} multiplexa los canales y los envía al satélite por el enlace ascendente, en la banda de 17{,}3--17{,}8~GHz.
+  \item \textbf{Satélite geoestacionario:} está a $\approx 35\,786$~km sobre el ecuador, por lo que se ve fijo desde tierra y la antena del usuario no necesita seguimiento. Sus transpondedores, de 24--36~MHz de ancho de banda cada uno, reciben la señal, la trasladan de frecuencia, la amplifican y la reemiten sobre la huella de cobertura en banda Ku (12{,}2--12{,}7~GHz en América).
+  \item \textbf{Equipo del usuario:} incluye un plato de 45--90~cm, un LNB (\emph{Low Noise Block}) en el foco, que amplifica y baja la señal a una frecuencia intermedia de 950--2150~MHz para llevarla por coaxial, y un decodificador que demodula y descifra los canales.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth, font=\small]
+  % Superficie terrestre
+  \fill[green!15] (-6,0) arc[start angle=120, end angle=60, radius=12] -- (6,-0.8) -- (-6,-0.8) -- cycle;
+  \draw[thick] (-6,0) arc[start angle=120, end angle=60, radius=12];
+
+  % Satélite
+  \begin{scope}[shift={(0,5.2)}]
+    \fill[gray!60] (-0.35,-0.3) rectangle (0.35,0.3);
+    \fill[blue!40] (-1.4,-0.15) rectangle (-0.45,0.15);
+    \fill[blue!40] (0.45,-0.15) rectangle (1.4,0.15);
+    \draw (-0.45,0) -- (-0.35,0);
+    \draw (0.35,0) -- (0.45,0);
+    \node[above=6pt] at (0,0.3) {Satélite geoestacionario ($\approx 35\,786$ km)};
+  \end{scope}
+
+  % Estación terrena de subida
+  \begin{scope}[shift={(-4.6,1.2)}]
+    \fill[gray!40] (-0.5,-0.55) rectangle (0.5,0.05);
+    \draw[thick] (-0.35,0.25) arc[start angle=200, end angle=340, radius=0.4];
+    \draw (0,0.05) -- (0,0.2);
+    \node[below=14pt, align=center] at (0.3,-0.5) {Centro de emisión\\(estación terrena)};
+  \end{scope}
+
+  % Enlace ascendente
+  \draw[->, very thick, red!70!black, decorate, decoration={snake, amplitude=1.2pt, segment length=8pt, post length=4pt}]
+       (-4.5,1.4) -- (-0.5,4.8) node[midway, left=4pt, align=right] {Enlace ascendente\\(17{,}3--17{,}8 GHz)};
+
+  % Huella (enlace descendente)
+  \fill[orange!25, opacity=0.6] (0,4.85) -- (-1.2,1.5) -- (5.6,0.3) -- cycle;
+  \node[orange!50!black, align=center] at (3.9,3.1) {Enlace descendente\\(banda Ku, $\approx 12$ GHz)};
+
+  % Casas
+  \foreach \x/\y in {0/2.0, 2.4/1.78, 4.6/1.12} {
+    \begin{scope}[shift={(\x,\y)}]
+      \fill[brown!40] (-0.35,-0.45) rectangle (0.35,0.1);
+      \fill[red!50!black] (-0.45,0.1) -- (0,0.5) -- (0.45,0.1) -- cycle;
+      \draw[thick] (0.25,0.45) arc[start angle=200, end angle=330, radius=0.18];
+    \end{scope}
+  }
+  \node[below=4pt] at (2.4,0.75) {Usuarios con antena de 45--90 cm};
+\end{tikzpicture}
+\end{figure}
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
         Debe usar frecuencias distintas porque, en una transmisión continua y sin interferencias, el satélite no puede transmitir y recibir en el mismo rango de frecuencias. Se produciría una interferencia entre la señal entrante y la saliente.
   \item
         \textbf{Indique las diferencias más significativas entre la difusión de radio y las microondas.}
-        Diferencias principales: la difusión de microondas es parabólica, es decir direccional, mientras que las ondas de radio son omnidireccionales; como consecuencia de lo anterior, la difusión por microondas requiere de antenas parabólicas bien direccionadas, en cambio las ondas de radio no; como otra diferencia clave está el hecho de que la difusión por microondas es útil para los enlaces punto a punto (antena a antena), en cambio en el caso de la difusión por ondas de radio el uso práctico son los enlaces de un emisor a muchos receptores; también podemos decir que los fenómenos físicos que afectan estas comunicaciones van a ser distintos, por ejemplo las ondas de radio son menos sensibles a la atenuación causada por lluvia que las microondas pero en contrapartida se ven más afectadas por multitrayectorias.
+
+        Retomamos esta cuestión agregando los datos concretos que trae el libro, porque la primera respuesta se había quedado en una comparación bastante general.
+
+        La diferencia de fondo, que el propio Stallings señala como ``la más apreciable'', es la direccionalidad: las microondas tienen un diagrama de radiación muy direccional, mientras que las ondas de radio son omnidireccionales. No es un detalle menor, porque de ahí se desprenden casi todas las demás diferencias.
+
+        Por ser direccional, un enlace de microondas terrestres necesita antenas parabólicas tipo ``plato'' (de unos 3 metros de diámetro típicamente) perfectamente alineadas entre sí siguiendo la trayectoria visual, montadas sobre torres o estructuras rígidas a cierta altura para evitar obstáculos; para cubrir distancias largas, se encadenan varios enlaces punto a punto entre antenas de torres adyacentes. El rango de frecuencias que usan va de 1 a 40 GHz. Las ondas de radio, en cambio, no necesitan ese tipo de antenas ni de instalación rígida, porque se usan sobre todo entre 30 MHz y 1 GHz (la franja VHF y parte de UHF) y su gracia es, justamente, que un único transmisor llegue a muchos receptores a la vez sin necesidad de apuntar hacia cada uno.
+
+        Esa diferencia en el uso típico (microondas para enlaces punto a punto, ondas de radio para difusión hacia varios destinos simultáneamente) tiene que ver con cómo las trata la ionosfera: por debajo de 30 MHz la ionosfera refleja las ondas y por eso se puede llegar lejos con rebotes (propagación aérea), mientras que por encima de esa frecuencia la ionosfera es transparente, así que tanto las microondas como las ondas de radio (que están arriba de los 30 MHz) sólo se propagan en línea de vista. Aun así, las de radio, al tener mayor longitud de onda, sufren relativamente menos atenuación con la distancia que las microondas: usando la misma fórmula de pérdida en el espacio libre que vimos en la Cuestión 4.5 ($L = 10\log_{10}(4\pi d/\lambda)^2$, Ecuación 4.2 del libro), a igual distancia $d$, cuanto mayor es $\lambda$, menor resulta $L$.
+
+        Por el lado de las dificultades, cada una sufre más de un tipo de defecto distinto. Las microondas se ven mucho más afectadas por la atenuación debida a la lluvia, sobre todo por encima de los 10 GHz, mientras que las ondas de radio son comparativamente menos sensibles a ese fenómeno. A cambio, las ondas de radio son más propensas a sufrir interferencias por multitrayectoria: como no van tan enfocadas, al receptor le llegan reflejos de la señal original con distintos retardos (el ejemplo clásico es el ``fantasma'' que aparece en la imagen de un televisor cuando pasa un avión cerca), algo que en un enlace de microondas bien alineado es mucho menos frecuente porque casi toda la energía viaja concentrada en el haz directo.
   \item
         \textbf{¿Qué dos funciones realiza una antena?}
 
@@ -179,34 +252,61 @@
         \textbf{¿Cuál es la ventaja de una antena parabólica por reflexión?} \\
         La ventaja es el direccionamiento de la señal en la emisión y en la recepción. Debido a la forma de la antena una señal emitida desde el foco de la parábola y reflejarse en la antena tendrá una dirección de transmisión paralela al eje de la antena, esto generará un haz de señal que podrá viajar casi en línea recta hacia donde apunte la misma. Además, al recibir una señal con haces que lleguen paralelos al eje de la antena, al reflejarse en la parábola todas incidirán en el foco de la parábola, lo que permite concentrar en un solo punto mayor potencia de la señal.
   \item \textbf{¿Qué factores determinan la ganancia de una antena?} \\
-        Los factores físicos y matemáticos que determinan la ganancia de una antena son principalmente el área efectiva y la frecuencia de operación (o longitud de onda).
+La ganancia mide la directividad de la antena: es la relación entre la potencia radiada en una dirección dada y la que radiaría una antena isotrópica ideal. Se expresa en dBi. La antena no agrega potencia, sino que la concentra en un haz: a mayor ganancia, haz más angosto. Por reciprocidad, la ganancia es la misma al transmitir y al recibir.
 
-        \begin{itemize}
-          \item \textbf{Área efectiva $(A_e)$:} está relacionada con el tamaño físico, la geometría y la eficiencia de la antena. En una antena parabólica, un mayor diámetro permite obtener una mayor directividad y, en consecuencia, una mayor ganancia. El área efectiva se puede expresar como:
+Depende de dos factores:
 
-                \[
-                  A_e = \eta_a A
-                \]
-
-                donde $\eta_a$ es la eficiencia de apertura.
-
-          \item \textbf{Frecuencia de operación $(f)$ o longitud de onda $(\lambda)$:} para un área efectiva constante, la ganancia es inversamente proporcional al cuadrado de la longitud de onda y directamente proporcional al cuadrado de la frecuencia. Por lo tanto, para una misma antena física, una mayor frecuencia de operación generalmente permite obtener una mayor ganancia.
-        \end{itemize}
-
-        La relación fundamental es:
-
+\begin{itemize}
+  \item \textbf{Área efectiva $(A_e)$:} depende del tamaño físico, la forma y la eficiencia de la antena. Es menor que el área física $A$ por la iluminación no uniforme del reflector, el bloqueo del alimentador y las imperfecciones de la superficie:
         \[
-          \boxed{
-            G = \frac{4\pi A_e}{\lambda^2}
-            = \frac{4\pi f^2 A_e}{c^2}
-          }
+          A_e = \eta_a \, A
         \]
+        En una parabólica, $\eta_a \approx 0{,}55$--$0{,}7$.
 
-        donde $c$ es la velocidad de propagación de las ondas electromagnéticas en el vacío, aproximadamente:
+  \item \textbf{Frecuencia $(f)$ o longitud de onda $(\lambda)$:} para un $A_e$ fijo, la ganancia es proporcional a $f^2$. Lo que importa es el tamaño de la antena medido en longitudes de onda.
+\end{itemize}
 
-        \[
-          c \approx 3 \times 10^8 \, \text{m/s}
-        \]
+\[
+  \boxed{
+    G = \frac{4\pi A_e}{\lambda^2}
+      = \frac{4\pi f^2 A_e}{c^2}
+  }
+  \qquad c \approx 3 \times 10^8~\text{m/s}
+\]
+
+Para una parabólica de diámetro $D$, reemplazando $A = \pi D^2/4$:
+
+\begin{align*}
+  G &= \eta_a \left(\frac{\pi D}{\lambda}\right)^2 \\
+  G_{\text{dBi}} &\approx 20{,}4 + 20\log_{10} f_{\text{GHz}} + 20\log_{10} D_{\text{m}} + 10\log_{10}\eta_a
+\end{align*}
+
+Duplicar el diámetro o la frecuencia suma 6~dB. El ancho del haz a $-3$~dB es aproximadamente $\theta \approx 70\,\lambda/D$ grados, así que más ganancia implica apuntamiento más preciso.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Tipo de antena} & \textbf{Área efectiva $A_e$} & \textbf{Ganancia $G$} \\
+\midrule
+Isotrópica                     & $\lambda^2/4\pi$    & $1$ \\
+Dipolo de media onda           & $0{,}13\,\lambda^2$ & $1{,}64$ \\
+Bocina, con boca de área $A$   & $0{,}81\,A$         & $10\,A/\lambda^2$ \\
+Parabólica, con apertura $A$   & $0{,}56\,A$         & $7\,A/\lambda^2$ \\
+\bottomrule
+\end{tabular}
+\caption{Área efectiva y ganancia (respecto de la isotrópica) de distintos tipos de antena.}
+\end{table}
+
+\textbf{Ejemplo.} Parabólica de $D = 2$~m a 12~GHz ($\lambda = 0{,}025$~m, $A \approx 3{,}14$~m$^2$):
+
+\[
+  G = \frac{7A}{\lambda^2} = \frac{7 \cdot 3{,}14}{(0{,}025)^2} \approx 35\,186
+  \;\Longrightarrow\; 45{,}5~\text{dBi},
+  \qquad \theta \approx 70 \cdot \frac{0{,}025}{2} \approx 0{,}9^\circ
+\]
+
+La misma antena a 4~GHz da $\approx 35{,}9$~dBi: al dividir la frecuencia por 3, la ganancia cae 9 veces ($\approx 9{,}5$~dB). Por eso un plato DBS de 60~cm a 12~GHz ($\approx 35$~dBi) logra la misma ganancia que una antena de 2~m en banda C.
   \item
         \textbf{¿Cuál es la principal causa de la pérdida de señal en comunicaciones vía satélite?} \\
         La principal causa de pérdida de señal en las comunicaciones vía satélite es la pérdida en el espacio libre, producida por la dispersión de la señal debido a la gran distancia entre las antenas.
@@ -218,7 +318,14 @@
         en la velocidad con la altura que sean significativamente distintas de las variaciones típicas esperadas. Esto puede dar lugar a que sólo una fracción, o incluso nada, de la onda transmitida siguiendo la trayectoria visual llegue a la antena receptora.
   \item
         \textbf{¿Qué diferencia hay entre difracción y dispersión?} \\
-        Para diferenciar, decimos que la Dispersión es el cambio de dirección o frecuencia que sufre una onda al encontrarse con partículas de materia (como gotas de lluvia, por ejemplo), y esto hace que la energía se esparza en muchas direcciones; en cambio, la difracción es un fenómeno que provoca que la onda se curve alrededor del borde de un objeto grande (dada la diferencia de tamaño relativo del objeto y la longitud de onda).
+
+        Nos pareció que valía la pena no quedarnos solo con la definición de cada fenómeno, sino mostrar dónde aparece cada uno en el propio capítulo, porque eso ayuda a fijar la diferencia.
+
+        La difracción es la que explica, en la Sección 4.3, por qué la propagación superficial (la que usa, por ejemplo, la radio AM, por debajo de los 2 MHz) puede seguir la curvatura de la Tierra en lugar de perderse en línea recta hacia el espacio: el libro la define como ``un fenómeno que tiene que ver con el comportamiento de las ondas electromagnéticas en presencia de obstáculos'', y lo que sucede físicamente es que, cuando el obstáculo (en este caso, la propia superficie terrestre, o un edificio, una colina) es grande en relación con la longitud de onda, el frente de onda se curva alrededor de su borde en lugar de cortarse de forma abrupta, dejando que algo de energía llegue a zonas que deberían quedar ``en sombra'' si la onda viajara en línea recta. Es, en el fondo, el mismo principio por el que en las ciudades un celular sigue teniendo señal aunque no haya línea de vista directa con la antena, porque la señal se difracta en los bordes de los edificios.
+
+        La dispersión (\textit{scattering}), en cambio, aparece más adelante, en la Sección 4.4, al hablar de la absorción atmosférica: ahí el libro la define como ``el cambio de dirección o frecuencia que sufre una onda al encontrarse con partículas de materia'', dando como ejemplo típico las gotas de lluvia o la niebla. A diferencia de la difracción, acá no hay un obstáculo grande y liso del que la onda se ``despega'', sino una nube de partículas pequeñas (comparables o menores que la longitud de onda) contra las que la onda rebota en todas direcciones, perdiendo parte de su energía en el camino original. Es justamente el mecanismo que explica por qué la lluvia afecta tanto a la transmisión de microondas en frecuencias por encima de los 10 GHz, punto que ya habíamos visto en la Cuestión 4.5 y que acá retomamos desde el lado físico.
+
+        En definitiva, la diferencia de fondo está en qué tipo de ``obstáculo'' interviene: un objeto grande y continuo produce difracción (la onda lo rodea), mientras que una multitud de partículas pequeñas produce dispersión (la onda se esparce en direcciones aleatorias). Para profundizar un poco más en esto, además de Stallings consultamos el libro de Rappaport, \textit{Wireless Communications: Principles and Practice}, que el propio capítulo recomienda en sus lecturas adicionales para quien quiera una base más sólida de propagación inalámbrica, y que trata estos dos fenómenos (junto con la reflexión) como los tres mecanismos básicos de propagación en entornos reales.
 \end{enumerate}
 
 \section*{Ejercicios}
@@ -467,56 +574,54 @@
         \end{equation}
 
         Por lo tanto, la longitud típica requerida para la antena es de \textbf{$5\,000\text{ km}$} (o $5 \times 10^6\text{ m}$).
-  \item
-        \textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
+ \item \textbf{La potencia de la señal de voz está concentrada en torno a los 300 Hz. Las antenas para transmitir esta frecuencia deberían tener un tamaño enormemente grande. Esto hace que, para transmitir voz por radio, la señal deba enviarse modulando una señal de frecuencia superior (portadora) para la que la antena correspondiente requiera un tamaño menor.}
 
-        \textbf{a) ¿Cuál debe ser la longitud de una antena, equivalente a la mitad de la longitud de onda, para enviar una señal de 300 Hz?}
+\textbf{a) ¿Cuál debe ser la longitud de una antena, equivalente a la mitad de la longitud de onda, para enviar una señal de 300 Hz?}
 
-        \textbf{b) Una posible alternativa es emplear algún esquema de modulación, como los descritos en el Capítulo 5, de tal manera que la señal a transmitir tenga un ancho de banda estrecho, centrado en torno a la frecuencia portadora. Supóngase que quisiéramos una antena de 1 metro de longitud. ¿Qué frecuencia de portadora debería utilizarse?}
+\textbf{b) Una posible alternativa es emplear algún esquema de modulación, como los descritos en el Capítulo 5, de tal manera que la señal a transmitir tenga un ancho de banda estrecho, centrado en torno a la frecuencia portadora. Supóngase que quisiéramos una antena de 1 metro de longitud. ¿Qué frecuencia de portadora debería utilizarse?}
 
-        Para resolver este problema, se utiliza la relación fundamental entre la velocidad de propagación de una onda electromagnética ($c \approx 3 \times 10^8\ \text{m/s}$), la frecuencia ($f$) y la longitud de onda ($\lambda$):
+La antena pedida es un dipolo de media onda: dos conductores alimentados en el centro, con longitud total $L = \lambda/2$. A esa longitud el dipolo resuena, y la distribución de corriente es máxima en el punto de alimentación y nula en los extremos. En ambos incisos se usa
+\[
+  \lambda = \frac{c}{f}, \qquad c \approx 3 \times 10^8~\text{m/s}
+\]
 
-        \[
-          \lambda = \frac{c}{f}
-        \]
+\begin{center}
+\begin{tikzpicture}[>=Stealth, font=\small]
+  % Conductores
+  \draw[line width=2pt] (0,0.15) -- (0,2.2);
+  \draw[line width=2pt] (0,-0.15) -- (0,-2.2);
+  % Alimentación
+  \draw (0,0.15) -- (-0.9,0.15);
+  \draw (0,-0.15) -- (-0.9,-0.15);
+  \node[left] at (-0.9,0) {Línea de alimentación};
+  % Distribución de corriente
+  \draw[thick, red!70!black, domain=-2.2:2.2, samples=60, smooth]
+       plot ({0.9*cos(deg(pi*\x/4.4))}, \x);
+  \node[red!70!black, right] at (0.95,0.5) {$I(z)$};
+  % Cota
+  \draw[<->] (2.0,-2.2) -- (2.0,2.2) node[midway, right] {$L = \lambda/2$};
+  \draw[gray] (0.1,2.2) -- (2.1,2.2);
+  \draw[gray] (0.1,-2.2) -- (2.1,-2.2);
+\end{tikzpicture}
+\end{center}
 
-        \textbf{a) Longitud de la antena para una señal de 300 Hz}
+\textbf{a)} Para $f = 300$~Hz:
+\[
+  \lambda = \frac{3 \times 10^8}{300} = 10^6~\text{m} = 1000~\text{km}
+  \qquad\Longrightarrow\qquad
+  L = \frac{\lambda}{2} = \boxed{500~\text{km}}
+\]
 
-        Primero calculamos la longitud de onda:
+Una antena de 500~km no se puede construir. Incluso un monopolo de cuarto de onda sobre plano de tierra, que es la mitad de largo, mediría 250~km. Por eso la voz no se transmite en banda base por radio, sino modulando una portadora.
 
-        \[
-          \lambda = \frac{3 \times 10^8\ \text{m/s}}{300\ \text{Hz}}
-          = 1\,000\,000\ \text{m} = 1\,000\ \text{km}
-        \]
+\textbf{b)} Con $L = 1$~m:
+\[
+  \lambda = 2L = 2~\text{m}
+  \qquad\Longrightarrow\qquad
+  f = \frac{3 \times 10^8}{2} = \boxed{150~\text{MHz}}
+\]
 
-        Como la longitud de la antena debe ser la mitad de la longitud de onda ($L = \lambda/2$):
-
-        \[
-          L = \frac{1\,000\,000\ \text{m}}{2}
-          = \boxed{500\,000\ \text{m} = 500\ \text{km}}
-        \]
-
-        Una antena de 500 km es físicamente irrealizable para un sistema de transmisión práctico, lo que justifica la necesidad de utilizar modulación.
-
-        \medskip
-        \textbf{b) Frecuencia portadora requerida para una antena de 1 metro}
-
-        Si la antena mide $L = 1\ \text{m}$ y equivale a la mitad de la longitud de onda ($L = \lambda/2$), la longitud de onda necesaria es:
-
-        \[
-          \lambda = 2L = 2 \times 1\ \text{m} = 2\ \text{m}
-        \]
-
-        Calculamos la frecuencia portadora:
-
-        \[
-          f = \frac{c}{\lambda}
-          = \frac{3 \times 10^8\ \text{m/s}}{2\ \text{m}}
-          = 150\,000\,000\ \text{Hz}
-          = \boxed{150\ \text{MHz}}
-        \]
-
-        Para poder utilizar una antena de 1 metro, la señal de voz debe modularse sobre una frecuencia portadora de \textbf{150 MHz}, perteneciente a la banda VHF.
+Esta portadora pertenece a la banda VHF (30--300~MHz). Al modular, el espectro de la voz se traslada alrededor de los 150~MHz y ocupa solo unos pocos kHz, por lo que la antena de 1~m sirve para toda la señal.
 
   \item
         Observamos que la longitud de onda completa es $\lambda = 0,005\,\mathrm{m}$, y usando $f = c/\lambda$, despejamos y encontramos que:
