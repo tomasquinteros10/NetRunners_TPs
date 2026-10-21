@@ -262,11 +262,53 @@ El espectro de una señal es el conjunto de todas las frecuencias que la compone
 
 \vspace{0.3cm}
 \noindent\textbf{3.7. ¿Qué es la atenuación?}\par
-La atenuación es la pérdida progresiva de energía o potencia que sufre una señal a medida que viaja a través de un medio de transmisión. Ocurre tanto por el incremento de la distancia entre emisor y receptor como por un aumento de la frecuencia de la señal. Para corregirla puede ser necesario el uso de amplificadores o repetidores para recuperar la potencia, y de ecualizadores para corregir la distorsión por frecuencia.
+La atenuación es la pérdida progresiva de potencia que sufre una señal a medida que se propaga por un medio de transmisión: ningún medio entrega en el extremo la misma energía que recibió en el origen. Stallings la presenta como la primera de las tres degradaciones de la transmisión, junto con la distorsión de retardo y el ruido. Tanenbaum llega al mismo punto desde otro lado: define el ancho de banda de un canal como el rango de frecuencias que pasan sin una atenuación fuerte, lo que implica que fuera de ese rango la señal se debilita demasiado como para ser útil.
+
+Para cuantificarla se usan decibeles, que comparan la potencia que sale del emisor con la que llega al receptor:
+\[
+  A_{\mathrm{dB}} = 10\log_{10}\frac{P_{\mathrm{ent}}}{P_{\mathrm{sal}}}
+\]
+Si, por ejemplo, una señal de $10\,\mathrm{mW}$ llega como $5\,\mathrm{mW}$, la atenuación es $10\log_{10}2\approx3{,}01\,\mathrm{dB}$: se perdió la mitad de la potencia. Lo cómodo de esta escala es que, en un enlace con varios tramos (cable, amplificador, cable), las pérdidas y ganancias simplemente se suman y restan en dB, en lugar de multiplicarse. Con un enlace de fibra de $100\,\mathrm{km}$ y $0{,}2\,\mathrm{dB/km}$, por ejemplo, la atenuación total es de $20\,\mathrm{dB}$, es decir, llega solo el $1\,\%$ de la potencia.
+
+Para entender el problema conviene ver de qué depende la atenuación: de la distancia, de la frecuencia y del tipo de medio.
+\begin{itemize}
+  \item \textbf{Distancia.} Stallings explica que, en medios guiados, la atenuación es en general una función logarítmica de la distancia, por lo que suele expresarse como una cantidad constante de dB por unidad de longitud. En medios no guiados, en cambio, es una función más compleja, que depende de la distancia y de la atmósfera. En el caso particular del espacio libre, la pérdida crece con el cuadrado de la distancia,
+  \[
+    L=\left(\frac{4\pi d}{\lambda}\right)^{2}=\left(\frac{4\pi f d}{c}\right)^{2},
+  \]
+  de modo que cada vez que se duplica la distancia se agregan unos $6\,\mathrm{dB}$ de pérdida.
+  \item \textbf{Frecuencia.} Stallings señala que la atenuación es mayor a frecuencias altas. Esto es lo que vuelve más delicado el problema: aunque llegue suficiente potencia total, la señal llega deformada, porque cada componente de su espectro se debilita en distinta proporción. Tanenbaum lo muestra descomponiendo una señal digital en sus armónicos: si el canal solo deja pasar los primeros, la forma de onda recibida pierde definición.
+  \item \textbf{Medio.} Un par trenzado, un coaxial, una fibra óptica o un enlace de radio atenúan de maneras muy distintas, por lo que el valor en dB/km depende del medio elegido.
+\end{itemize}
+
+Stallings resume las consecuencias para el diseño en tres puntos. La señal recibida tiene que conservar energía suficiente para que el receptor pueda detectarla e interpretarla. Tiene que mantenerse con un nivel sensiblemente superior al del ruido, porque si la atenuación la acerca al piso de ruido la información se pierde, y eso conecta directamente con la relación señal-ruido y con la capacidad del canal (cuestión 3.8). Y, como la atenuación crece con la frecuencia, aparece una distorsión que hay que compensar.
+
+Para corregirla se usan principalmente tres recursos. Primero, se colocan amplificadores o repetidores a intervalos regulares para recuperar la potencia. Stallings aclara que un repetidor, propio de la transmisión digital, regenera la señal a partir de los bits detectados, mientras que un amplificador, propio de la analógica, también amplifica el ruido que ya se acumuló. Segundo, se ecualiza el canal, es decir, se realzan las bandas más atenuadas para que la respuesta sea más pareja en frecuencia, técnica que Stallings también menciona. Tercero, se reduce la atenuación acortando los tramos o eligiendo un medio que atenúe menos, como la fibra óptica en enlaces largos.
 
 \vspace{0.3cm}
 \noindent\textbf{3.8. Defina la capacidad de un canal.}\par
-Se denomina capacidad del canal a la velocidad máxima a la que se pueden transmitir datos a través de una ruta de comunicación bajo unas condiciones dadas, expresada típicamente en bits por segundo (bps).
+Stallings define la capacidad de un canal como la velocidad máxima, medida en bits por segundo, a la que se pueden transmitir datos por una ruta de comunicación bajo unas condiciones dadas. Es importante remarcar la parte de ``bajo unas condiciones dadas'': no es un número propio del cable o del enlace, sino que depende de cuánto ancho de banda tiene y de cuánto ruido hay. Tanenbaum trata el tema bajo el título de máxima tasa de datos de un canal y la acota con dos resultados teóricos, el de Nyquist y el de Shannon.
+
+El primero supone un canal ideal, sin ruido. Según Nyquist, tal como lo exponen Stallings y Tanenbaum, un canal de ancho de banda $B$ admite como máximo $2B$ símbolos independientes por segundo, y si cada símbolo puede tomar $M$ niveles, cada uno transporta $\log_2 M$ bits:
+\[
+  C = 2B\log_2 M \quad [\mathrm{bps}]
+\]
+Con un canal de $3\,\mathrm{kHz}$ y señal binaria ($M=2$) se llega a $6\,\mathrm{kbps}$, y con $16$ niveles a $24\,\mathrm{kbps}$. En teoría bastaría con seguir subiendo $M$ para ir más rápido, pero en la práctica el receptor tiene que poder distinguir esos niveles, y ahí aparece el ruido.
+
+Ese es el problema que resuelve el límite de Shannon, que sí contempla el ruido y que ambos autores presentan así:
+\[
+  C = B\log_2\!\left(1+\mathrm{SNR}\right) \quad [\mathrm{bps}],
+  \qquad \mathrm{SNR}_{\mathrm{dB}} = 10\log_{10}\mathrm{SNR}
+\]
+Acá la capacidad ya no depende de cuántos niveles use la señal, sino solo de $B$ y de la SNR. Stallings la llama capacidad libre de errores: Shannon demostró que, si la velocidad de transmisión es menor que $C$, es teóricamente posible encontrar una codificación que logre una transmisión sin errores, y por encima de $C$ eso no puede lograrse. Stallings también advierte que, en la práctica, se alcanzan velocidades bastante menores, entre otras cosas porque la fórmula supone solo ruido blanco y no contempla ni el ruido impulsivo ni la distorsión por atenuación o por retardo.
+
+Tanenbaum lo ilustra con una línea telefónica de $3000\,\mathrm{Hz}$ y $30\,\mathrm{dB}$ de SNR, o sea $\mathrm{SNR}=1000$:
+\[
+  C = 3000\cdot\log_2(1+1000)\approx 3000\cdot 9{,}97\approx 30\,\mathrm{kbps}
+\]
+Ninguna modulación ni codificación, por ingeniosa que sea, puede superar ese valor en ese canal.
+
+Mirando la fórmula sacamos una conclusión práctica. Stallings relaciona cuatro conceptos: velocidad de datos, ancho de banda, ruido y tasa de errores. La capacidad crece linealmente con el ancho de banda, pero solo logarítmicamente con la SNR. A SNR constante, duplicar $B$ duplica $C$; sin embargo, el ruido térmico crece con el ancho de banda ($N=kTB$), así que si se ensancha el canal sin aumentar la potencia de la señal, la SNR baja y la capacidad no llega a duplicarse. En cambio, duplicar la potencia de la señal suma apenas $3\,\mathrm{dB}$, o sea como máximo $1\,\mathrm{bps/Hz}$ extra. Y cuanto más baja es la tasa de errores que se exige, menor es la velocidad efectiva que se puede sostener en la práctica.
 
 \vspace{0.3cm}
 \noindent\textbf{3.9. ¿Qué factores clave afectan a la capacidad de un canal?}\par
@@ -751,39 +793,90 @@ Relación: Nyquist establece la velocidad máxima realizable mediante la estruct
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.19}\par
-Datos: $C = 20\,\text{Mbps} = 20\times10^6\,\text{bps}$, $B = 3\,\text{MHz} = 3\times10^6\,\text{Hz}$.
-Despejando SNR de la ley de Shannon ($C = B\log_2(1+\mathrm{SNR})$):
+Los datos son $C = 20\,\mathrm{Mbps}$ y $B = 3\,\mathrm{MHz}$, y lo que se busca es la relación señal-ruido necesaria para alcanzar esa capacidad, es decir, la SNR mínima. Como lo que limita al canal es el ruido, el modelo que corresponde es el de Shannon, que según Stallings y Tanenbaum da la capacidad máxima de un canal con ruido (con ruido blanco como hipótesis). Nyquist, en cambio, supone un canal sin ruido, así que lo usamos más abajo solo como comparación:
 \[
-  \frac{C}{B} = \log_2(1+\mathrm{SNR}) \implies 1+\mathrm{SNR} = 2^{C/B} \implies \mathrm{SNR} = 2^{20/3} - 1
+  C = B\log_2(1+\mathrm{SNR})
 \]
+Despejamos la SNR pasando el logaritmo del otro lado:
 \[
-  \mathrm{SNR} = 2^{6{,}667} - 1 \approx 101{,}59 - 1 = 100{,}59
+  \frac{C}{B}=\log_2(1+\mathrm{SNR})
+  \;\Longrightarrow\;
+  \mathrm{SNR}=2^{C/B}-1
 \]
-En decibelios:
+La eficiencia espectral que se necesita es
 \[
-  \mathrm{SNR}_{\text{dB}} = 10\log_{10}(100{,}59) \approx 20{,}02\,\text{dB}
+  \frac{C}{B}=\frac{20\times10^{6}}{3\times10^{6}}=6{,}667~\mathrm{bps/Hz}
 \]
+y entonces
+\[
+  2^{6{,}667}=2^{6}\cdot2^{2/3}\approx64\cdot1{,}5874\approx101{,}59
+  \;\Longrightarrow\;
+  \mathrm{SNR}\approx101{,}59-1=100{,}59
+\]
+Como las SNR suelen expresarse en decibeles, lo convertimos:
+\[
+  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(100{,}59)\approx\boxed{20{,}03\,\mathrm{dB}}
+\]
+Para verificar, reemplazamos en la fórmula original: $3\times10^{6}\cdot\log_2(101{,}59)=3\times10^{6}\cdot6{,}667=20\,\mathrm{Mbps}$, que coincide con el dato.
+
+Nos pareció interesante comparar este resultado con Nyquist. En un canal sin ruido, $C=2B\log_2M$ pediría $\log_2M=20/6=3{,}33$, es decir, unos $10{,}1$ niveles. Como $M$ debe ser potencia de 2, en la práctica se usarían $16$ niveles, con $4$ bits por símbolo. Las dos fórmulas se complementan: Nyquist indica cuántos niveles se pueden definir y Shannon cuántos se pueden distinguir con el ruido presente. Que la SNR requerida sea de unos $20\,\mathrm{dB}$ es coherente con esto: cuantos más niveles se quieren distinguir, menor tiene que ser el ruido relativo a la señal.
+
+Stallings introduce también la relación $E_b/N_0$ (energía por bit sobre densidad espectral de ruido) como una medida de SNR normalizada por bit, útil para comparar esquemas de modulación y codificación. Como $S=E_bC$ y $N=N_0B$, la SNR vale $\mathrm{SNR}=\frac{E_b}{N_0}\frac{C}{B}$, y de la fórmula de Shannon se despeja
+\[
+  \frac{E_b}{N_0}=\frac{B}{C}\left(2^{C/B}-1\right)=\frac{100{,}59}{6{,}667}\approx15{,}09
+  \;\Rightarrow\;10\log_{10}(15{,}09)\approx11{,}8\,\mathrm{dB}
+\]
+
+Hay que tener presente que $20{,}03\,\mathrm{dB}$ es un mínimo teórico. Con menos SNR no existe codificación que permita llegar a $20\,\mathrm{Mbps}$ en este canal, y alcanzar justo ese límite exigiría códigos ideales. Como advierte Stallings, en la práctica se alcanzan velocidades menores que la capacidad de Shannon, así que un sistema real necesita un margen adicional de SNR.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.20}\par
-Onda cuadrada con $T = 1\,\text{ms} \implies f = 1/T = 1000\,\text{Hz} = 1\,\text{kHz}$.
-Filtro paso bajo ideal con $f_c = 8\,\text{kHz}$. Atraviesan las armónicas impares $k = 1, 3, 5, 7$.
+La onda cuadrada tiene período $T=1\,\mathrm{ms}$, así que su frecuencia fundamental es $f_0=1/T=1\,\mathrm{kHz}$. En la Figura 3.7, Stallings construye la onda cuadrada sumando armónicos impares de la fundamental:
+\[
+  s(t)=\frac{4}{\pi}\sum_{k=1,3,5,\dots}\frac{\sen(2\pi k f_0 t)}{k}
+\]
+El factor $4/\pi$ hace que la onda resultante tenga amplitud $\pm1$. Como el enunciado no indica ninguna carga, trabajamos con potencias normalizadas (sobre $1\,\Omega$): la señal de entrada tiene una potencia total de $1\,\mathrm{W}$, porque $v^2(t)=1$ en todo instante.
 
-\noindent\textbf{a) Potencia de la señal de salida:}
+Las componentes de la señal están en $1,3,5,7,9,\dots\,\mathrm{kHz}$. El filtro pasa bajo ideal, de ganancia unidad y corte en $8\,\mathrm{kHz}$, deja pasar las que cumplen $kf_0\le8\,\mathrm{kHz}$, o sea $k=1,3,5,7$. El armónico de $9\,\mathrm{kHz}$ y todos los siguientes quedan eliminados.
+
+\noindent\textbf{a) Potencia de la señal de salida.} Cada armónico es una sinusoide de amplitud $\frac{4}{\pi k}$, y una sinusoide de amplitud $a$ tiene potencia media $a^2/2$, por lo que el armónico $k$ aporta $\frac{8}{\pi^2k^2}$. La potencia de salida es la suma de las cuatro componentes que sobreviven:
 \[
-  P_{\text{salida}} = \frac{8}{\pi^2} \left( \frac{1}{1^2} + \frac{1}{3^2} + \frac{1}{5^2} + \frac{1}{7^2} \right) = \frac{8}{\pi^2} \left( 1 + \frac{1}{9} + \frac{1}{25} + \frac{1}{49} \right) \approx 0{,}95\,\text{W}
+  P_{\mathrm{sal}}=\frac{8}{\pi^2}\left(1+\frac{1}{9}+\frac{1}{25}+\frac{1}{49}\right)
+  =\frac{8}{\pi^2}\,(1{,}1715)\approx\boxed{0{,}95\,\mathrm{W}}
+\]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{$k$} & \textbf{Frecuencia} & \textbf{Amplitud $\frac{4}{\pi k}$ [V]} & \textbf{Potencia $\frac{8}{\pi^2k^2}$ [W]} \\
+\hline
+1 & $1\,\mathrm{kHz}$ & $1{,}2732$ & $0{,}8106$ \\
+\hline
+3 & $3\,\mathrm{kHz}$ & $0{,}4244$ & $0{,}0901$ \\
+\hline
+5 & $5\,\mathrm{kHz}$ & $0{,}2546$ & $0{,}0324$ \\
+\hline
+7 & $7\,\mathrm{kHz}$ & $0{,}1819$ & $0{,}0165$ \\
+\hline
+\multicolumn{3}{|r|}{\textbf{Total}} & $\mathbf{0{,}9496}$ \\
+\hline
+\end{tabular}
+\end{center}
+Como comprobación, si no hubiera filtro se sumarían todos los armónicos impares, y como $\sum_{k\ \mathrm{impar}}\frac{1}{k^2}=\frac{\pi^2}{8}$, la potencia total sería $\frac{8}{\pi^2}\cdot\frac{\pi^2}{8}=1\,\mathrm{W}$, que coincide con la potencia de la señal de entrada. Con apenas cuatro armónicos se conserva alrededor del $95\,\%$ de esa potencia, y solo la fundamental ya concentra el $81\,\%$. El $5\,\%$ restante es lo que se pierde con los armónicos de $k\ge9$.
+
+\noindent\textbf{b) Relación señal-ruido a la salida.} Stallings describe el ruido térmico como ruido blanco, con una densidad de potencia $N_0$ constante en todo el espectro. Con $N_0=0{,}1\,\mu\mathrm{W/Hz}$, el ruido que sale del filtro es el que ocupa la banda de $0$ a $8\,\mathrm{kHz}$, así que su potencia es
+\[
+  P_n=N_0\,B=(0{,}1\times10^{-6}\,\mathrm{W/Hz})(8000\,\mathrm{Hz})=8\times10^{-4}\,\mathrm{W}=0{,}8\,\mathrm{mW}
+\]
+Dividiendo,
+\[
+  \mathrm{SNR}=\frac{P_{\mathrm{sal}}}{P_n}=\frac{0{,}9496}{8\times10^{-4}}\approx1187
+\]
+y en decibeles
+\[
+  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(1187)\approx\boxed{30{,}74\,\mathrm{dB}}
 \]
 
-\noindent\textbf{b) Relación señal-ruido en dB a la salida ($N_0 = 0{,}1\,\mu\text{W/Hz}$):}
-\[
-  P_n = N_0 \cdot B = (0{,}1 \times 10^{-6}\,\text{W/Hz}) \cdot (8000\,\text{Hz}) = 800\,\mu\text{W} = 0{,}0008\,\text{W}
-\]
-\[
-  \mathrm{SNR} = \frac{P_{\text{señal}}}{P_n} = \frac{0{,}95}{0{,}0008} = 1187{,}5
-\]
-\[
-  \mathrm{SNR}_{\text{dB}} = 10\log_{10}(1187{,}5) \approx 30{,}74\,\text{dB}
-\]
+El resultado muestra por qué filtrar conviene. El filtro limita el ruido a la banda que interesa, y como la potencia de los armónicos cae con $1/k^2$, descartar los de orden alto cuesta muy poca señal. La onda cuadrada sale con los flancos redondeados, pero sigue siendo reconocible y con una SNR muy holgada. Es un ejemplo concreto del compromiso entre ancho de banda y fidelidad.
 
 \newpage
 
