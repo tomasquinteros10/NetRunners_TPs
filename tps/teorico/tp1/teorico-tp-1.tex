@@ -193,7 +193,7 @@ f=\frac{1}{T}.
 \]
 Por ejemplo, si una señal tiene un período de \(0{,}01\) s, su frecuencia es \(100\) Hz.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -482,26 +482,73 @@ Esta expresión ya es la combinación lineal de tres sinusoides que pide el enun
 \end{itemize}
 
 \vspace{0.3cm}
+
 \noindent\textbf{Ejercicio 3.7}\par
-Desarrollando $f(t) = (10\cos t)^2 = 100\cos^2(t)$.
-Para verificar el período $T$, buscamos la menor constante positiva que cumple $f(t+T) = f(t)$:
+
+Dada la función:
+
 \[
-  100\cos^2(t+T) = 100\cos^2(t)
+f(t)=(10\cos t)^2=100\cos^2(t)
 \]
-Probando con $T = \pi$ y sabiendo que $\cos(t+\pi) = -\cos(t)$:
+
+Para determinar el período fundamental, buscamos el menor valor positivo de \(T\) que cumple \(f(t+T)=f(t)\).
+
+Primero, probamos con \(T=\pi\). Usando la identidad trigonométrica
+\(\cos(t+\pi)=-\cos(t)\), obtenemos:
+
 \[
-  100\bigl[-\cos(t)\bigr]^2 = 100\cos^2(t)
+\begin{aligned}
+f(t+\pi)
+&=100\cos^2(t+\pi)\\
+&=100[-\cos(t)]^2\\
+&=100\cos^2(t)\\
+&=f(t)
+\end{aligned}
 \]
-Por lo tanto, el período fundamental es $T = \pi$.
+
+Tenemos que \(T=\pi\) es un período de la función.
+
+Ahora, para comprobar que no existe un período positivo menor que \(\pi\), evaluamos la condición \(f(t+T)=f(t)\) en \(t=0\). Como \(f(0)=100\), se tiene que:
+
+\[
+f(T)=100\cos^2(T)=100
+\]
+
+Por lo que:
+
+\[
+\cos^2(T)=1 \quad\Longleftrightarrow\quad \cos(T)=\pm1
+\]
+
+Solo se da cuando \(T=k\pi\), con \(k\in\mathbb{Z}\). Como \(T\) debe ser positivo, el menor valor posible es \(T=\pi\).
+
+Por lo que el período fundamental es:
+
+\[
+\boxed{T_0=\pi}
+\]
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.8}\par
-La suma $f(t) = f_1(t) + f_2(t)$ será periódica si existe un período común $T$ tal que $T = n T_1 = m T_2$ con $n, m \in \mathbb{Z}^+$. Esto requiere que la relación entre sus períodos sea un número racional:
+Sean $f_1(t)$ y $f_2(t)$ dos señales periódicas, con períodos fundamentales $T_1$ y $T_2$, respectivamente. La suma $f(t)=f_1(t)+f_2(t)$ será periódica si ambas señales poseen un período común $T$, tal que:
 \[
-  \frac{T_1}{T_2} = \frac{m}{n} \in \mathbb{Q}
+  T=nT_1=mT_2,\qquad n,m\in\mathbb{Z}^+
 \]
-\textbf{Ejemplo 1:} Si $T_1 = 4$ y $T_2 = 2 \implies \frac{T_1}{T_2} = 2 \in \mathbb{Q}$. El período común es $T = 4$. Es periódica.\par
-\textbf{Ejemplo 2:} Si $T_1 = 1$ y $T_2 = \sqrt{2} \implies \frac{T_1}{T_2} = \frac{1}{\sqrt{2}} \notin \mathbb{Q}$. No existe período común y la suma no es periódica.
+Por lo tanto, para que exista dicho período común, la relación entre los períodos debe ser racional:
+\[
+  \frac{T_1}{T_2}=\frac{m}{n}\in\mathbb{Q}
+\]
+\textbf{Ejemplo 1:} Supongamos dos señales periodicas con periodos $T_1=4$ y $T_2=2$, entonces:
+\[
+  \frac{T_1}{T_2}=\frac{4}{2}=2\in\mathbb{Q}
+\]
+Ambas señales tienen un período común $T=4$, por lo que su suma es periódica.
+
+\textbf{Ejemplo 2:} Supongamos dos señales periodicas con períodos $T_1=1$ y $T_2=\sqrt{2}$, entonces:
+\[
+  \frac{T_1}{T_2}=\frac{1}{\sqrt{2}}\notin\mathbb{Q}
+\]
+Como la divicion entre sus períodos es irracional, no existe un período común por lo que la suma de estas dos señales es no periodica.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.9}\par
