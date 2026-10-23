@@ -257,8 +257,23 @@ Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la 
 La relación está dada por la expresión $\lambda \cdot f = v$, o de forma equivalente $\lambda = \frac{v}{f}$, donde $\lambda$ es la longitud de onda, $f$ es la frecuencia y $v$ es la velocidad de propagación de la onda en el medio. Existe una relación inversamente proporcional: a mayor frecuencia, menor es la longitud de onda.
 
 \vspace{0.3cm}
-\noindent\textbf{3.6. ¿Cuál es la relación entre el espectro de una señal y su ancho de banda?}\par
-El espectro de una señal es el conjunto de todas las frecuencias que la componen. El ancho de banda es la anchura del espectro de la señal, es decir, la diferencia entre la frecuencia más alta y la frecuencia más baja contenidas en dicho espectro.
+\noindent\textbf{3.6. ¿Cuál es la relación entre el espectro de una señal y su ancho de banda?}
+
+El espectro de una señal describe la distribución de sus componentes frecuenciales, indicando las frecuencias presentes y su amplitud o potencia asociada. Mediante el análisis de Fourier, una señal puede representarse en el dominio de la frecuencia, permitiendo determinar las componentes que la constituyen.
+
+El ancho de banda ($B$) representa la extensión del espectro de frecuencias ocupado por una señal y se define como la diferencia entre sus frecuencias límite:
+
+\begin{equation}
+    B = f_{\max} - f_{\min}
+\end{equation}
+
+Se expresa en hertz (Hz). Las señales periódicas presentan un espectro formado por componentes discretas, mientras que las aperiódicas generalmente poseen un espectro continuo. En las señales digitales ideales con transiciones instantáneas, el ancho de banda absoluto es infinito; en la práctica, se considera el ancho de banda necesario para transmitir la señal con una distorsión aceptable.
+
+La forma de los pulsos y la tasa de transmisión de bits ($R_b$) determinan los requerimientos espectrales de la señal. En general, para un esquema de señalización determinado, aumentar la tasa de transmisión requiere un mayor ancho de banda, ya que la reducción de la duración de los pulsos produce una expansión de su espectro.
+
+El canal de comunicación posee un ancho de banda limitado y atenúa las componentes frecuenciales fuera de su banda de paso. Si esta limitación impide transmitir adecuadamente las componentes necesarias de la señal, puede producirse distorsión e interferencia intersimbólica, aumentando la probabilidad de error en la recepción.
+
+En conclusión, el espectro describe la distribución de frecuencias de una señal, mientras que su ancho de banda cuantifica la extensión de dicha distribución. Ambos conceptos permiten determinar los requerimientos frecuenciales de una transmisión y evaluar si el canal dispone de capacidad suficiente para transmitir la información correctamente.
 
 \vspace{0.3cm}
 \noindent\textbf{3.7. ¿Qué es la atenuación?}\par
@@ -761,73 +776,129 @@ Por lo tanto, la capacidad máxima teórica del canal es aproximadamente $9{,}97
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.16}\par
-Usando la fórmula de Nyquist: $R = 2B \log_2 M \implies B = \frac{R}{2 \log_2 M}$ para $R = 9600\text{ bps}$.
+Usando la fórmula de capacidad de Nyquist, determine el ancho de banda $B$ mínimo necesario para lograr una tasa de transmisión de datos de $R = 9600\text{ bps}$ considerando:
+\begin{enumerate}
+    \item[a)] Palabras digitales de 4 bits.
+    \item[b)] Palabras digitales de 8 bits.
+\end{enumerate}
 
-\noindent\textbf{a)} Con palabras de 4 bits $\implies M = 2^4 = 16$ niveles:
-\[
-  B = \frac{9600}{2 \cdot \log_2(16)} = \frac{9600}{2 \cdot 4} = 1200\,\mathrm{Hz}
-\]
+El \textbf{Criterio de Señalización de Nyquist} establece el límite teórico máximo para la tasa de transmisión de símbolos (tasa de baudios) sobre un canal libre de ruido que posee un ancho de banda finito $B$. Según Nyquist, para evitar la \textit{interferencia intersimbólica} (ISI), la tasa máxima de señalización es $2B$ baudios.
 
-\noindent\textbf{b)} Con palabras de 8 bits $\implies M = 2^8 = 256$ niveles:
-\[
-  B = \frac{9600}{2 \cdot \log_2(256)} = \frac{9600}{2 \cdot 8} = 600\,\mathrm{Hz}
-\]
+Si cada símbolo discreto representa un nivel de señal $M$ que codifica un grupo de $V$ bits ($V = \log_2 M$), la velocidad de transmisión de datos $R$ (en bits por segundo, bps) se expresa como:
+\begin{equation}
+    R = 2 \cdot B \cdot \log_2(M) = 2 \cdot B \cdot V
+\end{equation}
+
+Despejando el ancho de banda mínimo $B$ requerido en función de la tasa de datos $R$ y los bits por símbolo $V$:
+\begin{equation}
+    B = \frac{R}{2 \cdot \log_2(M)} = \frac{R}{2 \cdot V}
+\end{equation}
+
+\vspace{0.2cm}
+
+\noindent\textbf{a) Palabras digitales de 4 bits:}
+\begin{itemize}
+    \item Tasa de transmisión objetivo: $R = 9600\text{ bps}$.
+    \item Cantidad de niveles de señal: $M = 2^4 = 16\text{ niveles}$.
+\end{itemize}
+
+Sustituyendo los valores en la ecuación:
+\begin{equation}
+    B = \frac{9600\text{ bps}}{2 \cdot \log_2(16)} = \frac{9600}{2 \cdot 4} = \frac{9600}{8} = 1200\text{ Hz}
+\end{equation}
+
+\noindent\textbf{b) Palabras digitales de 8 bits:}
+\begin{itemize}
+    \item Tasa de transmisión objetivo: $R = 9600\text{ bps}$.
+    \item Cantidad de niveles de señal: $M = 2^8 = 256\text{ niveles}$.
+\end{itemize}
+
+Sustituyendo los valores en la ecuación:
+\begin{equation}
+    B = \frac{9600\text{ bps}}{2 \cdot \log_2(256)} = \frac{9600}{2 \cdot 8} = \frac{9600}{16} = 600\text{ Hz}
+\end{equation}
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.17}\par
-Cálculo de la potencia del ruido térmico $N = k T B$:
+El \textbf{ruido térmico} (o ruido blanco de Johnson-Nyquist) es omnipresente en todos los sistemas y medios de transmisión electrónicos. Se origina debido a la agitación térmica aleatoria de los electrones libres dentro de los conductores.
+La densidad espectral de potencia de ruido es uniforme a lo largo del espectro, y la potencia total de ruido térmico $N$ presente en un ancho de banda $B$ se calcula mediante la fórmula:
+\begin{equation}
+    N = k \cdot T \cdot B
+\end{equation}
+
+Donde:
 \begin{itemize}
-  \item $k = 1{,}38 \times 10^{-23}\,\mathrm{J/K}$
-  \item $T = 50\,^\circ\mathrm{C} + 273{,}15 = 323{,}15\,\mathrm{K}$
-  \item $B = 10\,\mathrm{kHz} = 10000\,\mathrm{Hz}$
+    \item $k$: Constante de Boltzmann $= 1,3806 \times 10^{-23}\text{ J/K}$ (Joules por Kelvin).
+    \item $T$: Temperatura absoluta del medio expresada en la escala Kelvin ($\text{K}$).
+    \item $B$: Ancho de banda del canal expresado en Hertz ($\text{Hz}$).
 \end{itemize}
-\[
-  N = (1{,}38 \times 10^{-23}) \cdot (323{,}15) \cdot (10000) \approx 4{,}46 \times 10^{-17}\,\mathrm{W}
-\]
+
+\begin{enumerate}
+    \item \textbf{Conversión de la Temperatura a Kelvin:}
+    \begin{equation}
+        T_{\text{K}} = T_{^\circ\text{C}} + 273,15 = 50 + 273,15 = 323,15\text{ K}
+    \end{equation}
+
+    \item \textbf{Conversión del Ancho de Banda a Hertz:}
+    \begin{equation}
+        B = 10\text{ kHz} = 10 \times 10^3\text{ Hz} = 10.000\text{ Hz}
+    \end{equation}
+
+    \item \textbf{Cálculo Numérico de la Potencia de Ruido ($N$):}
+    \begin{equation}
+        N = (1,3806 \times 10^{-23}\text{ J/K}) \cdot (323,15\text{ K}) \cdot (10.000\text{ Hz})
+    \end{equation}
+    \begin{equation}
+        N \approx 4,4614 \times 10^{-17}\text{ Watts (W)}
+    \end{equation}
+\end{enumerate}
+
+El valor $N \approx 4,46 \times 10^{-17}\text{ W}$ constituye el \textbf{piso de ruido físico} (\textit{noise floor}) insuperable del canal bajo estas condiciones térmicas y de ancho de banda. Cualquier señal útil cuyos niveles de potencia recibidos caigan por debajo o cerca de este umbral no podrá ser demodulada correctamente por el receptor.
+
+\vspace{0.2cm}
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.18}\par
-Límite de Nyquist: $C = 2B \log_2(M)$ (Aplica a canales ideales sin ruido, indicando cuántos niveles $M$ se precisan para una velocidad $C$).\par
-Límite de Shannon: $C = B \log_2(1 + \mathrm{SNR})$ (Aplica a canales reales limitados por ruido térmico).\par
-Relación: Nyquist establece la velocidad máxima realizable mediante la estructuración de multiniveles de la señal, mientras que Shannon impone una cota física infranqueable debido a la presencia inevitable del ruido. Si al aplicar Nyquist con un $M$ elevado la capacidad calculada supera el límite de Shannon, el ruido impedirá diferenciar los niveles con precisión y la tasa real se verá degradada.
+El límite de Nyquist y el teorema de Shannon establecen restricciones fundamentales sobre la velocidad de transmisión de información en un canal de comunicaciones. El primero relaciona la tasa máxima de transmisión con el ancho de banda y la cantidad de niveles de señalización, mientras que el segundo determina la capacidad máxima teórica considerando el ruido presente en el canal.
 
-\vspace{0.3cm}
-\noindent\textbf{Ejercicio 3.19}\par
-Los datos son $C = 20\,\mathrm{Mbps}$ y $B = 3\,\mathrm{MHz}$, y lo que se busca es la relación señal-ruido necesaria para alcanzar esa capacidad, es decir, la SNR mínima. Como lo que limita al canal es el ruido, el modelo que corresponde es el de Shannon, que según Stallings y Tanenbaum da la capacidad máxima de un canal con ruido (con ruido blanco como hipótesis). Nyquist, en cambio, supone un canal sin ruido, así que lo usamos más abajo solo como comparación:
-\[
-  C = B\log_2(1+\mathrm{SNR})
-\]
-Despejamos la SNR pasando el logaritmo del otro lado:
-\[
-  \frac{C}{B}=\log_2(1+\mathrm{SNR})
-  \;\Longrightarrow\;
-  \mathrm{SNR}=2^{C/B}-1
-\]
-La eficiencia espectral que se necesita es
-\[
-  \frac{C}{B}=\frac{20\times10^{6}}{3\times10^{6}}=6{,}667~\mathrm{bps/Hz}
-\]
-y entonces
-\[
-  2^{6{,}667}=2^{6}\cdot2^{2/3}\approx64\cdot1{,}5874\approx101{,}59
-  \;\Longrightarrow\;
-  \mathrm{SNR}\approx101{,}59-1=100{,}59
-\]
-Como las SNR suelen expresarse en decibeles, lo convertimos:
-\[
-  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(100{,}59)\approx\boxed{20{,}03\,\mathrm{dB}}
-\]
-Para verificar, reemplazamos en la fórmula original: $3\times10^{6}\cdot\log_2(101{,}59)=3\times10^{6}\cdot6{,}667=20\,\mathrm{Mbps}$, que coincide con el dato.
+El criterio de Nyquist para un canal ideal sin ruido se expresa como:
 
-Nos pareció interesante comparar este resultado con Nyquist. En un canal sin ruido, $C=2B\log_2M$ pediría $\log_2M=20/6=3{,}33$, es decir, unos $10{,}1$ niveles. Como $M$ debe ser potencia de 2, en la práctica se usarían $16$ niveles, con $4$ bits por símbolo. Las dos fórmulas se complementan: Nyquist indica cuántos niveles se pueden definir y Shannon cuántos se pueden distinguir con el ruido presente. Que la SNR requerida sea de unos $20\,\mathrm{dB}$ es coherente con esto: cuantos más niveles se quieren distinguir, menor tiene que ser el ruido relativo a la señal.
+\begin{equation}
+    R_{\max} = 2B\log_2(M)
+\end{equation}
 
-Stallings introduce también la relación $E_b/N_0$ (energía por bit sobre densidad espectral de ruido) como una medida de SNR normalizada por bit, útil para comparar esquemas de modulación y codificación. Como $S=E_bC$ y $N=N_0B$, la SNR vale $\mathrm{SNR}=\frac{E_b}{N_0}\frac{C}{B}$, y de la fórmula de Shannon se despeja
-\[
-  \frac{E_b}{N_0}=\frac{B}{C}\left(2^{C/B}-1\right)=\frac{100{,}59}{6{,}667}\approx15{,}09
-  \;\Rightarrow\;10\log_{10}(15{,}09)\approx11{,}8\,\mathrm{dB}
-\]
+donde $B$ es el ancho de banda del canal en hertz y $M$ es la cantidad de niveles de señalización. La expresión supone una transmisión ideal limitada en banda y sin interferencia intersimbólica. Según este criterio, aumentar la cantidad de niveles permite incrementar la tasa de transmisión sin modificar el ancho de banda; sin embargo, esto requiere que el receptor pueda distinguir correctamente los diferentes estados de la señal.
 
-Hay que tener presente que $20{,}03\,\mathrm{dB}$ es un mínimo teórico. Con menos SNR no existe codificación que permita llegar a $20\,\mathrm{Mbps}$ en este canal, y alcanzar justo ese límite exigiría códigos ideales. Como advierte Stallings, en la práctica se alcanzan velocidades menores que la capacidad de Shannon, así que un sistema real necesita un margen adicional de SNR.
+Por su parte, el teorema de Shannon establece la capacidad máxima teórica de un canal con ruido gaussiano blanco aditivo (AWGN):
+
+\begin{equation}
+    C = B\log_2(1+\mathrm{SNR})
+\end{equation}
+
+donde $\mathrm{SNR}$ es la relación entre la potencia de la señal y la potencia del ruido, expresada en escala lineal:
+
+\begin{equation}
+    \mathrm{SNR} = \frac{P_{\text{señal}}}{P_{\text{ruido}}}
+\end{equation}
+
+La capacidad $C$, expresada en bits por segundo, representa el límite teórico de transmisión con una probabilidad de error arbitrariamente pequeña, utilizando códigos adecuados y bajo las hipótesis del modelo. Para superar este límite no basta con aumentar los niveles de señalización, ya que la capacidad depende tanto del ancho de banda como de la relación señal a ruido.
+La relación entre ambos criterios permite evaluar el diseño de un sistema de transmisión. Para una tasa objetivo $R$, deben cumplirse las restricciones impuestas por el ancho de banda, la señalización y la capacidad del canal. En particular, para alcanzar la tasa máxima de Nyquist sin superar el límite de Shannon, se requiere:
+
+\begin{equation}
+    2B\log_2(M) \leq B\log_2(1+\mathrm{SNR})
+\end{equation}
+
+Para $B>0$, al simplificar y despejar $M$, se obtiene:
+
+\begin{equation}
+    M \leq \sqrt{1+\mathrm{SNR}}
+\end{equation}
+
+Esta condición corresponde al modelo idealizado utilizado en la expresión de Nyquist y no constituye una regla universal para cualquier sistema de modulación o codificación.
+En el diseño práctico, aumentar $M$ permite transmitir más bits por símbolo, pero reduce la separación entre los estados de señal cuando se mantienen constantes las demás condiciones. En presencia de ruido, esto dificulta la detección y puede incrementar la tasa de errores. Por ello, la elección de la modulación debe considerar conjuntamente el ancho de banda disponible, la relación señal a ruido y la tasa de transmisión requerida. \newline
+
+En conclusión, Nyquist establece una limitación asociada al ancho de banda y a los niveles de señalización, mientras que Shannon determina la capacidad teórica del canal considerando el ruido. Ambos criterios permiten evaluar la viabilidad de una transmisión y seleccionar los parámetros de diseño adecuados.
+
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.20}\par

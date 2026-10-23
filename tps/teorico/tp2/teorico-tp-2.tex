@@ -127,7 +127,17 @@
         Un enlace de conexión que se realiza con un par trenzado usa dos conductores ya que al momento de conectar los dispositivos a sus puntas estos formarán un bucle cerrado en el que la señal viajará como variaciones de corriente en ese bucle. Los dispositivos sensarán esas variaciones de corriente, que representarán la codificación de la señal que se envía.
   \item
         \textbf{¿Cuáles son las limitaciones del par trenzado?} \\
-        Las principales limitaciones del par trenzado son su menor distancia de transmisión, menor ancho de banda y menor velocidad respecto de otros medios guiados. Además, es muy susceptible a interferencias y ruido, debido a su acoplamiento con campos electromagnéticos externos.
+        El par trenzado es un medio de transmisión ampliamente utilizado en redes LAN debido a su bajo costo y facilidad de instalación. Sin embargo, sus características físicas y eléctricas limitan la distancia, el ancho de banda y la velocidad de transmisión.
+
+        La principal limitación es la \textbf{atenuación}, que consiste en la disminución de la potencia de la señal a medida que aumenta la distancia recorrida. Además, la atenuación se incrementa con la frecuencia, lo que restringe el ancho de banda disponible. Por ejemplo, en Ethernet sobre par trenzado, la longitud máxima habitual de un enlace de cobre es de 100 metros, según el estándar y las condiciones de instalación.
+
+        Otra limitación es la susceptibilidad a las \textbf{interferencias electromagnéticas (EMI/RFI)}, que pueden introducir ruido y degradar la señal recibida. El trenzado de los conductores reduce la captación de interferencias externas, aunque su eficacia depende de las características del cable y de las condiciones del entorno.
+
+        También puede producirse \textbf{diafonía (\textit{crosstalk})}, fenómeno por el cual la señal transmitida por un par induce interferencias en otro par cercano mediante acoplamiento electromagnético. Se distinguen la diafonía del extremo cercano (NEXT) y la del extremo lejano (FEXT). Este fenómeno limita el rendimiento de la transmisión y debe controlarse mediante el diseño del cable, el trenzado y las técnicas de procesamiento de señal.
+
+        Finalmente, el \textbf{efecto pelicular (\textit{skin effect})} hace que, a frecuencias elevadas, la corriente se concentre en una región más superficial del conductor, aumentando su resistencia efectiva. Junto con las pérdidas dieléctricas y la diafonía, contribuye a limitar las frecuencias que pueden transmitirse con una calidad aceptable.
+
+        En conclusión, las principales limitaciones del par trenzado son la atenuación, la susceptibilidad al ruido y las interferencias, la diafonía y las pérdidas que aumentan con la frecuencia. Estos factores condicionan la distancia máxima del enlace y la velocidad de transmisión alcanzable.
   \item
         \textbf{¿Cuál es la diferencia entre el par trenzado no apantallado y el par trenzado apantallado?} \\
 
@@ -436,7 +446,30 @@ Parabólica, con apertura $A$   & $0{,}56\,A$         & $7\,A/\lambda^2$ \\
 La misma antena a 4~GHz da $\approx 35{,}9$~dBi: al dividir la frecuencia por 3, la ganancia cae 9 veces ($\approx 9{,}5$~dB). Por eso un plato DBS de 60~cm a 12~GHz ($\approx 35$~dBi) logra la misma ganancia que una antena de 2~m en banda C.
   \item
         \textbf{¿Cuál es la principal causa de la pérdida de señal en comunicaciones vía satélite?} \\
-        La principal causa de pérdida de señal en las comunicaciones vía satélite es la pérdida en el espacio libre, producida por la dispersión de la señal debido a la gran distancia entre las antenas.
+        La principal causa de pérdida de señal en las comunicaciones vía satélite es la \textbf{pérdida en el espacio libre} (\textit{Free Space Path Loss}, FSPL), producida por la dispersión de la energía electromagnética a medida que aumenta la distancia entre el transmisor y el receptor. La potencia se distribuye sobre una superficie cada vez mayor, reduciendo la densidad de potencia recibida.
+
+        La pérdida en el espacio libre se calcula mediante:
+
+        \begin{equation}
+            L_{\mathrm{FSPL}} =
+            \left(\frac{4\pi d}{\lambda}\right)^2
+        \end{equation}
+
+        Expresada en decibelios:
+
+        \begin{equation}
+            L_{\mathrm{FSPL}} =
+            20\log_{10}\left(\frac{4\pi d f}{c}\right)
+            \ \mathrm{dB}
+        \end{equation}
+
+        donde $d$ es la distancia entre las antenas, $f$ es la frecuencia de la señal, $\lambda$ es su longitud de onda y $c$ es la velocidad de la luz.
+
+        En los enlaces con satélites geoestacionarios, la gran distancia de propagación genera pérdidas muy elevadas, por lo que se utilizan antenas de alta ganancia, amplificadores de bajo ruido y una adecuada potencia de transmisión para garantizar una recepción confiable.
+
+        Además, la señal puede sufrir pérdidas adicionales debido a la absorción atmosférica, la lluvia, los efectos ionosféricos y la desalineación de las antenas. Estos fenómenos pueden adquirir especial importancia según la frecuencia utilizada y las condiciones ambientales.
+
+        En conclusión, la pérdida en el espacio libre es el principal mecanismo de atenuación asociado a la distancia en un enlace satelital, mientras que los fenómenos atmosféricos y las condiciones de instalación introducen pérdidas adicionales que deben considerarse en el balance del enlace.
   \item
         \textbf{¿Qué es la refracción?} \\
         Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado.

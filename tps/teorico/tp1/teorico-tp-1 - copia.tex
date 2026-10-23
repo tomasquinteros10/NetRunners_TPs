@@ -1,0 +1,884 @@
+\documentclass[11pt,a4paper]{article}
+
+% -----------------------------------------------------------------------------
+% Paquetes estándar
+% -----------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\newcommand{\FechaEnEspanol}{%
+  \number\day\space de\space
+  \ifcase\month
+    \or enero\or febrero\or marzo\or abril\or mayo\or junio\or
+    julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre
+  \fi\space de\space\number\year
+}
+
+\usepackage[a4paper,margin=2.5cm,headheight=42pt]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={teorico-tp-2}}
+
+\newif\ifHayUltimaPagina
+\IfFileExists{lastpage.sty}{
+  \usepackage{lastpage}
+  \HayUltimaPaginatrue
+}{
+  \HayUltimaPaginafalse
+}
+
+% -----------------------------------------------------------------------------
+% CONFIGURACIÓN DEL TRABAJO
+% -----------------------------------------------------------------------------
+\newcommand{\NombreMateria}{Redes de Computadoras}
+\newcommand{\TipoTrabajo}{Tarea}
+\newcommand{\NumeroTrabajo}{2}
+\newcommand{\TipoTP}{Teórico}
+\newcommand{\NombreTrabajo}{Introducción a los Sistemas de Comunicaciones}
+% Nombre acortado para el encabezado para mantener la estética del TP 1 sin pisar márgenes
+\newcommand{\NombreTrabajoCorto}{Capítulo 3: Transmisión de Datos}
+
+\newcommand{\NombreGrupo}{NetRunners}
+\newcommand{\Docente}{FACUNDO NICOLAS OLIVA CUNEO}
+\newcommand{\LogoArchivo}{logo.png}
+\newcommand{\LogoRuta}{\LogoArchivo}
+\newcommand{\sen}{\operatorname{sen}}
+
+\newcommand{\Integrantes}{%
+  \begin{tabular}{ll}
+    Bastida, Lucas Ramiro & DNI 39444511 \\
+    Contessi, Ruben Andres & DNI 33315235 \\
+    Garay, Ignacio Hernan & DNI 44191925 \\
+    Giraudo, Juan Pablo & DNI 34970089 \\
+    Peñaloza, Gonzalo Adrian & DNI 40441355 \\
+    Quinteros del Castillo, Tomás Agustín & DNI 46169739 \\
+    Vasconsellos Blason, Benjamin Alejandro & DNI 45642879 \\
+  \end{tabular}%
+}
+
+% -----------------------------------------------------------------------------
+% Elementos comunes de carátula y encabezado
+% -----------------------------------------------------------------------------
+\newcommand{\InsertarLogo}[1][0.24\textwidth]{%
+  \ifx\LogoRuta\empty
+    \fbox{\parbox[c][1cm][c]{#1}{\centering Logo institucional\\\small (colocar archivo)}}%
+  \else
+    \includegraphics[width=#1,keepaspectratio]{\LogoRuta}%
+  \fi
+}
+
+\newcommand{\TituloCorto}{\TipoTrabajo\ \NumeroTrabajo\ (\TipoTP): \NombreTrabajoCorto}
+
+\newcommand{\EjeTiempo}[1]{%
+  \draw[->] (-1.15,0) -- (1.25,0) node[right] {\small Tiempo};
+  \draw[->] (0,-#1) -- (0,#1) node[above] {\small Amplitud};
+  \foreach \x/\etiqueta in {-1/-T,-0.5/{-\frac{T}{2}},0.5/{\frac{T}{2}},1/T} {
+    \draw (\x,0.10) -- (\x,-0.10) node[below=2pt] {\scriptsize $\etiqueta$};
+  }
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\InsertarLogo[1.4cm]}
+\fancyhead[C]{\small\textbf{\TituloCorto}}
+\fancyhead[R]{\small\NombreGrupo}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[C]{\small Página \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+% CARÁTULA
+% -----------------------------------------------------------------------------
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    \InsertarLogo[0.32\textwidth]
+
+    \vfill
+    {\Large\textsc{\NombreMateria}\par}
+    \vspace{1.5cm}
+    {\Huge\bfseries \TipoTrabajo\par}
+    \vspace{0.35cm}
+    {\LARGE N.\textsuperscript{o} \NumeroTrabajo\ (\TipoTP)\par}
+    \vspace{0.8cm}
+    {\Large\NombreTrabajo\par}
+
+    \vfill
+    \begin{tabular}{rl}
+      \textbf{Grupo:} & \NombreGrupo \\
+      \textbf{Docente:} & \Docente
+    \end{tabular}
+
+    \vspace{1cm}
+    \begin{center}
+      \textbf{Integrantes}\\[0.2cm]
+      \Integrantes
+    \end{center}
+
+    \vfill
+    {\large \FechaEnEspanol\par}
+  \end{center}
+\end{titlepage}
+
+% -----------------------------------------------------------------------------
+% SECCIÓN B: CUESTIONES DE REPASO
+% -----------------------------------------------------------------------------
+\section*{b) - Cuestiones de Repaso}
+
+\noindent\textbf{3.1. ¿En qué se diferencia un medio guiado de un medio no guiado?}\par
+En un medio guiado las ondas electromagnéticas que se usan para transmitir los datos se propagan confinadas en un camino físico o material, por ejemplo, cables metálicos o fibras ópticas. Es direccional: la información llegará allá donde llegue el material físico, por lo que este debe conectarse entre emisor y receptor para que la comunicación pueda realizarse.
+
+En un medio no guiado la transmisión de las ondas se produce irradiándolas en un medio, manipulando el campo electromagnético. Su propagación se produce en múltiples direcciones (aunque pudiendo lograr cierta direccionalidad mediante diseños específicos de transmisores). Esto permite al receptor estar en cualquier punto dentro del radio de potencia de transmisión del emisor e incluso que ambos actores puedan estar en movimiento.
+
+\vspace{0.3cm}
+\noindent\textbf{3.2. ¿Cuáles son las diferencias entre una señal electromagnética analógica y una digital?}\par
+
+Para responder esta pregunta nos pareció importante empezar separando dos ideas que en la cursada se suelen mezclar: una cosa es el dato que se quiere transmitir y otra, distinta, es la señal que efectivamente viaja por el medio físico. Stallings plantea que tanto los datos como la señalización, e incluso la transmisión en sí misma, pueden calificarse de analógicos o digitales, y los tres no necesariamente coinciden entre sí. El enunciado pregunta puntualmente por la señal, así que nos vamos a centrar en eso, aunque más adelante retomamos la relación con los datos porque nos ayudó a entender mejor el porqué de algunas decisiones de diseño.
+
+La diferencia de fondo entre una señal analógica y una digital tiene que ver con cuántos valores puede tomar la magnitud física que transporta la información, que en la mayoría de los casos es una tensión eléctrica. Una señal analógica es una onda electromagnética que varía de forma continua en el tiempo: en cualquier instante puede tomar, en principio, infinitos valores dentro de un rango. Es el caso típico del audio o de la voz humana, donde la intensidad de la señal sigue de manera fiel la variación de la presión sonora original (Figura 3.1a del libro). Una señal digital, en cambio, se construye con pulsos de tensión que sólo pueden tomar un número finito de niveles con significado, generalmente dos (uno representa al 0 y el otro al 1 binario), y permanece en ese nivel constante durante un intervalo de tiempo definido antes de pasar al siguiente (Figura 3.1b).
+
+Esa diferencia en la cantidad de valores posibles trae consecuencias prácticas que nos parecieron las más relevantes para destacar en la respuesta:
+
+\begin{itemize}
+  \item \textbf{Fidelidad frente a interpretación.} La señal analógica busca reproducir exactamente la forma de la información original, por lo que cualquier ruido que se le sume queda incorporado a la señal de manera permanente y se transmite junto con ella. La señal digital no necesita reproducir ninguna forma: el receptor sólo tiene que decidir, para cada intervalo de tiempo, a cuál de los pocos niveles posibles se parece más lo recibido. Esto hace que un sistema digital sea mucho más tolerante al ruido, porque alcanza con distinguir entre un puñado de niveles y no con preservar una forma de onda exacta.
+  \item \textbf{Regeneración frente a amplificación.} Como consecuencia de lo anterior, una señal digital atenuada o con algo de ruido se puede reconstruir por completo con un repetidor: éste interpreta los bits recibidos y genera, a partir de ellos, una señal nueva e idéntica a la original. Con una señal analógica esto no es posible, porque un amplificador sólo puede aumentar la energía de todo lo que llega, incluido el ruido ya acumulado, por lo que en enlaces largos con varios saltos ese ruido se va sumando progresivamente (Tabla 3.1 del libro resume bien estas combinaciones entre dato, señal y transmisión).
+  \item \textbf{Costo y practicidad.} La señalización digital suele ser más económica de generar e implementar que la analógica, y se integra mejor con las técnicas de multiplexación por división en el tiempo, que son más simples y baratas que las de división en frecuencia usadas habitualmente con señales analógicas.
+\end{itemize}
+
+Esto último terminó siendo, de hecho, uno de los motivos por los que buena parte de las redes actuales migraron a transmisión digital aunque el dato de origen sea analógico, como la voz telefónica, que hoy se digitaliza con un \textit{codec} apenas entra a la red: el abaratamiento de la tecnología digital gracias a la integración a gran y muy gran escala (LSI/VLSI), la posibilidad de multiplexar de forma más eficiente, la mayor integridad de los datos en distancias largas y, además, la facilidad para aplicar cifrado sobre información ya digitalizada.
+
+Para completar esta cuestión, además de Stallings consultamos el capítulo sobre señales de Forouzan (\textit{Data Communications and Networking}), que trabaja la misma distinción pero agrega la idea de que tanto los datos como las señales se pueden describir como funciones periódicas o aperiódicas en el tiempo. Esa mirada nos resultó útil para conectar esta cuestión con los ejercicios prácticos del final del trabajo, donde justamente se arma una señal (digital, en ese caso una onda cuadrada) a partir de la suma de componentes analógicas senoidales de distinta frecuencia.
+
+\vspace{0.3cm}
+\noindent\textbf{3.3. ¿Cuáles son las tres características más importantes de una señal periódica?}\par
+\noindent Las tres características más importantes de una señal periódica son la amplitud de pico, la frecuencia y la fase.
+
+\paragraph{a) Amplitud de pico (\(A\)).}
+La amplitud de pico es el valor máximo que alcanza la señal respecto de su nivel de referencia. Representa la magnitud de la señal y, en el caso de una señal eléctrica, normalmente se mide en voltios (V). Para una señal sinusoidal centrada en cero, los valores extremos son \(A\) y \(-A\).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.82\textwidth, height=5cm,
+  xlabel={Tiempo}, ylabel={Amplitud [V]},
+  xmin=0, xmax=4*pi, ymin=-1.3, ymax=1.3,
+  xtick={0,6.28318,12.56637},
+  xticklabels={$0$,$T$,$2T$},
+  ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+  grid=major, minor tick num=1,
+  axis lines=left, samples=200, domain=0:4*pi
+]
+\addplot[blue, thick] {sin(deg(x))};
+\draw[red,thick,<->] (axis cs:1.5708,0) -- (axis cs:1.5708,1);
+\node[red,above right] at (axis cs:1.5708,0.5) {$A$};
+\end{axis}
+\end{tikzpicture}
+\caption{Amplitud de pico de una señal sinusoidal.}
+\end{figure}
+
+\paragraph{b) Frecuencia (\(f\)) y período (\(T\)).}
+La frecuencia indica cuántos ciclos completos realiza la señal por unidad de tiempo. Se mide en hercios (Hz), donde un hercio equivale a un ciclo por segundo. El período es el tiempo necesario para completar un ciclo. Ambas magnitudes son inversamente proporcionales:
+\[
+f=\frac{1}{T}.
+\]
+Por ejemplo, si una señal tiene un período de \(0{,}01\) s, su frecuencia es \(100\) Hz.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.82\textwidth, height=5cm,
+  xlabel={Tiempo}, ylabel={Amplitud [V]},
+  xmin=0, xmax=6*pi, ymin=-1.3, ymax=1.3,
+  xtick={0,6.28318,12.56637,18.84956},
+  xticklabels={$0$,$T$,$2T$,$3T$},
+  ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+  grid=major, minor tick num=1,
+  axis lines=left, samples=300, domain=0:6*pi
+]
+\addplot[blue, thick] {sin(deg(x))};
+\draw[red,densely dashed] (axis cs:6.28318,0) -- (axis cs:6.28318,1);
+\draw[red,densely dashed] (axis cs:12.56637,0) -- (axis cs:12.56637,1);
+\draw[red,thick,<->] (axis cs:6.28318,1) -- (axis cs:12.56637,1);
+\node[red,above] at (axis cs:9.42478,1) {$T$};
+\end{axis}
+\end{tikzpicture}
+\caption{El período \(T\) es el tiempo entre dos puntos equivalentes consecutivos del ciclo.}
+\end{figure}
+
+\paragraph{c) Fase (\(\varphi\)).}
+La fase indica la posición relativa de una señal dentro de su ciclo respecto de un origen de referencia. Para ilustrarla, el gráfico compara una señal seno y una señal coseno de igual amplitud y frecuencia. La señal coseno alcanza su máximo un cuarto de período antes que la señal seno; por lo tanto, el coseno adelanta al seno en \(T/4\), lo que equivale a una diferencia de fase de \(90^\circ\) o \(\pi/2\) radianes. La fase permite describir el desplazamiento relativo entre señales periódicas.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.82\textwidth, height=5cm,
+  xlabel={Tiempo}, ylabel={Amplitud [V]},
+  xmin=0, xmax=4*pi, ymin=-1.35, ymax=1.6,
+  xtick={0,1.5708,3.14159,4.71239,6.28318,9.42478,12.56637},
+  xticklabels={$0$,$T/4$,$T/2$,$3T/4$,$T$,$3T/2$,$2T$},
+  ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+  grid=major, minor tick num=1,
+  axis lines=left, samples=300, domain=0:4*pi,
+  legend style={at={(0.98,0.98)},anchor=north east,font=\small}
+]
+\addplot[blue, thick] {sin(deg(x))};
+\addlegendentry{Señal seno}
+\addplot[red, dashed, thick] {cos(deg(x))};
+\addlegendentry{Señal coseno}
+\draw[<->,black,thick] (axis cs:0,1.12) -- (axis cs:1.5708,1.12);
+\node[black,above] at (axis cs:0.7854,1.12) {$T/4$};
+\node[black] at (axis cs:2.1,0.93) {$\Delta\varphi=\pi/2$};
+\end{axis}
+\end{tikzpicture}
+\caption{Desfase entre una señal seno y una señal coseno de igual amplitud y frecuencia. El coseno adelanta al seno un cuarto de período.}
+\end{figure}
+
+\vspace{0.3cm}
+\noindent\textbf{3.4. ¿Cuántos radianes hay en $360^\circ$?}\par
+Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la circunferencia completa mide $2\pi r$, una vuelta tiene
+\[
+  360^\circ = \frac{2\pi r}{r} = 2\pi~\text{rad} \approx 6{,}2832~\text{rad}
+\]
+
+\vspace{0.3cm}
+\noindent\textbf{3.5. ¿Cuál es la relación entre la longitud de onda y la frecuencia en una onda seno?}\par
+La relación está dada por la expresión $\lambda \cdot f = v$, o de forma equivalente $\lambda = \frac{v}{f}$, donde $\lambda$ es la longitud de onda, $f$ es la frecuencia y $v$ es la velocidad de propagación de la onda en el medio. Existe una relación inversamente proporcional: a mayor frecuencia, menor es la longitud de onda.
+
+\vspace{0.3cm}
+\noindent\textbf{3.6. ¿Cuál es la relación entre el espectro de una señal y su ancho de banda?}\par
+El espectro de una señal es el conjunto de todas las frecuencias que la componen. El ancho de banda es la anchura del espectro de la señal, es decir, la diferencia entre la frecuencia más alta y la frecuencia más baja contenidas en dicho espectro.
+
+\vspace{0.3cm}
+\noindent\textbf{3.7. ¿Qué es la atenuación?}\par
+La atenuación es la pérdida progresiva de potencia que sufre una señal a medida que se propaga por un medio de transmisión: ningún medio entrega en el extremo la misma energía que recibió en el origen. Stallings la presenta como la primera de las tres degradaciones de la transmisión, junto con la distorsión de retardo y el ruido. Tanenbaum llega al mismo punto desde otro lado: define el ancho de banda de un canal como el rango de frecuencias que pasan sin una atenuación fuerte, lo que implica que fuera de ese rango la señal se debilita demasiado como para ser útil.
+
+Para cuantificarla se usan decibeles, que comparan la potencia que sale del emisor con la que llega al receptor:
+\[
+  A_{\mathrm{dB}} = 10\log_{10}\frac{P_{\mathrm{ent}}}{P_{\mathrm{sal}}}
+\]
+Si, por ejemplo, una señal de $10\,\mathrm{mW}$ llega como $5\,\mathrm{mW}$, la atenuación es $10\log_{10}2\approx3{,}01\,\mathrm{dB}$: se perdió la mitad de la potencia. Lo cómodo de esta escala es que, en un enlace con varios tramos (cable, amplificador, cable), las pérdidas y ganancias simplemente se suman y restan en dB, en lugar de multiplicarse. Con un enlace de fibra de $100\,\mathrm{km}$ y $0{,}2\,\mathrm{dB/km}$, por ejemplo, la atenuación total es de $20\,\mathrm{dB}$, es decir, llega solo el $1\,\%$ de la potencia.
+
+Para entender el problema conviene ver de qué depende la atenuación: de la distancia, de la frecuencia y del tipo de medio.
+\begin{itemize}
+  \item \textbf{Distancia.} Stallings explica que, en medios guiados, la atenuación es en general una función logarítmica de la distancia, por lo que suele expresarse como una cantidad constante de dB por unidad de longitud. En medios no guiados, en cambio, es una función más compleja, que depende de la distancia y de la atmósfera. En el caso particular del espacio libre, la pérdida crece con el cuadrado de la distancia,
+  \[
+    L=\left(\frac{4\pi d}{\lambda}\right)^{2}=\left(\frac{4\pi f d}{c}\right)^{2},
+  \]
+  de modo que cada vez que se duplica la distancia se agregan unos $6\,\mathrm{dB}$ de pérdida.
+  \item \textbf{Frecuencia.} Stallings señala que la atenuación es mayor a frecuencias altas. Esto es lo que vuelve más delicado el problema: aunque llegue suficiente potencia total, la señal llega deformada, porque cada componente de su espectro se debilita en distinta proporción. Tanenbaum lo muestra descomponiendo una señal digital en sus armónicos: si el canal solo deja pasar los primeros, la forma de onda recibida pierde definición.
+  \item \textbf{Medio.} Un par trenzado, un coaxial, una fibra óptica o un enlace de radio atenúan de maneras muy distintas, por lo que el valor en dB/km depende del medio elegido.
+\end{itemize}
+
+Stallings resume las consecuencias para el diseño en tres puntos. La señal recibida tiene que conservar energía suficiente para que el receptor pueda detectarla e interpretarla. Tiene que mantenerse con un nivel sensiblemente superior al del ruido, porque si la atenuación la acerca al piso de ruido la información se pierde, y eso conecta directamente con la relación señal-ruido y con la capacidad del canal (cuestión 3.8). Y, como la atenuación crece con la frecuencia, aparece una distorsión que hay que compensar.
+
+Para corregirla se usan principalmente tres recursos. Primero, se colocan amplificadores o repetidores a intervalos regulares para recuperar la potencia. Stallings aclara que un repetidor, propio de la transmisión digital, regenera la señal a partir de los bits detectados, mientras que un amplificador, propio de la analógica, también amplifica el ruido que ya se acumuló. Segundo, se ecualiza el canal, es decir, se realzan las bandas más atenuadas para que la respuesta sea más pareja en frecuencia, técnica que Stallings también menciona. Tercero, se reduce la atenuación acortando los tramos o eligiendo un medio que atenúe menos, como la fibra óptica en enlaces largos.
+
+\vspace{0.3cm}
+\noindent\textbf{3.8. Defina la capacidad de un canal.}\par
+Stallings define la capacidad de un canal como la velocidad máxima, medida en bits por segundo, a la que se pueden transmitir datos por una ruta de comunicación bajo unas condiciones dadas. Es importante remarcar la parte de ``bajo unas condiciones dadas'': no es un número propio del cable o del enlace, sino que depende de cuánto ancho de banda tiene y de cuánto ruido hay. Tanenbaum trata el tema bajo el título de máxima tasa de datos de un canal y la acota con dos resultados teóricos, el de Nyquist y el de Shannon.
+
+El primero supone un canal ideal, sin ruido. Según Nyquist, tal como lo exponen Stallings y Tanenbaum, un canal de ancho de banda $B$ admite como máximo $2B$ símbolos independientes por segundo, y si cada símbolo puede tomar $M$ niveles, cada uno transporta $\log_2 M$ bits:
+\[
+  C = 2B\log_2 M \quad [\mathrm{bps}]
+\]
+Con un canal de $3\,\mathrm{kHz}$ y señal binaria ($M=2$) se llega a $6\,\mathrm{kbps}$, y con $16$ niveles a $24\,\mathrm{kbps}$. En teoría bastaría con seguir subiendo $M$ para ir más rápido, pero en la práctica el receptor tiene que poder distinguir esos niveles, y ahí aparece el ruido.
+
+Ese es el problema que resuelve el límite de Shannon, que sí contempla el ruido y que ambos autores presentan así:
+\[
+  C = B\log_2\!\left(1+\mathrm{SNR}\right) \quad [\mathrm{bps}],
+  \qquad \mathrm{SNR}_{\mathrm{dB}} = 10\log_{10}\mathrm{SNR}
+\]
+Acá la capacidad ya no depende de cuántos niveles use la señal, sino solo de $B$ y de la SNR. Stallings la llama capacidad libre de errores: Shannon demostró que, si la velocidad de transmisión es menor que $C$, es teóricamente posible encontrar una codificación que logre una transmisión sin errores, y por encima de $C$ eso no puede lograrse. Stallings también advierte que, en la práctica, se alcanzan velocidades bastante menores, entre otras cosas porque la fórmula supone solo ruido blanco y no contempla ni el ruido impulsivo ni la distorsión por atenuación o por retardo.
+
+Tanenbaum lo ilustra con una línea telefónica de $3000\,\mathrm{Hz}$ y $30\,\mathrm{dB}$ de SNR, o sea $\mathrm{SNR}=1000$:
+\[
+  C = 3000\cdot\log_2(1+1000)\approx 3000\cdot 9{,}97\approx 30\,\mathrm{kbps}
+\]
+Ninguna modulación ni codificación, por ingeniosa que sea, puede superar ese valor en ese canal.
+
+Mirando la fórmula sacamos una conclusión práctica. Stallings relaciona cuatro conceptos: velocidad de datos, ancho de banda, ruido y tasa de errores. La capacidad crece linealmente con el ancho de banda, pero solo logarítmicamente con la SNR. A SNR constante, duplicar $B$ duplica $C$; sin embargo, el ruido térmico crece con el ancho de banda ($N=kTB$), así que si se ensancha el canal sin aumentar la potencia de la señal, la SNR baja y la capacidad no llega a duplicarse. En cambio, duplicar la potencia de la señal suma apenas $3\,\mathrm{dB}$, o sea como máximo $1\,\mathrm{bps/Hz}$ extra. Y cuanto más baja es la tasa de errores que se exige, menor es la velocidad efectiva que se puede sostener en la práctica.
+
+\vspace{0.3cm}
+\noindent\textbf{3.9. ¿Qué factores clave afectan a la capacidad de un canal?}\par
+Los factores fundamentales que limitan la capacidad de un canal son:
+\begin{itemize}
+  \item \textbf{El ancho de banda ($B$):} Limita la velocidad máxima de variación de la señal.
+  \item \textbf{El ruido (y la relación señal-ruido, SNR):} Presencia de interferencias térmicas o externas que degradan los niveles de señal.
+  \item \textbf{La tasa de errores no corregidos permisible:} Determina el margen de tolerancia del receptor.
+\end{itemize}
+
+\newpage
+% -----------------------------------------------------------------------------
+% SECCIÓN C: EJERCICIOS
+% -----------------------------------------------------------------------------
+\section*{c) - Ejercicios}
+
+\noindent\textbf{Ejercicio 3.1}\par
+\noindent a) En una configuración multipunto múltiples dispositivos comparten el mismo medio de transmisión. Si más de uno transmite al mismo tiempo, las señales se solapan y los mensajes resultan indistinguibles (colisión).\par
+\noindent b)
+\begin{center}
+  \begin{tabular}{|l|p{0.38\textwidth}|p{0.38\textwidth}|}
+    \hline
+    & \textbf{Centralizado} & \textbf{Descentralizado} \\
+    \hline
+    \textbf{Ventajas} &
+    El coordinador puede asignar tiempo solo a quien lo requiere y establecer prioridades. &
+    Si un nodo falla, la comunicación entre el resto no se ve afectada. \\
+    \hline
+    \textbf{Desventajas} &
+    Sin coordinador no hay transmisión (punto único de fallo). Parte del tiempo se pierde en la coordinación. &
+    Al estar repartido el tiempo en turnos prefijados, se puede asignar tiempo a quien no lo necesite. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.2}\par
+Dado que el período es la inversa de la frecuencia:
+\[
+  T = \frac{1}{f} = \frac{1}{1000\,\mathrm{Hz}} = 0{,}001\,\mathrm{s} = 1\,\mathrm{ms}
+\]
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.3}\par
+\noindent a) Sea \(x(t)=\sin(2\pi ft)\) la señal de referencia. Su amplitud oscila entre \(-1\) y \(1\).
+Un desfase de \(\pm\pi\) invierte la señal:
+\[
+  \sin(2\pi ft \pm \pi) = -\sin(2\pi ft)
+\]
+Por lo tanto, ambas señales desfasadas son iguales y su suma duplica la amplitud:
+\[
+  x_+(t) = x_-(t) = -\sin(2\pi ft), \qquad
+  x_R(t) = x_+(t) + x_-(t) = -2\sin(2\pi ft)
+\]
+
+\begin{center}
+  \begin{tikzpicture}[x=2.2cm,y=0.5cm]
+    \begin{scope}
+      \EjeTiempo{1.35}
+      \draw[blue,thick,domain=-1:1,samples=100,smooth] plot (\x,{sin(360*\x)});
+      \node[blue,anchor=west] at (0.15,1.18) {\small $x(t)=\sin(2\pi ft)$};
+      \draw (-0.06,1) -- (0.06,1); \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-3.3cm]
+      \EjeTiempo{1.35}
+      \draw[red!70!black,thick,domain=-1:1,samples=100,smooth] plot (\x,{-sin(360*\x)});
+      \node[red!70!black,anchor=west] at (0.15,1.18) {\small $x_+(t)=\sin(2\pi ft+\pi)$};
+      \draw (-0.06,1) -- (0.06,1); \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-6.6cm]
+      \EjeTiempo{2.35}
+      \draw[blue!70!black,thick,domain=-1:1,samples=100,smooth] plot (\x,{-2*sin(360*\x)});
+      \node[blue!70!black,anchor=west] at (0.15,2.18) {\small $x_R(t)=2\sin(2\pi ft\pm\pi)=-2\sin(2\pi ft)$};
+      \draw (-0.06,2) -- (0.06,2); \draw (-0.06,-2) -- (0.06,-2);
+      \node[anchor=east,xshift=-2pt] at (0,2) {\scriptsize $2$};
+      \node[anchor=east,xshift=-2pt] at (0,-2) {\scriptsize $-2$};
+    \end{scope}
+  \end{tikzpicture}
+\end{center}
+
+\noindent b) Sean las señales:
+\[
+  x_1(t)=\sin(2\pi ft), \qquad x_2(t)=\sin(2\pi ft-\pi)=-\sin(2\pi ft)
+\]
+El desfase de \(\pi\) hace que \(x_2(t)\) sea la opuesta de \(x_1(t)\). Por ello, para cada instante sus amplitudes se cancelan y la señal resultante es nula:
+\[
+  x_R(t)=x_1(t)+x_2(t)=\sin(2\pi ft)+\sin(2\pi ft-\pi)=0
+\]
+
+\begin{center}
+  \begin{tikzpicture}[x=2.2cm,y=0.5cm]
+    \begin{scope}
+      \EjeTiempo{1.35}
+      \draw[blue,thick,domain=-1:1,samples=100,smooth] plot (\x,{sin(360*\x)});
+      \node[blue,anchor=west] at (0.15,1.18) {\small $x_1(t)=\sin(2\pi ft)$};
+      \draw (-0.06,1) -- (0.06,1); \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-3.3cm]
+      \EjeTiempo{1.35}
+      \draw[red!70!black,thick,domain=-1:1,samples=100,smooth] plot (\x,{-sin(360*\x)});
+      \node[red!70!black,anchor=west] at (0.15,1.18) {\small $x_2(t)=\sin(2\pi ft-\pi)=-\sin(2\pi ft)$};
+      \draw (-0.06,1) -- (0.06,1); \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+    \end{scope}
+
+    \begin{scope}[yshift=-6.6cm]
+      \EjeTiempo{1.35}
+      \draw[green!50!black,very thick] (-1.15,0) -- (1.12,0);
+      \node[green!50!black,anchor=west] at (0.15,0.45) {\small $x_R(t)=0$ (señal nula)};
+      \draw (-0.06,1) -- (0.06,1); \draw (-0.06,-1) -- (0.06,-1);
+      \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
+      \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
+      \node[anchor=east,xshift=-2pt] at (0,0) {\scriptsize $0$};
+    \end{scope}
+  \end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.4}\par
+
+Este ejercicio pide comparar, para cada nota de la escala musical, su frecuencia relativa y su longitud de onda, sabiendo que el sonido viaja a $v = 330$ m/s. La herramienta que usamos para pasar de una magnitud a la otra es la relación entre velocidad de propagación, longitud de onda y frecuencia que vimos en la Cuestión 3.5 y que Stallings introduce al definir la longitud de onda de una señal periódica: si una onda avanza a velocidad $v$ y tarda un período $T$ en repetirse, en ese tiempo recorre exactamente una longitud de onda, de donde sale
+
+\[
+  \lambda = vT = \frac{v}{f} \qquad \Longleftrightarrow \qquad \lambda f = v.
+\]
+
+Con esa fórmula calculamos la longitud de onda de cada nota dividiendo la velocidad del sonido por su frecuencia. También agregamos una columna con la frecuencia de cada nota relativa a la del DO grave, porque es la que mejor deja ver la idea de octava.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Nota} & DO & RE & MI & FA & SOL & LA & SI & DO \\
+\hline
+\textbf{Frecuencia (Hz)} & 264 & 297 & 330 & 352 & 396 & 440 & 495 & 528 \\
+\hline
+\textbf{$\lambda = v/f$ (m)} & 1{,}250 & 1{,}111 & 1{,}000 & 0{,}938 & 0{,}833 & 0{,}750 & 0{,}667 & 0{,}625 \\
+\hline
+\textbf{$f/f_{\text{DO grave}}$} & 1{,}000 & 1{,}125 & 1{,}250 & 1{,}333 & 1{,}500 & 1{,}667 & 1{,}875 & 2{,}000 \\
+\hline
+\end{tabular}
+\end{center}
+
+Lo primero que se confirma con la tabla es lo que pide el enunciado: el DO agudo tiene exactamente el doble de frecuencia que el DO grave (528 Hz frente a 264 Hz, es decir, $f/f_{\text{DO grave}}=2$), y su longitud de onda es exactamente la mitad (0,625 m frente a 1,25 m). Esa relación de 2 a 1 entre las frecuencias es, de hecho, la definición física de octava en acústica: dos notas están separadas por una octava cuando una vibra al doble de frecuencia que la otra, y el oído las percibe como "la misma nota" en un registro distinto.
+
+Mirando la tabla con un poco más de detalle, también se puede ver que el salto de frecuencia entre notas consecutivas no es siempre igual: entre DO y RE la razón es $297/264 = 9/8$, entre RE y MI es $330/297 = 10/9$, entre MI y FA es $352/330 = 16/15$, y así se repite el patrón ($9/8$, $10/9$, $9/8$, $16/15$) hasta llegar al DO agudo. Son las razones propias de la afinación justa o natural de la escala diatónica (donde los intervalos se arman con fracciones simples de números enteros), distinta de la afinación temperada que se usa hoy en instrumentos como el piano, donde cada semitono multiplica la frecuencia por $2^{1/12}$. No hacía falta este detalle para resolver el ejercicio, pero nos pareció un buen ejemplo de cómo la relación $\lambda f = v$ que estudiamos para señales eléctricas es la misma que describe, con otro medio y otra velocidad de propagación, al sonido.
+
+En definitiva, como $v$ es constante para todas las notas (viajan por el mismo medio, el aire), la relación entre frecuencia y longitud de onda es estrictamente inversa: cuanto más aguda es la nota, mayor su frecuencia y menor su longitud de onda, y viceversa.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.5}\par
+
+Según el enunciado, la curva de línea continua de la Figura 3.17 representa a $\sen(2\pi t)$, es decir, una onda seno genérica $A\sen(2\pi ft+\varphi)$ con $A=1$, $f=1$ y $\varphi=0$ (son los mismos tres parámetros que repasamos en la Cuestión 3.3). Para identificar los parámetros de la curva discontinua, aplicamos el mismo método que describe el libro al introducir esos parámetros: la amplitud se lee directamente de la altura de los picos, la frecuencia se obtiene comparando cuántos ciclos completa la curva discontinua en el mismo intervalo que la continua, y la fase se obtiene midiendo el corrimiento horizontal de un pico de la curva discontinua respecto del pico correspondiente de la curva continua, expresado como fracción del período.
+
+\begin{itemize}
+  \item \textbf{Amplitud ($A$):} los picos de la curva discontinua llegan hasta $2$ (el doble que la curva continua, que llega a $1$), así que $A=2$.
+  \item \textbf{Frecuencia ($f$):} en el mismo tramo en el que la curva continua completa un ciclo, la discontinua completa dos, de modo que su frecuencia es el doble: $f=2$ (equivalentemente, su período es la mitad).
+  \item \textbf{Fase ($\varphi$):} comparando la posición de los picos, la curva discontinua está desplazada respecto de lo que sería $2\sen(2\pi(2)t)$ sin desfasar. Ese desplazamiento equivale a un adelanto de $\pi$ radianes.
+\end{itemize}
+
+Con esos tres valores, la curva discontinua queda expresada como
+\[
+  2\sen\!\big(2\pi(2)t+\pi\big).
+\]
+
+Vale la pena notar que, usando la misma identidad trigonométrica que ya usamos en el Ejercicio 3.3 ($\sen(\theta+\pi)=-\sen\theta$), esta expresión se puede reescribir de forma equivalente como $-2\sen(4\pi t)$, que es otra manera válida de describir la misma curva. Esto nos sirvió para confirmar el resultado: ambas formas describen exactamente la misma señal, sólo que una usa el parámetro de fase explícito y la otra lo absorbe en el signo.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.6}\par
+
+El enunciado pide expresar $s(t) = (1 + 0{,}1\cos 5t)\cos 100t$ como combinación lineal de funciones sinusoidales, y da como sugerencia usar la expresión de $\cos a \cos b$. Antes de aplicarla nos pareció importante repasar de dónde sale esa identidad, para no usarla como una fórmula memorizada sin más.
+
+Partimos de las dos identidades de suma y diferencia de ángulos para el coseno, que son las que se demuestran a partir de la definición geométrica del seno y el coseno:
+\[
+  \cos(a-b) = \cos a\cos b + \sen a\sen b, \qquad
+  \cos(a+b) = \cos a\cos b - \sen a\sen b.
+\]
+Sumando ambas expresiones, los términos con $\sen a \sen b$ se cancelan entre sí y queda
+\[
+  \cos(a-b) + \cos(a+b) = 2\cos a\cos b
+  \qquad \Longrightarrow \qquad
+  \cos a\cos b = \tfrac{1}{2}\big[\cos(a-b)+\cos(a+b)\big].
+\]
+
+Con esta identidad ya demostrada, distribuimos la multiplicación de la señal original:
+\[
+  s(t) = (1 + 0{,}1\cos 5t)\cos 100t = \cos 100t + 0{,}1\cos 5t \cdot \cos 100t
+\]
+y aplicamos la identidad con $a = 5t$ y $b = 100t$:
+\[
+  \cos 5t \cdot \cos 100t = \frac{1}{2}\left[\cos(5t-100t) + \cos(5t+100t)\right] = \frac{1}{2}\left[\cos 95t + \cos 105t\right]
+\]
+(usamos que $\cos(-95t)=\cos(95t)$, porque el coseno es una función par). Sustituyendo el resultado en $s(t)$:
+\[
+  s(t) = \cos 100t + 0{,}05\cos 95t + 0{,}05\cos 105t
+\]
+
+Esta expresión ya es la combinación lineal de tres sinusoides que pide el enunciado: una componente a la frecuencia original de la portadora (100 rad/s) y dos componentes adicionales, una por debajo y otra por encima, separadas exactamente $5$ rad/s. Es, en miniatura, el mismo fenómeno que Stallings muestra en las Figuras 3.4 y 3.5 del capítulo cuando arma una señal sumando componentes senoidales de distinta frecuencia y después la mira en el dominio de la frecuencia: acá, en vez de sumar dos sinusoides independientes, el término $0{,}1\cos 5t$ multiplicando a la portadora termina generando dos nuevas componentes alrededor de ella. Identificando amplitud, frecuencia angular ($\omega$) y fase de cada término, y pasando la frecuencia angular a hercios con $f=\omega/2\pi$:
+
+\begin{itemize}
+  \item Componente $\cos 100t$: Amplitud $= 1$, $f = \dfrac{100}{2\pi} \approx 15{,}915\,\mathrm{Hz}$, fase $\varphi = 0$.
+  \item Componente $0{,}05\cos 95t$: Amplitud $= 0{,}05$, $f = \dfrac{95}{2\pi} \approx 15{,}120\,\mathrm{Hz}$, fase $\varphi = 0$.
+  \item Componente $0{,}05\cos 105t$: Amplitud $= 0{,}05$, $f = \dfrac{105}{2\pi} \approx 16{,}711\,\mathrm{Hz}$, fase $\varphi = 0$.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\noindent\textbf{Ejercicio 3.7}\par
+
+Dada la función:
+
+\[
+f(t)=(10\cos t)^2=100\cos^2(t)
+\]
+
+Para determinar el período fundamental, buscamos el menor valor positivo de \(T\) que cumple \(f(t+T)=f(t)\).
+
+Primero, probamos con \(T=\pi\). Usando la identidad trigonométrica
+\(\cos(t+\pi)=-\cos(t)\), obtenemos:
+
+\[
+\begin{aligned}
+f(t+\pi)
+&=100\cos^2(t+\pi)\\
+&=100[-\cos(t)]^2\\
+&=100\cos^2(t)\\
+&=f(t)
+\end{aligned}
+\]
+
+Tenemos que \(T=\pi\) es un período de la función.
+
+Ahora, para comprobar que no existe un período positivo menor que \(\pi\), evaluamos la condición \(f(t+T)=f(t)\) en \(t=0\). Como \(f(0)=100\), se tiene que:
+
+\[
+f(T)=100\cos^2(T)=100
+\]
+
+Por lo que:
+
+\[
+\cos^2(T)=1 \quad\Longleftrightarrow\quad \cos(T)=\pm1
+\]
+
+Solo se da cuando \(T=k\pi\), con \(k\in\mathbb{Z}\). Como \(T\) debe ser positivo, el menor valor posible es \(T=\pi\).
+
+Por lo que el período fundamental es:
+
+\[
+\boxed{T_0=\pi}
+\]
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.8}\par
+Sean $f_1(t)$ y $f_2(t)$ dos señales periódicas, con períodos fundamentales $T_1$ y $T_2$, respectivamente. La suma $f(t)=f_1(t)+f_2(t)$ será periódica si ambas señales poseen un período común $T$, tal que:
+\[
+  T=nT_1=mT_2,\qquad n,m\in\mathbb{Z}^+
+\]
+Por lo tanto, para que exista dicho período común, la relación entre los períodos debe ser racional:
+\[
+  \frac{T_1}{T_2}=\frac{m}{n}\in\mathbb{Q}
+\]
+\textbf{Ejemplo 1:} Supongamos dos señales periodicas con periodos $T_1=4$ y $T_2=2$, entonces:
+\[
+  \frac{T_1}{T_2}=\frac{4}{2}=2\in\mathbb{Q}
+\]
+Ambas señales tienen un período común $T=4$, por lo que su suma es periódica.
+
+\textbf{Ejemplo 2:} Supongamos dos señales periodicas con períodos $T_1=1$ y $T_2=\sqrt{2}$, entonces:
+\[
+  \frac{T_1}{T_2}=\frac{1}{\sqrt{2}}\notin\mathbb{Q}
+\]
+Como la divicion entre sus períodos es irracional, no existe un período común por lo que la suma de estas dos señales es no periodica.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.9}\par
+
+La Figura 3.4 del libro de Stallings muestra cómo se puede
+construir una señal mediante la suma de componentes sinusoidales
+de distintas frecuencias. En ella se representa la componente
+fundamental, de frecuencia \(f\), el tercer armónico, de frecuencia
+\(3f\), y la señal resultante de sumar ambas componentes.
+
+Los armónicos son componentes sinusoidales cuyas frecuencias
+son múltiplos enteros de una frecuencia fundamental. Para un
+pulso cuadrado simétrico, la serie de Fourier contiene armónicos
+impares, cuyas amplitudes disminuyen a medida que aumenta su
+frecuencia. Su expresión puede escribirse como:
+
+\[
+x(t)=\frac{4}{\pi}\left[
+\sin(2\pi ft)+\frac{1}{3}\sin(2\pi 3ft)
++\frac{1}{5}\sin(2\pi 5ft)+\cdots
+\right]
+\]
+
+A partir de esta expresión, el ejercicio plantea analizar
+qué sucede cuando se eliminan las componentes de baja frecuencia
+y se conservan las de alta frecuencia.
+
+Para este caso, se consideran los armónicos impares
+comprendidos entre \(5f\) y \(15f\), es decir,
+\(5f\), \(7f\), \(9f\), \(11f\), \(13f\) y \(15f\). La señal
+resultante se obtiene sumando únicamente estas componentes:
+
+\[
+\begin{aligned}
+x_r(t)=\frac{4}{\pi}\bigg[&
+\frac{1}{5}\sin(2\pi 5ft)
++\frac{1}{7}\sin(2\pi 7ft)\\
+&+\frac{1}{9}\sin(2\pi 9ft)
++\frac{1}{11}\sin(2\pi 11ft)\\
+&+\frac{1}{13}\sin(2\pi 13ft)
++\frac{1}{15}\sin(2\pi 15ft)
+\bigg]
+\end{aligned}
+\]
+
+Se eligió este conjunto de armónicos
+ya que el enunciado no especifica cuáles utilizar.
+Para tener una mejor visualización de las frecuencias mas altas, se utilizan 
+varias componentes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]
+    {graficos_ej_3.9.png}
+    \caption{Comparación entre la señal original y la señal
+    resultante al conservar armónicos impares de \(5f\) a \(15f\).}
+    \label{fig:ejercicio39}
+\end{figure}
+
+Comparando ambas señales, se observa que la señal resultante
+oscila más rápido y ya no conserva la forma del pulso cuadrado
+original. Esto pasa porque las componentes de mayor frecuencia
+producen variaciones más rápidas en el tiempo, mientras que las
+de menor frecuencia contribuyen a definir la forma general de
+la señal.
+
+También se puede ver que la señal resultante tiene, en general,
+una amplitud menor que la original. Esto se debe a que se
+eliminaron los armónicos de baja frecuencia y se conservaron
+solamente los de mayor frecuencia.
+
+En conclusión, al eliminar los armónicos de baja frecuencia
+y conservar los de alta frecuencia, se obtiene una señal con
+oscilaciones rápidas que pierde la forma característica del
+pulso cuadrado original.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.10}\par
+Un pulso rectangular de amplitud $A$ y duración $\tau$ tiene como espectro
+\[
+  X(f) = A\tau \,\frac{\sin(\pi f \tau)}{\pi f \tau}
+\]
+que se extiende hasta frecuencia infinita, por lo que su ancho de banda absoluto es infinito. Ningún medio real lo puede transmitir: todo canal tiene un ancho de banda limitado, y además los transmisores y receptores son más caros cuanto más ancho de banda manejan. En la práctica la señal se limita en banda y eso deforma el pulso, que pierde los flancos verticales y se redondea.
+
+Esto no impide la transmisión, porque la energía no está repartida por igual. Cerca del 90\,\% está en el lóbulo principal, hasta $f = 1/\tau$. Alcanza con transmitir esa banda para que el receptor distinga un 1 de un 0, aunque la forma no sea exacta. Lo mismo ocurre con una secuencia de pulsos: una onda cuadrada se forma con la fundamental y sus armónicos impares, y con unos pocos ya queda bien aproximada.
+
+\begin{center}
+\begin{tikzpicture}[xscale=4, yscale=1.4, font=\small]
+  \draw[->, gray] (0,0) -- (2.1,0) node[right] {$t$};
+  \draw[->, gray] (0,-1.3) -- (0,1.4);
+  % Onda cuadrada ideal
+  \draw[gray!60, thick] (0,0) -- (0,1) -- (0.5,1) -- (0.5,-1) -- (1,-1) -- (1,1) -- (1.5,1) -- (1.5,-1) -- (2,-1) -- (2,0);
+  % Solo fundamental
+  \draw[blue!70!black, dashed, domain=0:2, samples=120, smooth]
+       plot (\x, {4/pi*sin(360*\x)});
+  % Fundamental + 3er + 5to armónico
+  \draw[red!70!black, thick, domain=0:2, samples=300, smooth]
+       plot (\x, {4/pi*(sin(360*\x) + sin(3*360*\x)/3 + sin(5*360*\x)/5)});
+  \node[gray, right] at (2.05,1) {ideal};
+  \node[blue!70!black, right] at (2.05,0.55) {$k = 1$};
+  \node[red!70!black, right] at (2.05,-0.6) {$k = 1, 3, 5$};
+\end{tikzpicture}
+\end{center}
+
+La implicación principal es el compromiso entre velocidad y ancho de banda. Cuanto más cortos son los pulsos, es decir, cuanto mayor es la tasa de bits, más se ensancha el espectro. Para un ancho de banda dado, aumentar la velocidad deforma más los pulsos, hasta que se superponen entre sí (interferencia entre símbolos) y aumentan los errores. Por ejemplo, con una onda cuadrada de 1~MHz y sus armónicos de 3 y 5~MHz, que ocupan $B = 4$~MHz, se transmiten 2~Mbps, porque cada período lleva dos bits.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.11}\par
+Con 6 bits hay $2^6 = 64$ combinaciones, que no alcanzan para 100 caracteres. La solución es usar caracteres de cambio (\emph{shift}): se reservan algunos códigos que no representan ningún carácter, sino que le indican al receptor cómo interpretar los que siguen. Por ejemplo, ``mayúsculas'' y ``minúsculas''. Cada uno de los códigos restantes tiene entonces un significado distinto según el modo vigente, hasta que llega otro carácter de cambio. Es el mismo mecanismo del código Baudot de 5 bits, con sus caracteres LTRS y FIGS.
+
+Con $s$ códigos reservados para cambiar entre $s$ modos, la cantidad de caracteres es
+\[
+  N = s\,(64 - s)
+\]
+Con dos modos, $N = 2 \cdot 62 = 124$, que alcanza para los 100 caracteres. Algunos códigos, como el espacio, el retorno de carro o el avance de línea, suelen valer lo mismo en ambos modos, así que la cifra útil es algo menor.
+
+La desventaja es que la interpretación depende del estado. Si un carácter de cambio se pierde o llega con error, todo el texto hasta el próximo cambio se decodifica mal.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.12}\par
+Se parte de los parámetros de vídeo del texto: 525 líneas por cuadro (483 visibles y 42 de retroceso vertical), 30 cuadros/s, $63{,}5~\mu$s por línea, de los cuales $11~\mu$s son de retroceso horizontal y $52{,}5~\mu$s son activos. Con 4{,}2~MHz se obtienen unos 450 elementos por línea.
+
+La resolución se calcula considerando que un ciclo de la señal permite representar dos elementos, uno claro y uno oscuro. Por lo tanto, con un ancho de banda $B$ y un tiempo activo $T$ hay $2BT$ elementos por línea.
+
+\noindent\underline{\textbf{Incremento de resolución horizontal}} (se mantienen las líneas):
+\[
+  N_h = 2 \cdot (5 \times 10^6~\text{Hz}) \cdot (52{,}5 \times 10^{-6}~\text{s}) = 525~\text{elementos}
+\]
+Son $525 - 450 = \boxed{75~\text{elementos más por línea}}$, un aumento de aproximadamente $17\,\%$.
+
+\noindent\underline{\textbf{Incremento de resolución vertical}} (con 450 elementos por línea):
+
+Con 5~MHz, los 225 ciclos de cada línea se recorren en menos tiempo:
+\[
+  T_{\text{activo}} = \frac{225}{5 \times 10^6~\text{Hz}} = 45~\mu\text{s}
+  \qquad\Longrightarrow\qquad
+  T_{\text{línea}} = 45 + 11 = 56~\mu\text{s}
+\]
+Las líneas por cuadro pasan a ser
+\[
+  \frac{1/30~\text{s}}{56 \times 10^{-6}~\text{s}} \approx 595~\text{líneas}
+\]
+El retroceso vertical dura lo mismo que antes ($42 \cdot 63{,}5~\mu\text{s} \approx 2{,}67$~ms), así que el tiempo útil por cuadro es $33{,}33 - 2{,}67 = 30{,}67$~ms. Las líneas visibles resultan
+\[
+  N_v = \frac{30{,}67 \times 10^{-3}~\text{s}}{56 \times 10^{-6}~\text{s}} \approx 548~\text{líneas}
+\]
+Son $548 - 483 \approx \boxed{65~\text{líneas visibles más}}$, un aumento de aproximadamente $13\,\%$.
+
+El aumento vertical es menor que el horizontal. Esto se debe a que los $11~\mu$s de retroceso horizontal no se acortan con el ancho de banda, y pesan más cuando la línea es más corta.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.13}\par
+Un sistema de transmisión telefónica de voz opera típicamente en el rango de $300\,\mathrm{Hz}$ a $3400\,\mathrm{Hz}$ (ancho de banda de $3100\,\mathrm{Hz}$). Si se requiere transmitir voz con mayor fidelidad, se incrementa el ancho de banda asignado por canal, lo que disminuye el número de canales multiplexados posibles en el mismo medio físico.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.14}\par
+Si se duplica el ancho de banda de un canal, la capacidad máxima teórica según la ley de Shannon ($C = B \log_2(1 + \mathrm{SNR})$) se duplica linealmente, manteniendo constante la SNR. Según el límite de Nyquist ($C = 2B \log_2 M$), también permite duplicar la tasa de baudios máxima.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.15}\par
+Relación de la tasa de transmisión y el ancho de banda en presencia de ruido gaussiano blanco aditivo (AWGN):
+Con una $\mathrm{SNR} = 30\,\text{dB} \implies \mathrm{SNR} = 10^{30/10} = 1000$.
+Aplicando Shannon:
+\[
+  C = B \log_2(1 + 1000) = B \cdot 9{,}966 \text{ bps/Hz}
+\]
+Por lo tanto, la capacidad máxima teórica del canal es aproximadamente $9{,}97$ bps por hertz de ancho de banda.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.16}\par
+Usando la fórmula de Nyquist: $R = 2B \log_2 M \implies B = \frac{R}{2 \log_2 M}$ para $R = 9600\text{ bps}$.
+
+\noindent\textbf{a)} Con palabras de 4 bits $\implies M = 2^4 = 16$ niveles:
+\[
+  B = \frac{9600}{2 \cdot \log_2(16)} = \frac{9600}{2 \cdot 4} = 1200\,\mathrm{Hz}
+\]
+
+\noindent\textbf{b)} Con palabras de 8 bits $\implies M = 2^8 = 256$ niveles:
+\[
+  B = \frac{9600}{2 \cdot \log_2(256)} = \frac{9600}{2 \cdot 8} = 600\,\mathrm{Hz}
+\]
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.17}\par
+Cálculo de la potencia del ruido térmico $N = k T B$:
+\begin{itemize}
+  \item $k = 1{,}38 \times 10^{-23}\,\mathrm{J/K}$
+  \item $T = 50\,^\circ\mathrm{C} + 273{,}15 = 323{,}15\,\mathrm{K}$
+  \item $B = 10\,\mathrm{kHz} = 10000\,\mathrm{Hz}$
+\end{itemize}
+\[
+  N = (1{,}38 \times 10^{-23}) \cdot (323{,}15) \cdot (10000) \approx 4{,}46 \times 10^{-17}\,\mathrm{W}
+\]
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.18}\par
+Límite de Nyquist: $C = 2B \log_2(M)$ (Aplica a canales ideales sin ruido, indicando cuántos niveles $M$ se precisan para una velocidad $C$).\par
+Límite de Shannon: $C = B \log_2(1 + \mathrm{SNR})$ (Aplica a canales reales limitados por ruido térmico).\par
+Relación: Nyquist establece la velocidad máxima realizable mediante la estructuración de multiniveles de la señal, mientras que Shannon impone una cota física infranqueable debido a la presencia inevitable del ruido. Si al aplicar Nyquist con un $M$ elevado la capacidad calculada supera el límite de Shannon, el ruido impedirá diferenciar los niveles con precisión y la tasa real se verá degradada.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.19}\par
+Los datos son $C = 20\,\mathrm{Mbps}$ y $B = 3\,\mathrm{MHz}$, y lo que se busca es la relación señal-ruido necesaria para alcanzar esa capacidad, es decir, la SNR mínima. Como lo que limita al canal es el ruido, el modelo que corresponde es el de Shannon, que según Stallings y Tanenbaum da la capacidad máxima de un canal con ruido (con ruido blanco como hipótesis). Nyquist, en cambio, supone un canal sin ruido, así que lo usamos más abajo solo como comparación:
+\[
+  C = B\log_2(1+\mathrm{SNR})
+\]
+Despejamos la SNR pasando el logaritmo del otro lado:
+\[
+  \frac{C}{B}=\log_2(1+\mathrm{SNR})
+  \;\Longrightarrow\;
+  \mathrm{SNR}=2^{C/B}-1
+\]
+La eficiencia espectral que se necesita es
+\[
+  \frac{C}{B}=\frac{20\times10^{6}}{3\times10^{6}}=6{,}667~\mathrm{bps/Hz}
+\]
+y entonces
+\[
+  2^{6{,}667}=2^{6}\cdot2^{2/3}\approx64\cdot1{,}5874\approx101{,}59
+  \;\Longrightarrow\;
+  \mathrm{SNR}\approx101{,}59-1=100{,}59
+\]
+Como las SNR suelen expresarse en decibeles, lo convertimos:
+\[
+  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(100{,}59)\approx\boxed{20{,}03\,\mathrm{dB}}
+\]
+Para verificar, reemplazamos en la fórmula original: $3\times10^{6}\cdot\log_2(101{,}59)=3\times10^{6}\cdot6{,}667=20\,\mathrm{Mbps}$, que coincide con el dato.
+
+Nos pareció interesante comparar este resultado con Nyquist. En un canal sin ruido, $C=2B\log_2M$ pediría $\log_2M=20/6=3{,}33$, es decir, unos $10{,}1$ niveles. Como $M$ debe ser potencia de 2, en la práctica se usarían $16$ niveles, con $4$ bits por símbolo. Las dos fórmulas se complementan: Nyquist indica cuántos niveles se pueden definir y Shannon cuántos se pueden distinguir con el ruido presente. Que la SNR requerida sea de unos $20\,\mathrm{dB}$ es coherente con esto: cuantos más niveles se quieren distinguir, menor tiene que ser el ruido relativo a la señal.
+
+Stallings introduce también la relación $E_b/N_0$ (energía por bit sobre densidad espectral de ruido) como una medida de SNR normalizada por bit, útil para comparar esquemas de modulación y codificación. Como $S=E_bC$ y $N=N_0B$, la SNR vale $\mathrm{SNR}=\frac{E_b}{N_0}\frac{C}{B}$, y de la fórmula de Shannon se despeja
+\[
+  \frac{E_b}{N_0}=\frac{B}{C}\left(2^{C/B}-1\right)=\frac{100{,}59}{6{,}667}\approx15{,}09
+  \;\Rightarrow\;10\log_{10}(15{,}09)\approx11{,}8\,\mathrm{dB}
+\]
+
+Hay que tener presente que $20{,}03\,\mathrm{dB}$ es un mínimo teórico. Con menos SNR no existe codificación que permita llegar a $20\,\mathrm{Mbps}$ en este canal, y alcanzar justo ese límite exigiría códigos ideales. Como advierte Stallings, en la práctica se alcanzan velocidades menores que la capacidad de Shannon, así que un sistema real necesita un margen adicional de SNR.
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.20}\par
+La onda cuadrada tiene período $T=1\,\mathrm{ms}$, así que su frecuencia fundamental es $f_0=1/T=1\,\mathrm{kHz}$. En la Figura 3.7, Stallings construye la onda cuadrada sumando armónicos impares de la fundamental:
+\[
+  s(t)=\frac{4}{\pi}\sum_{k=1,3,5,\dots}\frac{\sen(2\pi k f_0 t)}{k}
+\]
+El factor $4/\pi$ hace que la onda resultante tenga amplitud $\pm1$. Como el enunciado no indica ninguna carga, trabajamos con potencias normalizadas (sobre $1\,\Omega$): la señal de entrada tiene una potencia total de $1\,\mathrm{W}$, porque $v^2(t)=1$ en todo instante.
+
+Las componentes de la señal están en $1,3,5,7,9,\dots\,\mathrm{kHz}$. El filtro pasa bajo ideal, de ganancia unidad y corte en $8\,\mathrm{kHz}$, deja pasar las que cumplen $kf_0\le8\,\mathrm{kHz}$, o sea $k=1,3,5,7$. El armónico de $9\,\mathrm{kHz}$ y todos los siguientes quedan eliminados.
+
+\noindent\textbf{a) Potencia de la señal de salida.} Cada armónico es una sinusoide de amplitud $\frac{4}{\pi k}$, y una sinusoide de amplitud $a$ tiene potencia media $a^2/2$, por lo que el armónico $k$ aporta $\frac{8}{\pi^2k^2}$. La potencia de salida es la suma de las cuatro componentes que sobreviven:
+\[
+  P_{\mathrm{sal}}=\frac{8}{\pi^2}\left(1+\frac{1}{9}+\frac{1}{25}+\frac{1}{49}\right)
+  =\frac{8}{\pi^2}\,(1{,}1715)\approx\boxed{0{,}95\,\mathrm{W}}
+\]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{$k$} & \textbf{Frecuencia} & \textbf{Amplitud $\frac{4}{\pi k}$ [V]} & \textbf{Potencia $\frac{8}{\pi^2k^2}$ [W]} \\
+\hline
+1 & $1\,\mathrm{kHz}$ & $1{,}2732$ & $0{,}8106$ \\
+\hline
+3 & $3\,\mathrm{kHz}$ & $0{,}4244$ & $0{,}0901$ \\
+\hline
+5 & $5\,\mathrm{kHz}$ & $0{,}2546$ & $0{,}0324$ \\
+\hline
+7 & $7\,\mathrm{kHz}$ & $0{,}1819$ & $0{,}0165$ \\
+\hline
+\multicolumn{3}{|r|}{\textbf{Total}} & $\mathbf{0{,}9496}$ \\
+\hline
+\end{tabular}
+\end{center}
+Como comprobación, si no hubiera filtro se sumarían todos los armónicos impares, y como $\sum_{k\ \mathrm{impar}}\frac{1}{k^2}=\frac{\pi^2}{8}$, la potencia total sería $\frac{8}{\pi^2}\cdot\frac{\pi^2}{8}=1\,\mathrm{W}$, que coincide con la potencia de la señal de entrada. Con apenas cuatro armónicos se conserva alrededor del $95\,\%$ de esa potencia, y solo la fundamental ya concentra el $81\,\%$. El $5\,\%$ restante es lo que se pierde con los armónicos de $k\ge9$.
+
+\noindent\textbf{b) Relación señal-ruido a la salida.} Stallings describe el ruido térmico como ruido blanco, con una densidad de potencia $N_0$ constante en todo el espectro. Con $N_0=0{,}1\,\mu\mathrm{W/Hz}$, el ruido que sale del filtro es el que ocupa la banda de $0$ a $8\,\mathrm{kHz}$, así que su potencia es
+\[
+  P_n=N_0\,B=(0{,}1\times10^{-6}\,\mathrm{W/Hz})(8000\,\mathrm{Hz})=8\times10^{-4}\,\mathrm{W}=0{,}8\,\mathrm{mW}
+\]
+Dividiendo,
+\[
+  \mathrm{SNR}=\frac{P_{\mathrm{sal}}}{P_n}=\frac{0{,}9496}{8\times10^{-4}}\approx1187
+\]
+y en decibeles
+\[
+  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(1187)\approx\boxed{30{,}74\,\mathrm{dB}}
+\]
+
+El resultado muestra por qué filtrar conviene. El filtro limita el ruido a la banda que interesa, y como la potencia de los armónicos cae con $1/k^2$, descartar los de orden alto cuesta muy poca señal. La onda cuadrada sale con los flancos redondeados, pero sigue siendo reconocible y con una SNR muy holgada. Es un ejemplo concreto del compromiso entre ancho de banda y fidelidad.
+
+\newpage
+
+
+\end{document}
