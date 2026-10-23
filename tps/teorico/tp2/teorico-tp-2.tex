@@ -140,14 +140,88 @@
         Ahora bien, esa mejora tiene un costo real, y no solo en dinero. Primero, el STP es efectivamente más caro: la Tabla 4.3 del libro, que compara categorías de cableado de cobre, muestra que si el UTP tipo 5 cuesta 1 (en unidades relativas), un STP tipo 7 (clase F) cuesta 2,2, más del doble. Segundo, es más difícil de instalar y manipular, porque la malla le agrega rigidez al cable, hace más delicado el conexionado (hay que aterrizar correctamente el blindaje en ambos extremos, si no se pierde buena parte del beneficio) y complica el tendido en espacios reducidos. Por eso, en la práctica, la preinstalación por defecto de la mayoría de los edificios de oficinas sigue siendo UTP, y el STP queda reservado para entornos con mucho ruido electromagnético o donde se necesitan las prestaciones más altas.
   \item
         \textbf {Describir los principales componentes del cable de fibra óptica.}\\
-        Un cable de fibra óptica posee una estructura cilíndrica concéntrica compuesta por tres elementos principales:
+                                     En primer lugar hay que explicar por qué esa estructura permite que la luz viaje por el interior de la fibra y cómo se inserta en un sistema de transmisión completo.
+
+        Tanenbaum (4.ª edición) explica que un sistema de transmisión óptico tiene tres componentes: la fuente de luz, el medio de transmisión y el detector. Convencionalmente, un pulso de luz indica un bit 1 y la ausencia de luz un bit 0, y el detector genera un pulso eléctrico cuando la luz incide en él. Por su parte, Stallings (7.ª edición) describe la fibra óptica como un medio flexible y delgado (de 2 a 125~$\mu$m) capaz de confinar un haz de naturaleza óptica, y presenta el cable de fibra como una estructura cilíndrica formada por tres secciones concéntricas:
+
         \begin{itemize}
-          \item \textbf{Núcleo (\textit{Core}):} Es la parte central del cable, extremadamente delgada, constituida por una sección cilíndrica de vidrio o plástico con un alto índice de refracción. Por aquí es por donde viajan las ondas de luz conducidas internamente.
+          \item \textbf{Núcleo (\textit{Core}):} es la sección más interna, de vidrio o plástico, con un diámetro de entre 8 y 100~$\mu$m según Stallings. Por aquí se propaga la luz.
 
-          \item \textbf{Revestimiento (\textit{Cladding}):} Es la capa intermedia que rodea al núcleo. Está hecha de un material de vidrio o plástico con propiedades ópticas diferentes. Esta diferencia de índices de refracción atrapa la luz dentro del núcleo mediante el fenómeno de reflexión interna total.
+          \item \textbf{Revestimiento (\textit{Cladding}):} rodea al núcleo y es otro vidrio o plástico con propiedades ópticas distintas. Tanenbaum precisa que tiene un \textbf{índice de refracción menor} que el del núcleo, y Stallings agrega que la separación entre ambos actúa como un reflector que confina el haz de luz.
 
-          \item \textbf{Cubierta / Revestimiento exterior (\textit{Jacket}):} Es la capa más externa, fabricada generalmente de materiales plásticos o sintéticos. Su función no es óptica, sino puramente mecánica y de protección física: resguarda al núcleo y al revestimiento contra la humedad, abrasiones, tensiones mecánicas y agresiones del entorno.
+          \item \textbf{Cubierta (\textit{Jacket}):} es la capa más exterior, hecha de plástico y otros materiales dispuestos en capas. No cumple ninguna función óptica: protege contra la humedad, la abrasión, los aplastamientos y otros peligros.
         \end{itemize}
+
+        \begin{figure}[h]
+          \centering
+          \begin{tikzpicture}[font=\small]
+            % Capas (esquema fuera de escala)
+            \draw[thick, fill=gray!35] (0,0) circle (1.7);
+            \draw[thick, fill=blue!15] (0,0) circle (1.2);
+            \draw[thick, fill=yellow!60] (0,0) circle (0.5);
+
+            % Etiquetas (cada línea nace dentro de su capa)
+            \draw (0,0) -- (3.0,0.0);
+            \node[right] at (3.0,0.0) {Núcleo (\textit{core}), $n_1$ mayor};
+            \draw (0.62,0.62) -- (3.0,1.1);
+            \node[right] at (3.0,1.1) {Revestimiento (\textit{cladding}), $n_2 < n_1$};
+            \draw (1.0,-1.0) -- (3.0,-1.1);
+            \node[right] at (3.0,-1.1) {Cubierta (\textit{jacket})};
+          \end{tikzpicture}
+          \caption{Corte transversal de una fibra óptica (esquema fuera de escala).}
+        \end{figure}
+
+        \textbf{¿Por qué la luz queda atrapada en el núcleo?} Stallings explica que la fibra propaga el haz de luz según el principio de reflexión total, que se da en cualquier medio transparente cuyo índice de refracción es mayor que el del medio que lo rodea: los rayos que inciden con ángulos rasantes se reflejan y siguen dentro del núcleo, mientras que para otros ángulos son absorbidos por el revestimiento. Tanenbaum lo explica a partir de la refracción: cuando un rayo pasa de un medio a otro, por ejemplo de sílice a aire, se dobla en la frontera; para ángulos de incidencia mayores que cierto valor crítico no sale, se refleja internamente y queda atrapado, de modo que puede propagarse por varios kilómetros prácticamente sin pérdida.
+
+        Como complemento, ese ángulo crítico se puede calcular con la ley de Snell, $n_1\sin\theta_1 = n_2\sin\theta_2$, tomando $\theta_2 = 90^\circ$:
+        \[
+          \theta_c = \arcsin\!\left(\frac{n_2}{n_1}\right).
+        \]
+        A modo de ejemplo, con $n_1 = 1{,}48$ y $n_2 = 1{,}46$ (valores típicos de un vidrio de sílice), resulta $\theta_c = \arcsin(1{,}46/1{,}48) \approx 80{,}6^\circ$. Todo rayo que incida sobre la interfaz con un ángulo mayor que ese respecto de la normal, es decir, casi paralelo al eje de la fibra, queda atrapado en el núcleo.
+
+        \begin{figure}[h]
+          \centering
+          \begin{tikzpicture}[>=Stealth, font=\small]
+            % Revestimiento
+            \fill[blue!15] (0,0.5) rectangle (8,1.2);
+            \fill[blue!15] (0,-1.2) rectangle (8,-0.5);
+            % Núcleo
+            \fill[yellow!50] (0,-0.5) rectangle (8,0.5);
+            \draw[thick] (0,0.5) -- (8,0.5);
+            \draw[thick] (0,-0.5) -- (8,-0.5);
+            \draw (0,1.2) -- (8,1.2);
+            \draw (0,-1.2) -- (8,-1.2);
+
+            % Rayo
+            \draw[->, very thick, red!70!black]
+              (0,-0.1) -- (1.4,0.5) -- (3.7,-0.5) -- (6.0,0.5) -- (8,-0.34);
+
+            % Etiquetas
+            \node at (4,0.1) {Núcleo ($n_1$)};
+            \node at (4,0.85) {Revestimiento ($n_2 < n_1$)};
+            \node at (4,-0.85) {Revestimiento ($n_2 < n_1$)};
+            \node[above, red!70!black] at (1.4,1.2) {\scriptsize reflexión interna total};
+            \node[above, red!70!black] at (6.0,1.2) {\scriptsize reflexión interna total};
+          \end{tikzpicture}
+          \caption{Propagación de un rayo por reflexión interna total en el núcleo (esquema con ángulos exagerados).}
+        \end{figure}
+
+        \textbf{Tipos de fibra.} Tanenbaum señala que, como cualquier rayo que incide con un ángulo mayor que el crítico se refleja internamente, muchos rayos rebotan con ángulos diferentes; cada uno tiene un modo distinto y la fibra se denomina multimodo. Si el diámetro se reduce a unas cuantas longitudes de onda, la fibra actúa como una guía de ondas y la luz se propaga solo en línea recta, sin rebotar: es la fibra monomodo, que es más cara pero puede utilizarse en distancias más grandes. Stallings distingue tres modos de transmisión: multimodo de índice discreto, monomodo y multimodo de índice gradual, este último con características intermedias entre los otros dos y de uso frecuente en redes de área local. Aclara además que, en la multimodo, los distintos caminos tienen distinta longitud y por lo tanto distinto tiempo de propagación, lo que dispersa los pulsos de luz y limita la velocidad (por eso es más adecuada para distancias cortas), mientras que la monomodo ofrece prestaciones superiores al existir un único camino posible y se usa en larga distancia, por ejemplo en telefonía y televisión por cable.
+
+        \begin{table}[h]
+          \centering
+          \begin{tabular}{lccp{5.2cm}}
+            \toprule
+            \textbf{Tipo} & \textbf{Núcleo} & \textbf{Revest.} & \textbf{Característica} \\
+            \midrule
+            Multimodo & $50$ o $62{,}5~\mu$m & $125~\mu$m & Muchos rayos a la vez; dispersión de pulsos; distancias cortas \\
+            Monomodo  & $8$--$10~\mu$m       & $125~\mu$m & Un solo camino; sin distorsión multimodal; mayor alcance \\
+            \bottomrule
+          \end{tabular}
+          \caption{Dimensiones típicas de las fibras multimodo y monomodo.}
+        \end{table}
+
+        Esto importa ya que Stallings destaca que la atenuación es significativamente menor en las fibras ópticas que en los cables coaxiales y los pares trenzados, y que los sistemas de fibra no se ven afectados por campos electromagnéticos exteriores, por lo que no son vulnerables a interferencias, ruido impulsivo ni diafonía. Por eso la fibra tiene una gran aceptación en las telecomunicaciones a larga distancia y cada vez se usa más en redes de área local. Finalmente, Tanenbaum aclara que las fibras por lo general se agrupan en haces, protegidas por una funda exterior común.
   \item \textbf{¿Qué ventajas y desventajas tiene la transmisión de microondas?}
 
         \textbf{Ventajas:}
@@ -237,13 +311,66 @@ El sistema tiene tres partes:
         Por el lado de las dificultades, cada una sufre más de un tipo de defecto distinto. Las microondas se ven mucho más afectadas por la atenuación debida a la lluvia, sobre todo por encima de los 10 GHz, mientras que las ondas de radio son comparativamente menos sensibles a ese fenómeno. A cambio, las ondas de radio son más propensas a sufrir interferencias por multitrayectoria: como no van tan enfocadas, al receptor le llegan reflejos de la señal original con distintos retardos (el ejemplo clásico es el ``fantasma'' que aparece en la imagen de un televisor cuando pasa un avión cerca), algo que en un enlace de microondas bien alineado es mucho menos frecuente porque casi toda la energía viaja concentrada en el haz directo.
   \item
         \textbf{¿Qué dos funciones realiza una antena?}
+        
+        Es importante no quedarnos solo con la enumeración de las dos funciones, sino explicar qué las vincula y mostrar dónde se ubica la antena dentro del enlace completo.
 
-        Una antena cumple dos funciones principales según si está transmitiendo o recibiendo la señal:
+        Stallings (7.ª edición) define una antena como un conductor eléctrico (o un conjunto de conductores) utilizado para radiar o captar energía electromagnética. En otras palabras, la antena es la interfaz entre el sistema de transmisión guiado (cables, circuitos del equipo) y el medio no guiado. Según el sentido en que se use, cumple dos funciones:
 
         \begin{itemize}
-          \item \textbf{En emisión:} Recibe la corriente eléctrica del equipo emisor y la transforma en ondas electromagnéticas que se propagan por el aire.
-          \item \textbf{En recepción:} Captura las ondas electromagnéticas que viajan por el aire y las transforma nuevamente en una corriente eléctrica para que el equipo receptor pueda procesarla.
+          \item \textbf{En emisión:} la energía eléctrica proveniente del transmisor se convierte en energía electromagnética en la antena, y se radia al entorno cercano (la atmósfera, el espacio o el agua).
+          \item \textbf{En recepción:} la energía electromagnética capturada por la antena se convierte en energía eléctrica y se pasa al receptor.
         \end{itemize}
+
+        \begin{figure}[h]
+          \centering
+          \begin{tikzpicture}[>=Stealth, font=\small]
+            % Transmisor
+            \draw[thick, fill=gray!20] (0,0) rectangle (2,1.2);
+            \node[align=center] at (1,0.6) {Equipo\\emisor};
+            \draw (2,0.6) -- (3.2,0.6);
+
+            % Antena transmisora
+            \draw[thick] (3.2,0.6) -- (3.2,1.4);
+            \draw[thick] (2.9,1.9) -- (3.2,1.4) -- (3.5,1.9);
+
+            % Antena receptora
+            \draw[thick] (9.2,0.6) -- (9.2,1.4);
+            \draw[thick] (8.9,1.9) -- (9.2,1.4) -- (9.5,1.9);
+            \draw (9.2,0.6) -- (10.4,0.6);
+
+            % Receptor
+            \draw[thick, fill=gray!20] (10.4,0) rectangle (12.4,1.2);
+            \node[align=center] at (11.4,0.6) {Equipo\\receptor};
+
+            % Onda
+            \draw[->, very thick, red!70!black, decorate,
+                  decoration={snake, amplitude=1.2pt, segment length=8pt, post length=4pt}]
+                 (3.7,1.6) -- (8.7,1.6);
+            \node[red!70!black, above] at (6.2,1.7) {onda electromagnética};
+
+            % Funciones
+            \node[align=center] at (3.2,-0.6) {\textbf{Emisión}\\corriente $\rightarrow$ onda};
+            \node[align=center] at (9.2,-0.6) {\textbf{Recepción}\\onda $\rightarrow$ corriente};
+          \end{tikzpicture}
+          \caption{La antena como interfaz entre el circuito del equipo y el espacio libre.}
+        \end{figure}
+
+        \textbf{Cómo se produce cada conversión.} En emisión, una corriente que varía en el tiempo en el conductor genera un campo electromagnético variable que se desprende de la antena y se propaga como onda. En recepción ocurre el proceso inverso: el campo de la onda incidente induce en el conductor una tensión y una corriente variables, de la misma frecuencia que la señal, que el receptor luego amplifica y demodula. Un ejemplo típico es el dipolo de media onda, que resuena cuando su longitud es $\lambda/2$ y se comporta de forma eficiente tanto al radiar como al captar.
+
+        \begin{table}[h]
+          \centering
+          \begin{tabular}{lll}
+            \toprule
+            & \textbf{Entrada} & \textbf{Salida} \\
+            \midrule
+            Emisión    & Corriente eléctrica del emisor & Onda electromagnética en el espacio libre \\
+            Recepción  & Onda electromagnética incidente & Corriente eléctrica hacia el receptor \\
+            \bottomrule
+          \end{tabular}
+          \caption{Resumen de las dos funciones de la antena.}
+        \end{table}
+
+        \textbf{Dos aclaraciones ante esto.} Primero, ambas funciones son recíprocas. Stallings explica que, en las comunicaciones bidireccionales, la misma antena se puede usar, y a menudo se usa, tanto para transmitir como para recibir, porque cualquier antena transfiere energía desde el entorno hacia el receptor con la misma eficacia con la que lo hace en sentido contrario (suponiendo la misma frecuencia en ambas direcciones). En otras palabras, las características de una antena son las mismas para recibir que para transmitir. Segundo, la antena no amplifica la señal. Stallings aclara que la ganancia de una antena no se refiere a un incremento de potencia respecto de la potencia de entrada, sino que es una medida de su direccionalidad: el aumento de potencia radiada en una dirección se consigue a expensas de la potencia radiada en las otras. Tanenbaum, por su parte, explica que al conectar una antena del tamaño apropiado a un circuito eléctrico, las ondas electromagnéticas pueden ser difundidas de manera eficiente y captadas por un receptor a cierta distancia, y agrega que toda la comunicación inalámbrica se basa en este principio.
   \item
         \textbf{¿Qué es una antena isotrópica?}
 
