@@ -234,20 +234,68 @@
         Esto importa ya que Stallings destaca que la atenuación es significativamente menor en las fibras ópticas que en los cables coaxiales y los pares trenzados, y que los sistemas de fibra no se ven afectados por campos electromagnéticos exteriores, por lo que no son vulnerables a interferencias, ruido impulsivo ni diafonía. Por eso la fibra tiene una gran aceptación en las telecomunicaciones a larga distancia y cada vez se usa más en redes de área local. Finalmente, Tanenbaum aclara que las fibras por lo general se agrupan en haces, protegidas por una funda exterior común.
   \item \textbf{¿Qué ventajas y desventajas tiene la transmisión de microondas?}
 
-        \textbf{Ventajas:}
+        La comunicación por microondas utiliza ondas electromagnéticas de alta frecuencia para transmitir información entre dos puntos. Sus principales aplicaciones incluyen los enlaces terrestres, las redes de telefonía móvil y las comunicaciones por satélite. A diferencia de los medios guiados, como los cables de cobre o la fibra óptica, no necesita un medio físico que conecte al emisor con el receptor.
+
+        En los enlaces terrestres se suelen utilizar antenas direccionales para transmitir y recibir señales entre puntos determinados. Esta tecnología permite establecer comunicaciones a distancias considerables y transportar grandes cantidades de información, aunque presenta algunas limitaciones relacionadas con las condiciones del entorno y la propagación de las señales.
+
+        \textbf{Ventajas}
         \begin{itemize}
-          \item Las microondas permiten realizar enlaces de larga distancia sin necesidad de un medio físico.
-          \item En los sistemas de microondas, los amplificadores o repetidores pueden estar más separados entre sí, generalmente entre \(10\) km y \(100\) km.
-          \item Las frecuencias más altas permiten utilizar antenas más pequeñas y más baratas, por lo que son adecuadas para distancias más cortas.
-          \item Las microondas también pueden utilizarse en comunicaciones vía satélite, permitiendo establecer enlaces entre estaciones terrestres alejadas.
+          \item \textbf{Permiten realizar enlaces de larga distancia sin instalar cables:}
+          las microondas permiten comunicar puntos alejados mediante señales que se transmiten por el aire. Esto resulta útil en lugares donde instalar cables sería complicado o costoso, por ejemplo, en zonas rurales o entre edificios separados. También permiten ampliar redes de comunicaciones sin tener que realizar grandes obras de infraestructura.
+
+          \item \textbf{Los repetidores pueden estar separados por distancias relativamente grandes:}
+          en los enlaces terrestres, las estaciones repetidoras permiten recibir y retransmitir la señal para cubrir distancias mayores. Según las condiciones del terreno, la altura de las antenas y la frecuencia utilizada, pueden existir separaciones de varios kilómetros entre estaciones. En el material de la materia se mencionan distancias aproximadas de 10 a 100 km. La distancia concreta depende de las condiciones del enlace y no es igual para todos los sistemas.
+
+          \item \textbf{Permiten utilizar antenas relativamente pequeñas y direccionales:}
+          al trabajar con longitudes de onda cortas, es posible construir antenas de dimensiones reducidas en comparación con las que se necesitarían para frecuencias mucho más bajas. Además, las antenas direccionales concentran la señal hacia el receptor, lo que ayuda a mejorar la recepción y a reducir la captación de señales provenientes de otras direcciones.
+
+          \item \textbf{Pueden ofrecer una gran capacidad de transmisión:}
+          las bandas de microondas permiten utilizar canales de gran ancho de banda y transportar cantidades importantes de información. Por eso, se emplean para transmitir datos entre estaciones de una red de telecomunicaciones y para conectar estaciones base de telefonía móvil con el resto de la red.
+
+          \item \textbf{Se utilizan en las comunicaciones por satélite:}
+          las microondas permiten establecer enlaces entre estaciones terrestres y satélites, que luego retransmiten las señales hacia otras estaciones. Esto permite comunicar regiones muy alejadas y llegar a lugares donde no existe infraestructura terrestre suficiente. Entre sus aplicaciones se encuentran la televisión satelital, el acceso a Internet y otras comunicaciones a larga distancia.
+
+          \item \textbf{Permiten una instalación relativamente rápida:}
+          cuando existe una ubicación adecuada para las antenas, un enlace de microondas puede instalarse en menos tiempo que una conexión que requiera tender cables o construir canalizaciones. Esto resulta especialmente útil para ampliar redes o conectar temporalmente instalaciones.
         \end{itemize}
 
-        \textbf{Desventajas:}
+        \textbf{Desventajas}
         \begin{itemize}
-          \item La atenuación aumenta con la lluvia, siendo especialmente significativa para frecuencias superiores a \(10\) GHz.
-          \item Debido a la creciente popularidad de las microondas, las áreas de cobertura pueden solaparse, haciendo que las interferencias sean un peligro potencial.
-          \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
-          \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
+          \item \textbf{Necesitan una línea de vista adecuada:}
+          en los enlaces terrestres, las antenas transmisora y receptora necesitan un recorrido suficientemente despejado. Los edificios, las montañas y otros obstáculos pueden debilitar o bloquear la señal. Por este motivo, en algunos casos es necesario instalar torres más altas o agregar estaciones intermedias para mantener la comunicación.
+
+          \item \textbf{Inclemencias climáticas y condiciones ambientales:}
+          las condiciones del ambiente pueden afectar el funcionamiento y la calidad de los enlaces de microondas. La lluvia y otros cambios atmosféricos pueden modificar la propagación de la señal y provocar desvanecimientos, es decir, disminuciones temporales de su intensidad. Por este motivo, al diseñar un enlace es importante tener en cuenta el clima de la zona y las condiciones en las que deberá funcionar el sistema.
+
+          Entre los principales factores se encuentran:
+          \begin{itemize}
+            \item \textbf{Lluvia y presencia de agua:}
+            el agua puede atenuar las señales de microondas, reduciendo su intensidad durante la transmisión. Además, la humedad que ingresa en los componentes del sistema puede afectar su funcionamiento. Para reducir estos problemas, las antenas suelen contar con cubiertas protectoras llamadas radomos, que ayudan a repeler el agua. También se sellan los sistemas de alimentación de las antenas para evitar la entrada de humedad.
+
+            \item \textbf{Viento:}
+            las ráfagas de viento pueden mover o desalinear las antenas, afectando la recepción de la señal. Por este motivo, al instalar un enlace se deben tener en cuenta la velocidad del viento que puede soportar la antena y la resistencia de la estructura donde está montada. Se considera la velocidad operativa del viento, que es aquella a partir de la cual el movimiento de la antena puede afectar la calidad de la señal. Por otro lado, la velocidad de supervivencia indica el viento máximo que puede soportar la antena sin sufrir daños físicos ni quedar desalineada de forma permanente.
+
+            \item \textbf{Acumulación de nieve y hielo:}
+            la nieve y el hielo pueden acumularse sobre las antenas y otros componentes, especialmente cuando la temperatura se encuentra cerca del punto de congelación. Esta acumulación puede perjudicar el funcionamiento del enlace. Además, el hielo acumulado en otras partes de la torre puede desprenderse y caer sobre la antena, por lo que en algunas instalaciones se utilizan protecciones específicas.
+
+            \item \textbf{Corrosión:}
+            la exposición al aire marino, a la contaminación industrial o al contacto entre metales diferentes puede producir corrosión en las antenas y sus soportes. Con el tiempo, esto puede deteriorar los materiales y afectar la vida útil de los equipos. Por eso, es importante utilizar materiales y recubrimientos adecuados para las condiciones del lugar de instalación.
+
+            \item \textbf{Radiación ultravioleta:}
+            la exposición prolongada a la radiación ultravioleta del sol puede deteriorar los materiales no metálicos utilizados en las antenas. Por este motivo, estos materiales deben estar preparados para resistir la exposición solar durante períodos prolongados.
+          \end{itemize}
+
+          \item \textbf{Pueden producirse interferencias:}
+          cuando varios enlaces utilizan frecuencias iguales o cercanas y sus señales llegan a una misma zona, pueden interferirse entre sí. Esto puede afectar la calidad de la comunicación. Para reducir este problema, es necesario planificar las frecuencias, orientar correctamente las antenas y coordinar el uso del espectro radioeléctrico.
+
+          \item \textbf{Existe congestión en algunas bandas de frecuencia:}
+          las bandas utilizadas para enlaces de larga distancia, como las de 4 a 6 GHz mencionadas en el material de la materia, pueden tener una gran cantidad de sistemas operando. Esto limita la disponibilidad de frecuencias para instalar nuevos enlaces y hace necesario administrar el espectro para evitar interferencias.
+
+          \item \textbf{Las frecuencias más altas pueden limitar la distancia del enlace:}
+          aunque permiten utilizar antenas pequeñas y disponer de mayor capacidad en determinadas bandas, las frecuencias altas suelen sufrir mayores pérdidas de propagación y son más sensibles a la lluvia. Por eso, los enlaces que trabajan en frecuencias elevadas generalmente requieren distancias más cortas o medidas adicionales para mantener una comunicación confiable.
+
+          \item \textbf{Requieren equipos y una planificación adecuados:}
+          para establecer un enlace se necesitan antenas, transmisores, receptores y sistemas de montaje correctamente instalados y alineados. También hay que calcular la distancia, la frecuencia y las pérdidas previstas. En las bandas que requieren autorización, es necesario contar con los permisos correspondientes para utilizar el espectro.
         \end{itemize}
 \item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
 Es la distribución de televisión en la que la señal de vídeo se transmite desde el satélite directamente al domicilio del usuario, sin pasar por la cabecera de un operador de cable. El usuario la recibe con una antena parabólica propia.
