@@ -130,9 +130,9 @@
 \end{titlepage}
 
 % -----------------------------------------------------------------------------
-% SECCIÓN B: CUESTIONES DE REPASO
+% CUESTIONES DE REPASO
 % -----------------------------------------------------------------------------
-\section*{b) - Cuestiones de Repaso}
+\section*{Cuestiones de Repaso}
 
 \noindent\textbf{3.1. ¿En qué se diferencia un medio guiado de un medio no guiado?}\par
 En un medio guiado las ondas electromagnéticas que se usan para transmitir los datos se propagan confinadas en un camino físico o material, por ejemplo, cables metálicos o fibras ópticas. Es direccional: la información llegará allá donde llegue el material físico, por lo que este debe conectarse entre emisor y receptor para que la comunicación pueda realizarse.
@@ -254,7 +254,31 @@ Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la 
 
 \vspace{0.3cm}
 \noindent\textbf{3.5. ¿Cuál es la relación entre la longitud de onda y la frecuencia en una onda seno?}\par
-La relación está dada por la expresión $\lambda \cdot f = v$, o de forma equivalente $\lambda = \frac{v}{f}$, donde $\lambda$ es la longitud de onda, $f$ es la frecuencia y $v$ es la velocidad de propagación de la onda en el medio. Existe una relación inversamente proporcional: a mayor frecuencia, menor es la longitud de onda.
+En una onda seno, se puede observar como la señal cambia en un punto a medida que transcurre el tiempo. El periodo $T$ describe como se repite la onda en el tiempo (explicado en 3.3). La longitud de onda $\lambda$ describe la distancia entre dos crestas consecutivas.
+
+Si durante un periodo $T$, la onda avanza una distancia igual a la longitud de onda, como la distancia recorrida es velocidad por tiempo, podemos expresar lo siguiente:
+
+$$\lambda=vT$$
+
+Como $T=1/f$, obtenemos:
+
+$$\lambda=v/f$$
+
+$$\lambda f=v$$
+
+Siendo $v$ la velocidad de propagación. Por lo tanto, si $v$ es constante, la longitud de onda y la frecuencia son inversamente proporcionales. Al duplicar la frecuencia, el periodo se reduce a la mitad y por lo tanto la onda dispone de la mitad de tiempo para avanzar durante cada ciclo ocupando la mitad de distancia. Es decir, esto no significa que la onda de mayor frecuencia viaje mas rápido. 
+
+Por ejemplo, dos ondas senoidales de $100Mhz$ y $200Mhz$, que se propagan a la misma velocidad en el vacío $c\approx3\times10^8\,\mathrm{m/s}$, tienen la siguientes longitudes de onda:
+
+$$
+\lambda_1=\frac{3\times10^8\,\mathrm{m/s}}{100\times10^6\,\mathrm{Hz}}=3m
+$$
+
+$$
+\lambda_2=\frac{3\times10^8\,\mathrm{m/s}}{200\times10^6\,\mathrm{Hz}}=1,5m
+$$
+
+Ambas se propagan a la misma velocidad pero al duplicar la frecuencia, se reduce a la mitad la separación entre las crestas.
 
 \vspace{0.3cm}
 \noindent\textbf{3.6. ¿Cuál es la relación entre el espectro de una señal y su ancho de banda?}
@@ -336,9 +360,9 @@ Los factores fundamentales que limitan la capacidad de un canal son:
 
 \newpage
 % -----------------------------------------------------------------------------
-% SECCIÓN C: EJERCICIOS
+% EJERCICIOS
 % -----------------------------------------------------------------------------
-\section*{c) - Ejercicios}
+\section*{Ejercicios}
 
 \noindent\textbf{Ejercicio 3.1}\par
 \noindent a) En una configuración multipunto múltiples dispositivos comparten el mismo medio de transmisión. Si más de uno transmite al mismo tiempo, las señales se solapan y los mensajes resultan indistinguibles (colisión).\par
