@@ -354,7 +354,13 @@ El sistema tiene tres partes:
 \end{figure}
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
-        Debe usar frecuencias distintas porque, en una transmisión continua y sin interferencias, el satélite no puede transmitir y recibir en el mismo rango de frecuencias. Se produciría una interferencia entre la señal entrante y la saliente.
+        El enlace ascendente lleva la señal desde una estación terrestre hasta el satelite y el descendente del satellite hacia la tierra. Un transponedor recibe una banda de la señal ascendente, la amplifica y la retransmite en otra banda de frecuencia (Stallings sección 4.2, Tanenbaum sección 2.4). Utiliza bandas de frecuencias distintas para evitar que su propia transmisión interfiera con la señal que esta recibiendo.
+        
+        La señal  ascendente llega debilitada por la gran distancia recorrida mientras que el transmisor del satelite genera una señal de mayor potencia para enviarla hacia la tierra. Si ambas ocuparan la misma banda, una parte de la transmission que se acople al receptor podría enmascarar la señal que se desea recibir. Generando una interferencia producida por su propio equipo aunque no hubiera otros transmisores utilizando el canal.
+        
+        Por ejemplo, La banda C fue la primera que se destinó al tráfico comercial por satélite. Tiene dos rangos de frecuencia, el inferior para el tráfico descendente o de bajada (proveniente del satélite) y el superior para el tráfico ascendente o de subida (hacia el satélite). 6 GHz para la subida y 4 GHz para la bajada. El satélite recibe la información alrededor de 6 GHz y la retransmite alrededor de 4 GHz. No se trata de dos mensajes diferentes, sino de la misma información transportada en bandas distintas.
+        
+        Esta separación, junto con el aislamiento entre los circuitos y las antenas, permite que el satélite reciba y retransmita simultáneamente facilitando la separación de la señal y conservando la información transportada.
   \item
         \textbf{Indique las diferencias más significativas entre la difusión de radio y las microondas.}
 
