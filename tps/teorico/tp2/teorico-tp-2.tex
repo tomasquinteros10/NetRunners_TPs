@@ -537,12 +537,18 @@ La misma antena a 4~GHz da $\approx 35{,}9$~dBi: al dividir la frecuencia por 3,
         En conclusión, la pérdida en el espacio libre es el principal mecanismo de atenuación asociado a la distancia en un enlace satelital, mientras que los fenómenos atmosféricos y las condiciones de instalación introducen pérdidas adicionales que deben considerarse en el balance del enlace.
   \item
         \textbf{¿Qué es la refracción?} \\
-        Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado.
+        Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado. La refracción es el cambio en la propagación de una onda al pasar entre regiones donde su velocidad es diferente.
 
-        Las ondas de radio se pueden refractar (o desviar) cuando se propagan a través de la atmósfera. La refracción es causada por los cambios en la velocidad de la señal al cambiar su altura o por otro tipo de cambios espaciales debido a las condiciones atmosféricas. Normalmente, la velocidad de la señal aumenta con la altura, haciendo que las ondas de radio se desvíen hacia la superficie terrestre. las condiciones metereológicas pueden implicar variaciones
-        en la velocidad con la altura que sean significativamente distintas de las variaciones típicas esperadas. Esto puede dar lugar a que sólo una fracción, o incluso nada, de la onda transmitida siguiendo la trayectoria visual llegue a la antena receptora.
+        Para describir este comportamiento se utiliza el indice de refracción $n$:
+
+        $$n = \frac{c}{v}$$
+        donde $c$ es la velocidad de la luz en el vació y $v$ su velocidad en el medio. Un indice mayor indica una velocidad de propagación menor. Para explicar hacia donde se desvía la onda, se comparan los indices de refracción de los medios. La relación entre las direcciones de incidencia y transmisión se expresa mediante la ley de Snell:
+        $$n_1\sin\theta_1=n_2\sin\theta_2$$
+        Donde los ángulos $\theta_1$ y $\theta_2$ se miden respecto de la normal. Si la onda pasa a un medio de mayor indice, se desvía hacia la normal. Si pasa a uno de menor indice, se desvía alejándose de la normal.
+
+        Las ondas de radio se pueden refractar (o desviar) cuando se propagan a través de la atmósfera. La refracción es causada por los cambios en la velocidad de la señal al cambiar su altura o por otro tipo de cambios espaciales debido a las condiciones atmosféricas. Normalmente, la velocidad de la señal aumenta con la altura, haciendo que las ondas de radio se desvíen hacia la superficie terrestre. Es decir, el indice de refracción disminuye con la altura y las ondas de radio curvan su trayectoria suavemente hacia la tierra. (Stallings, sección 4.3)
   \item
-        \textbf{¿Qué diferencia hay entre difracción y dispersión?} \\
+        \textbf{¿Qué diferencia hay entre difracción y dispersión?}
 
         Nos pareció que valía la pena no quedarnos solo con la definición de cada fenómeno, sino mostrar dónde aparece cada uno en el propio capítulo, porque eso ayuda a fijar la diferencia.
 
