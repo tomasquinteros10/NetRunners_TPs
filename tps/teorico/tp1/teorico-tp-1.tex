@@ -131,9 +131,9 @@
 \end{titlepage}
 
 % -----------------------------------------------------------------------------
-% SECCIÓN B: CUESTIONES DE REPASO
+% CUESTIONES DE REPASO
 % -----------------------------------------------------------------------------
-\section*{b) - Cuestiones de Repaso}
+\section*{Cuestiones de Repaso}
 
 \noindent\textbf{3.1. ¿En qué se diferencia un medio guiado de un medio no guiado?}\par
 En un medio guiado las ondas electromagnéticas que se usan para transmitir los datos se propagan confinadas en un camino físico o material, por ejemplo, cables metálicos o fibras ópticas. Es direccional: la información llegará allá donde llegue el material físico, por lo que este debe conectarse entre emisor y receptor para que la comunicación pueda realizarse.
@@ -261,7 +261,31 @@ Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la 
 
 \vspace{0.3cm}
 \noindent\textbf{3.5. ¿Cuál es la relación entre la longitud de onda y la frecuencia en una onda seno?}\par
-La relación está dada por la expresión $\lambda \cdot f = v$, o de forma equivalente $\lambda = \frac{v}{f}$, donde $\lambda$ es la longitud de onda, $f$ es la frecuencia y $v$ es la velocidad de propagación de la onda en el medio. Existe una relación inversamente proporcional: a mayor frecuencia, menor es la longitud de onda.
+En una onda seno, se puede observar como la señal cambia en un punto a medida que transcurre el tiempo. El periodo $T$ describe como se repite la onda en el tiempo (explicado en 3.3). La longitud de onda $\lambda$ describe la distancia entre dos crestas consecutivas.
+
+Si durante un periodo $T$, la onda avanza una distancia igual a la longitud de onda, como la distancia recorrida es velocidad por tiempo, podemos expresar lo siguiente:
+
+$$\lambda=vT$$
+
+Como $T=1/f$, obtenemos:
+
+$$\lambda=v/f$$
+
+$$\lambda f=v$$
+
+Siendo $v$ la velocidad de propagación. Por lo tanto, si $v$ es constante, la longitud de onda y la frecuencia son inversamente proporcionales. Al duplicar la frecuencia, el periodo se reduce a la mitad y por lo tanto la onda dispone de la mitad de tiempo para avanzar durante cada ciclo ocupando la mitad de distancia. Es decir, esto no significa que la onda de mayor frecuencia viaje mas rápido. 
+
+Por ejemplo, dos ondas senoidales de $100Mhz$ y $200Mhz$, que se propagan a la misma velocidad en el vacío $c\approx3\times10^8\,\mathrm{m/s}$, tienen la siguientes longitudes de onda:
+
+$$
+\lambda_1=\frac{3\times10^8\,\mathrm{m/s}}{100\times10^6\,\mathrm{Hz}}=3m
+$$
+
+$$
+\lambda_2=\frac{3\times10^8\,\mathrm{m/s}}{200\times10^6\,\mathrm{Hz}}=1,5m
+$$
+
+Ambas se propagan a la misma velocidad pero al duplicar la frecuencia, se reduce a la mitad la separación entre las crestas.
 
 \vspace{0.3cm}
 \noindent\textbf{3.6. ¿Cuál es la relación entre el espectro de una señal y su ancho de banda?}
@@ -343,9 +367,9 @@ Los factores fundamentales que limitan la capacidad de un canal son:
 
 \newpage
 % -----------------------------------------------------------------------------
-% SECCIÓN C: EJERCICIOS
+% EJERCICIOS
 % -----------------------------------------------------------------------------
-\section*{c) - Ejercicios}
+\section*{Ejercicios}
 
 \noindent\textbf{Ejercicio 3.1}\par
 \noindent\textbf{a) En una configuración multipunto, sólo un dispositivo puede transmitir cada vez, ¿por qué?}\par
@@ -852,21 +876,81 @@ El aumento vertical es menor que el horizontal. Esto se debe a que los $11~\mu$s
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.13}\par
-Un sistema de transmisión telefónica de voz opera típicamente en el rango de $300\,\mathrm{Hz}$ a $3400\,\mathrm{Hz}$ (ancho de banda de $3100\,\mathrm{Hz}$). Si se requiere transmitir voz con mayor fidelidad, se incrementa el ancho de banda asignado por canal, lo que disminuye el número de canales multiplexados posibles en el mismo medio físico.
+\noindent\textbf{a) Velocidad de transmission R de la fuente}\par
+Siendo $R$ la velocidad de transmisión de la fuente en bps, cada imagen contiene $480*500=240\,000$ puntos. Los 32 valores posibles de intensidad requieren 5 bits porque $2^5=32$. Por lo tanto, cada imagen requiere:
+
+$$240\,000\frac{puntos}{imagen}*5\frac{bits}{punto}=1\,200\,000\frac{bits}{imagen}$$
+
+Luego, segundo suponiendo que se envían 30 imágenes por segundo, resulta la velocidad de transmisión $R$ la siguiente en bps
+
+$$1\,200\,000\frac{bits}{imagen}*30=36\,000\,000bps=36Mbps$$
+
+
+\noindent\textbf{b) Capacidad del canal}
+Como el canal presenta ruido, usando la formula de Shannon (cuestionario 3.8):
+
+\[
+  C = B\log_2\!\left(1+\mathrm{SNR}\right) 
+\]
+
+donde $B$ es el ancho de banda en hercios y $SNR$ el cociente entre la potencia de la señal y la potencia del ruido. La capacidad $C$ se expresa en bps. Los $35dB$ es la expresión logarítmica de $SNR$ entonces e convierte a escala lineal:
+
+$$SNR_{dB}=10\log_{10}(SNR) \quad\Longrightarrow\quad SNR=10^{35/10}\approx3162,28$$
+
+
+Con $B=4,5\,MHz=4,5\times10^6Hz$:
+
+$$C=4{,}5\times10^6\log_2(1+3162{,}28) \approx\boxed{52\,322\,420\ bps=52{,}32\ Mbps}$$
+
+Como $R=36Mbps<C$, la velocidad de transmisión de la fuente esta por debajo del limite teórico del canal. Esto significa que el limite de Shannon no impide transmitir esa información pero no garantiza que cualquier implementación lo consiga. Hay que considerar los datos adicionales que requiere un sistema real y señalización y codificación adecuadas.
+
+\noindent\textbf{c) Transmisión en color sin aumentar R}
+
+En una representación RGB, cada punto se puede describir mediante 3 componentes (Red, Green, Blue). Si asignamos 32 valores a cada componente, cada uno require 5 bits. Entonces como cada punto requirer 3 componentes, entonces tenemos 15 bits necesarios por punto:
+
+$$b_{color}=3\times 5 = 15\ \text{bits/punto}$$
+
+sin embargo esto triplica la velocidad de transmisión necesaria:
+
+$$R_{color}=480\times500\times15\times30=108Mbps$$
+
+Para conservar los $36Mbps$ tenemos que modificar algunos de los siguientes parametros:
+\begin{itemize}
+  \item Reducir la cantidad de imágenes por segundo
+  \item Reducir los puntos por imagen
+\end{itemize}
+
+Si reducimos las imagenes por segundo de 30 a 10, tendríamos una tasa de 35Mbps. Si reducimos ls puntos por imágenes, por ejemplo en vez de $480\times500$ a $160\times500$ entonces también tendríamos 36Mbps. La primera conserva el detalle de cada imagen pero menos cuadros por segundo. La segunda conserva los cuadros por segundo pero reduce el detalle (la dimension). Se podrían también reducir con combinaciones de ambos parametros. En caso de aceptar una representacion limitada de RGB utilizando solo 32 posibles valores, podríamos mantener los parametros originales
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.14}\par
-Si se duplica el ancho de banda de un canal, la capacidad máxima teórica según la ley de Shannon ($C = B \log_2(1 + \mathrm{SNR})$) se duplica linealmente, manteniendo constante la SNR. Según el límite de Nyquist ($C = 2B \log_2 M$), también permite duplicar la tasa de baudios máxima.
+El ruido térmico se origina en la agitación térmica de los electrones. La potencia por hercio es $N_0=kT$ si la densidad de potencia se considera constante dentro de la banda analizada. Al considerar un ancho de banda $B$ en hercios, la potencia total es
+
+$$N=kTB$$
+
+donde $k=1,38\times10^{-23}\text{J/K}$ es la constante de Boltzmann (Stallings, sección 3.3).
+
+Entonces, dado $T=10^4K$ y $B=10Mhz$ aplicando estos valores en la formula anterior obtenemos la potencia de ruido en watts $\boxed{N=1,387\times10^{-12}W}$ también conocido como el nivel del ruido. A temperatura efectiva constante, duplicar el ancho de banda duplicaría la potencia de ruido recogida. 
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.15}\par
-Relación de la tasa de transmisión y el ancho de banda en presencia de ruido gaussiano blanco aditivo (AWGN):
-Con una $\mathrm{SNR} = 30\,\text{dB} \implies \mathrm{SNR} = 10^{30/10} = 1000$.
-Aplicando Shannon:
+Como se especifica una relacion señal-ruido, calculamos la capacidad mediante Shannon (Stallings seccion 3.4, ejercicio 3.13b y cuestionario 3.8) 
+
 \[
-  C = B \log_2(1 + 1000) = B \cdot 9{,}966 \text{ bps/Hz}
+  C = B\log_2\!\left(1+\mathrm{SNR}\right) 
 \]
-Por lo tanto, la capacidad máxima teórica del canal es aproximadamente $9{,}97$ bps por hertz de ancho de banda.
+
+donde $B$ es el ancho de banda en hercios y $SNR$ el cociente entre la potencia de la señal y la potencia del ruido expresado en escala lineal.
+
+Para el canal de un teletipo de 300 Hz de ancho de banda con una relación señal-ruido de 3 dB, primero convertimos el $SNR_{db}$:
+
+$$SNR=10^{3/10}\approx1,995$$
+
+Sustituyendo:
+
+$$C=300\log_2(1+1,995)\approx\boxed{474,8\ \mathrm{bps}\approx475\ \mathrm{bps}}.$$
+
+Siendo $475bps$ la capacidad máxima teórica del canal, es decir, la cota superior de la velocidad de transmisión que podés lograr sin errores
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.16}\par

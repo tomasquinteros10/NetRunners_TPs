@@ -354,7 +354,13 @@ El sistema tiene tres partes:
 \end{figure}
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
-        Debe usar frecuencias distintas porque, en una transmisión continua y sin interferencias, el satélite no puede transmitir y recibir en el mismo rango de frecuencias. Se produciría una interferencia entre la señal entrante y la saliente.
+        El enlace ascendente lleva la señal desde una estación terrestre hasta el satelite y el descendente del satellite hacia la tierra. Un transponedor recibe una banda de la señal ascendente, la amplifica y la retransmite en otra banda de frecuencia (Stallings sección 4.2, Tanenbaum sección 2.4). Utiliza bandas de frecuencias distintas para evitar que su propia transmisión interfiera con la señal que esta recibiendo.
+        
+        La señal  ascendente llega debilitada por la gran distancia recorrida mientras que el transmisor del satelite genera una señal de mayor potencia para enviarla hacia la tierra. Si ambas ocuparan la misma banda, una parte de la transmission que se acople al receptor podría enmascarar la señal que se desea recibir. Generando una interferencia producida por su propio equipo aunque no hubiera otros transmisores utilizando el canal.
+        
+        Por ejemplo, La banda C fue la primera que se destinó al tráfico comercial por satélite. Tiene dos rangos de frecuencia, el inferior para el tráfico descendente o de bajada (proveniente del satélite) y el superior para el tráfico ascendente o de subida (hacia el satélite). 6 GHz para la subida y 4 GHz para la bajada. El satélite recibe la información alrededor de 6 GHz y la retransmite alrededor de 4 GHz. No se trata de dos mensajes diferentes, sino de la misma información transportada en bandas distintas.
+        
+        Esta separación, junto con el aislamiento entre los circuitos y las antenas, permite que el satélite reciba y retransmita simultáneamente facilitando la separación de la señal y conservando la información transportada.
   \item
         \textbf{Indique las diferencias más significativas entre la difusión de radio y las microondas.}
 
@@ -531,12 +537,18 @@ La misma antena a 4~GHz da $\approx 35{,}9$~dBi: al dividir la frecuencia por 3,
         En conclusión, la pérdida en el espacio libre es el principal mecanismo de atenuación asociado a la distancia en un enlace satelital, mientras que los fenómenos atmosféricos y las condiciones de instalación introducen pérdidas adicionales que deben considerarse en el balance del enlace.
   \item
         \textbf{¿Qué es la refracción?} \\
-        Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado.
+        Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado. La refracción es el cambio en la propagación de una onda al pasar entre regiones donde su velocidad es diferente.
 
-        Las ondas de radio se pueden refractar (o desviar) cuando se propagan a través de la atmósfera. La refracción es causada por los cambios en la velocidad de la señal al cambiar su altura o por otro tipo de cambios espaciales debido a las condiciones atmosféricas. Normalmente, la velocidad de la señal aumenta con la altura, haciendo que las ondas de radio se desvíen hacia la superficie terrestre. las condiciones metereológicas pueden implicar variaciones
-        en la velocidad con la altura que sean significativamente distintas de las variaciones típicas esperadas. Esto puede dar lugar a que sólo una fracción, o incluso nada, de la onda transmitida siguiendo la trayectoria visual llegue a la antena receptora.
+        Para describir este comportamiento se utiliza el indice de refracción $n$:
+
+        $$n = \frac{c}{v}$$
+        donde $c$ es la velocidad de la luz en el vació y $v$ su velocidad en el medio. Un indice mayor indica una velocidad de propagación menor. Para explicar hacia donde se desvía la onda, se comparan los indices de refracción de los medios. La relación entre las direcciones de incidencia y transmisión se expresa mediante la ley de Snell:
+        $$n_1\sin\theta_1=n_2\sin\theta_2$$
+        Donde los ángulos $\theta_1$ y $\theta_2$ se miden respecto de la normal. Si la onda pasa a un medio de mayor indice, se desvía hacia la normal. Si pasa a uno de menor indice, se desvía alejándose de la normal.
+
+        Las ondas de radio se pueden refractar (o desviar) cuando se propagan a través de la atmósfera. La refracción es causada por los cambios en la velocidad de la señal al cambiar su altura o por otro tipo de cambios espaciales debido a las condiciones atmosféricas. Normalmente, la velocidad de la señal aumenta con la altura, haciendo que las ondas de radio se desvíen hacia la superficie terrestre. Es decir, el indice de refracción disminuye con la altura y las ondas de radio curvan su trayectoria suavemente hacia la tierra. (Stallings, sección 4.3)
   \item
-        \textbf{¿Qué diferencia hay entre difracción y dispersión?} \\
+        \textbf{¿Qué diferencia hay entre difracción y dispersión?}
 
         Nos pareció que valía la pena no quedarnos solo con la definición de cada fenómeno, sino mostrar dónde aparece cada uno en el propio capítulo, porque eso ayuda a fijar la diferencia.
 
