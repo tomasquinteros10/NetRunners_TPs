@@ -1079,6 +1079,44 @@ En conclusión, Nyquist establece una limitación asociada al ancho de banda y a
 
 
 \vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.19}\par
+Los datos son $C = 20\,\mathrm{Mbps}$ y $B = 3\,\mathrm{MHz}$, y lo que se busca es la relación señal-ruido necesaria para alcanzar esa capacidad, es decir, la SNR mínima. Como lo que limita al canal es el ruido, el modelo que corresponde es el de Shannon, que según Stallings y Tanenbaum da la capacidad máxima de un canal con ruido (con ruido blanco como hipótesis). Nyquist, en cambio, supone un canal sin ruido, así que lo usamos más abajo solo como comparación:
+\[
+  C = B\log_2(1+\mathrm{SNR})
+\]
+Despejamos la SNR pasando el logaritmo del otro lado:
+\[
+  \frac{C}{B}=\log_2(1+\mathrm{SNR})
+  \;\Longrightarrow\;
+  \mathrm{SNR}=2^{C/B}-1
+\]
+La eficiencia espectral que se necesita es
+\[
+  \frac{C}{B}=\frac{20\times10^{6}}{3\times10^{6}}=6{,}667~\mathrm{bps/Hz}
+\]
+y entonces
+\[
+  2^{6{,}667}=2^{6}\cdot2^{2/3}\approx64\cdot1{,}5874\approx101{,}59
+  \;\Longrightarrow\;
+  \mathrm{SNR}\approx101{,}59-1=100{,}59
+\]
+Como las SNR suelen expresarse en decibeles, lo convertimos:
+\[
+  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(100{,}59)\approx\boxed{20{,}03\,\mathrm{dB}}
+\]
+Para verificar, reemplazamos en la fórmula original: $3\times10^{6}\cdot\log_2(101{,}59)=3\times10^{6}\cdot6{,}667=20\,\mathrm{Mbps}$, que coincide con el dato.
+
+Nos pareció interesante comparar este resultado con Nyquist. En un canal sin ruido, $C=2B\log_2M$ pediría $\log_2M=20/6=3{,}33$, es decir, unos $10{,}1$ niveles. Como $M$ debe ser potencia de 2, en la práctica se usarían $16$ niveles, con $4$ bits por símbolo. Las dos fórmulas se complementan: Nyquist indica cuántos niveles se pueden definir y Shannon cuántos se pueden distinguir con el ruido presente. Que la SNR requerida sea de unos $20\,\mathrm{dB}$ es coherente con esto: cuantos más niveles se quieren distinguir, menor tiene que ser el ruido relativo a la señal.
+
+Stallings introduce también la relación $E_b/N_0$ (energía por bit sobre densidad espectral de ruido) como una medida de SNR normalizada por bit, útil para comparar esquemas de modulación y codificación. Como $S=E_bC$ y $N=N_0B$, la SNR vale $\mathrm{SNR}=\frac{E_b}{N_0}\frac{C}{B}$, y de la fórmula de Shannon se despeja
+\[
+  \frac{E_b}{N_0}=\frac{B}{C}\left(2^{C/B}-1\right)=\frac{100{,}59}{6{,}667}\approx15{,}09
+  \;\Rightarrow\;10\log_{10}(15{,}09)\approx11{,}8\,\mathrm{dB}
+\]
+
+Hay que tener presente que $20{,}03\,\mathrm{dB}$ es un mínimo teórico. Con menos SNR no existe codificación que permita llegar a $20\,\mathrm{Mbps}$ en este canal, y alcanzar justo ese límite exigiría códigos ideales. Como advierte Stallings, en la práctica se alcanzan velocidades menores que la capacidad de Shannon, así que un sistema real necesita un margen adicional de SNR.
+
+\vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.20}\par
 La onda cuadrada tiene período $T=1\,\mathrm{ms}$, así que su frecuencia fundamental es $f_0=1/T=1\,\mathrm{kHz}$. En la Figura 3.7, Stallings construye la onda cuadrada sumando armónicos impares de la fundamental:
 \[
