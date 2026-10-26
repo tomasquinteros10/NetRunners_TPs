@@ -26,6 +26,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\usepackage{float}
 
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
@@ -124,7 +125,29 @@
 
   \item
         \textbf{¿Por qué hay dos cables en un par trenzado de cobre?} \\
-        Un enlace de conexión que se realiza con un par trenzado usa dos conductores ya que al momento de conectar los dispositivos a sus puntas estos formarán un bucle cerrado en el que la señal viajará como variaciones de corriente en ese bucle. Los dispositivos sensarán esas variaciones de corriente, que representarán la codificación de la señal que se envía.
+        Para establecer una comunicación eléctrica se necesita un camino de ida y otro de retorno para la señal. Esto puede realizarse mediante una conexión no equilibrada o una conexión equilibrada. En una conexión no equilibrada, la señal viaja por un conductor y se mide respecto de una referencia de masa, que puede ser otro cable, un plano conductor u otro camino de retorno. En una conexión equilibrada, en cambio, ambos conductores transportan la señal de manera complementaria a lo largo del trayecto.
+
+        En la conexión no equilibrada, el receptor compara la señal con la masa. Por eso, cualquier ruido o diferencia de potencial que afecte de forma distinta al conductor de señal y al camino de retorno puede alterar la información recibida.
+
+        Para reducir este problema se utiliza un circuito equilibrado, formado por dos conductores con características eléctricas similares, especialmente en cuanto a su impedancia respecto del entorno. En lugar de enviar la señal por un hilo y utilizar el otro solamente como masa, se transmite una señal diferencial: en un conductor circula una variación de tensión y en el otro una variación de igual amplitud, pero de polaridad opuesta.
+
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.78\textwidth]{21401_07.jpg}
+        \end{figure}
+
+        Como ambos conductores recorren prácticamente el mismo espacio físico, las interferencias externas tienden a afectar a los dos de forma muy parecida. El receptor no interpreta cada señal por separado, sino que mide la diferencia de potencial entre ambas. Por eso, si un ruido externo introduce un pico de tensión similar en los dos hilos, ese ruido queda en gran medida eliminado al calcular la diferencia, mientras que se conserva la señal útil.
+
+        El trenzado mejora todavía más este comportamiento. A lo largo del cable, ambos conductores intercambian continuamente sus posiciones. De esta forma, los dos quedan expuestos de manera más uniforme a los campos electromagnéticos del entorno. Si los cables estuvieran rectos y paralelos, uno podría quedar más cerca de una fuente de ruido que el otro y recibir una interferencia mayor, lo que dificultaría su cancelación en el receptor.
+
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{Diagrama de corrientes entrelazadas.png}
+        \end{figure}
+
+        Además, las corrientes que circulan por ambos conductores tienen sentidos opuestos en cada instante. Por ello, los campos electromagnéticos que generan también tienden a ser opuestos y a cancelarse. El trenzado contribuye a que esta cancelación se mantenga a lo largo del cable. Así, el par trenzado no solo reduce el ruido que recibe del exterior, sino que también disminuye la interferencia electromagnética que puede emitir hacia otros cables cercanos.
+
+        En conclusión, se utilizan dos cables porque permiten formar un circuito equilibrado entre emisor y receptor y transmitir una señal diferencial. Esto hace posible que el receptor elimine gran parte del ruido externo común a ambos hilos. El trenzado ayuda a que ambos conductores reciban interferencias lo más similares posible y, al mismo tiempo, reduce la radiación generada por el propio cable.
   \item
         \textbf{¿Cuáles son las limitaciones del par trenzado?} \\
         El par trenzado es un medio de transmisión ampliamente utilizado en redes LAN debido a su bajo costo y facilidad de instalación. Sin embargo, sus características físicas y eléctricas limitan la distancia, el ancho de banda y la velocidad de transmisión.
@@ -452,7 +475,20 @@ El sistema tiene tres partes:
         \end{figure}
   \item
         \textbf{¿Cuál es la ventaja de una antena parabólica por reflexión?} \\
-        La ventaja es el direccionamiento de la señal en la emisión y en la recepción. Debido a la forma de la antena una señal emitida desde el foco de la parábola y reflejarse en la antena tendrá una dirección de transmisión paralela al eje de la antena, esto generará un haz de señal que podrá viajar casi en línea recta hacia donde apunte la misma. Además, al recibir una señal con haces que lleguen paralelos al eje de la antena, al reflejarse en la parábola todas incidirán en el foco de la parábola, lo que permite concentrar en un solo punto mayor potencia de la señal.
+        Una antena parabólica por reflexión está formada, por lo general, por tres componentes:
+
+        \begin{enumerate}[label=\arabic*., itemsep=0.15cm]
+          \item \textbf{Reflector:} es un plato de mayor tamaño con forma parabólica.
+          \item \textbf{Subreflector:} es un reflector parabólico más pequeño que ayuda a redirigir y concentrar las señales en el elemento de alimentación.
+          \item \textbf{Elemento de alimentación:} es donde se recogen o se transmiten las señales.
+        \end{enumerate}
+
+        El elemento de alimentación se ubica exactamente en el foco correspondiente. En las antenas que utilizan subreflector, se encuentra en el foco de este; mientras que, en las que no lo utilizan, se ubica directamente en el foco del reflector principal.
+
+        Al transmitir, el elemento de alimentación genera ondas que, sin un plato reflector, se distribuirían en distintas direcciones. La forma parabólica del reflector permite que las ondas emitidas desde el foco se reflejen y se dirijan hacia donde apunta el eje central de la antena. En las configuraciones que utilizan subreflector, la señal se refleja primero en este y luego en el reflector principal. De esta manera, parte de la señal que se perdería en otras direcciones se concentra en un haz, lo que permite que llegue al receptor con mayor potencia.
+
+        De forma similar, al recibir una señal, el plato capta una mayor proporción de las ondas que llegan en la dirección de su eje y las concentra en el foco. Allí, el elemento de alimentación puede captarlas con mayor potencia. En esto radican las ventajas de este tipo de antenas: permiten una transmisión de señal más potente y alcanzan receptores a mayor distancia y con mejor calidad. Sin embargo, esta misma direccionalidad es su principal desventaja, ya que requieren una alineación precisa con la señal durante su instalación y operación.
+
   \item \textbf{¿Qué factores determinan la ganancia de una antena?} \\
 La ganancia mide la directividad de la antena: es la relación entre la potencia radiada en una dirección dada y la que radiaría una antena isotrópica ideal. Se expresa en dBi. La antena no agrega potencia, sino que la concentra en un haz: a mayor ganancia, haz más angosto. Por reciprocidad, la ganancia es la misma al transmitir y al recibir.
 
