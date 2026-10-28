@@ -22,6 +22,7 @@
 \pgfplotsset{compat=1.18}
 \usepackage{float}
 \usepackage{xcolor}
+\usepackage{multirow}
 \usepackage{fancyhdr}
 \usepackage[hidelinks]{hyperref}
 \hypersetup{pdftitle={teorico-tp-2}}
@@ -130,14 +131,20 @@
 \end{titlepage}
 
 % -----------------------------------------------------------------------------
-% SECCIÓN B: CUESTIONES DE REPASO
+% CUESTIONES DE REPASO
 % -----------------------------------------------------------------------------
-\section*{b) - Cuestiones de Repaso}
+\section*{Cuestiones de Repaso}
 
 \noindent\textbf{3.1. ¿En qué se diferencia un medio guiado de un medio no guiado?}\par
 En un medio guiado las ondas electromagnéticas que se usan para transmitir los datos se propagan confinadas en un camino físico o material, por ejemplo, cables metálicos o fibras ópticas. Es direccional: la información llegará allá donde llegue el material físico, por lo que este debe conectarse entre emisor y receptor para que la comunicación pueda realizarse.
 
 En un medio no guiado la transmisión de las ondas se produce irradiándolas en un medio, manipulando el campo electromagnético. Su propagación se produce en múltiples direcciones (aunque pudiendo lograr cierta direccionalidad mediante diseños específicos de transmisores). Esto permite al receptor estar en cualquier punto dentro del radio de potencia de transmisión del emisor e incluso que ambos actores puedan estar en movimiento.
+
+Pese a la comodidad de evitar conexiones físicas que da un medio no guiado, existe una gran desventaja: las limitaciones de frecuencia en las que se transmite. Al ser el espectro de frecuencias un recurso escaso, su uso necesita de una estricta coordinación entre los usuarios para no solapar comunicaciones en una misma banda de frecuencia. Los medios guiados, al confinar la comunicación al medio físico, permiten que distintos enlaces utilicen simultáneamente las mismas bandas de frecuencia sin interferirse entre sí, incluso si sus cables recorren trayectos cercanos. En los medios no guiados, en cambio, dos emisores que transmitan en la misma banda y alcancen al mismo receptor pueden solapar sus comunicaciones e impedir la correcta recepción de ambos mensajes.
+
+Otro tema que genera una diferencia es el de la seguridad de la información y la disponibilidad de la comunicación. Alguien con intenciones de infiltrar u obstruir una comunicación tiene, en el medio guiado, una complejidad extra dada por conseguir el acceso físico al medio. Esto no hace imposible una actividad de tipo obstructiva, pero sí presenta una barrera que el medio no guiado no tiene: alguien que se encuentre dentro del área de cobertura y cuente con un receptor adecuado puede captar la señal. Los cifrados y demás mecanismos de seguridad se crearon, justamente, para evitar que esa capacidad de recepción permita comprender la información transmitida. Por otro lado, una señal interferente con potencia suficiente en el receptor objetivo puede obstruir la comunicación y volver ininteligible el mensaje.
+
+Existe una investigación reciente llevada a cabo por Clements, Kriezis y Humphreys que identificó como fuente de eventos transitorios de interferencia GNSS de gran alcance a una constelación de satélites rusos de alerta temprana. Estas ráfagas de señales electromagnéticas afectaron receptores GNSS en Europa continental, Groenlandia y Canadá, demostrando el amplio alcance que puede tener una interferencia en un medio no guiado.\footnote{Clements, Z. L., Kriezis, A., y Humphreys, T. E. (2026). \textit{Chasing Lightning: Detecting, Characterizing, and Identifying a Powerful Space-Based GNSS Interference Source}. arXiv:2606.03673. Disponible en: \url{https://arxiv.org/abs/2606.03673}.}
 
 \vspace{0.3cm}
 \noindent\textbf{3.2. ¿Cuáles son las diferencias entre una señal electromagnética analógica y una digital?}\par
@@ -254,7 +261,31 @@ Un radián es el ángulo que abarca un arco de longitud igual al radio. Como la 
 
 \vspace{0.3cm}
 \noindent\textbf{3.5. ¿Cuál es la relación entre la longitud de onda y la frecuencia en una onda seno?}\par
-La relación está dada por la expresión $\lambda \cdot f = v$, o de forma equivalente $\lambda = \frac{v}{f}$, donde $\lambda$ es la longitud de onda, $f$ es la frecuencia y $v$ es la velocidad de propagación de la onda en el medio. Existe una relación inversamente proporcional: a mayor frecuencia, menor es la longitud de onda.
+En una onda seno, se puede observar como la señal cambia en un punto a medida que transcurre el tiempo. El periodo $T$ describe como se repite la onda en el tiempo (explicado en 3.3). La longitud de onda $\lambda$ describe la distancia entre dos crestas consecutivas.
+
+Si durante un periodo $T$, la onda avanza una distancia igual a la longitud de onda, como la distancia recorrida es velocidad por tiempo, podemos expresar lo siguiente:
+
+$$\lambda=vT$$
+
+Como $T=1/f$, obtenemos:
+
+$$\lambda=v/f$$
+
+$$\lambda f=v$$
+
+Siendo $v$ la velocidad de propagación. Por lo tanto, si $v$ es constante, la longitud de onda y la frecuencia son inversamente proporcionales. Al duplicar la frecuencia, el periodo se reduce a la mitad y por lo tanto la onda dispone de la mitad de tiempo para avanzar durante cada ciclo ocupando la mitad de distancia. Es decir, esto no significa que la onda de mayor frecuencia viaje mas rápido. 
+
+Por ejemplo, dos ondas senoidales de $100Mhz$ y $200Mhz$, que se propagan a la misma velocidad en el vacío $c\approx3\times10^8\,\mathrm{m/s}$, tienen la siguientes longitudes de onda:
+
+$$
+\lambda_1=\frac{3\times10^8\,\mathrm{m/s}}{100\times10^6\,\mathrm{Hz}}=3m
+$$
+
+$$
+\lambda_2=\frac{3\times10^8\,\mathrm{m/s}}{200\times10^6\,\mathrm{Hz}}=1,5m
+$$
+
+Ambas se propagan a la misma velocidad pero al duplicar la frecuencia, se reduce a la mitad la separación entre las crestas.
 
 \vspace{0.3cm}
 \noindent\textbf{3.6. ¿Cuál es la relación entre el espectro de una señal y su ancho de banda?}
@@ -336,47 +367,135 @@ Los factores fundamentales que limitan la capacidad de un canal son:
 
 \newpage
 % -----------------------------------------------------------------------------
-% SECCIÓN C: EJERCICIOS
+% EJERCICIOS
 % -----------------------------------------------------------------------------
-\section*{c) - Ejercicios}
+\section*{Ejercicios}
 
 \noindent\textbf{Ejercicio 3.1}\par
-\noindent a) En una configuración multipunto múltiples dispositivos comparten el mismo medio de transmisión. Si más de uno transmite al mismo tiempo, las señales se solapan y los mensajes resultan indistinguibles (colisión).\par
-\noindent b)
-\begin{center}
-  \begin{tabular}{|l|p{0.38\textwidth}|p{0.38\textwidth}|}
-    \hline
-    & \textbf{Centralizado} & \textbf{Descentralizado} \\
-    \hline
-    \textbf{Ventajas} &
-    El coordinador puede asignar tiempo solo a quien lo requiere y establecer prioridades. &
-    Si un nodo falla, la comunicación entre el resto no se ve afectada. \\
-    \hline
-    \textbf{Desventajas} &
-    Sin coordinador no hay transmisión (punto único de fallo). Parte del tiempo se pierde en la coordinación. &
-    Al estar repartido el tiempo en turnos prefijados, se puede asignar tiempo a quien no lo necesite. \\
-    \hline
-  \end{tabular}
-\end{center}
+\noindent\textbf{a) En una configuración multipunto, sólo un dispositivo puede transmitir cada vez, ¿por qué?}\par
+Un mensaje transmitido mediante una señal física se define por las variaciones de una magnitud que imprime en el medio para codificarlo: tensión o corriente en un cable de cobre, intensidad luminosa en una fibra óptica, o variaciones del campo electromagnético en un medio inalámbrico. La legibilidad al recibir el mensaje depende de que el medio conserve lo más fielmente posible esas variaciones en el tiempo, de modo que el receptor pueda demodular la señal y recuperar la información que transporta.
+
+Cuando la disposición de la conexión se define como multipunto, existen múltiples dispositivos compartiendo el mismo medio; por lo tanto, las variaciones que genera alguno de esos dispositivos en el medio pueden ser recibidas por todos los que conforman la conexión. Esto conlleva que, si en un mismo instante y sin implementar ninguna estrategia de separación por canales, códigos u otro mecanismo de acceso, dos o más dispositivos empiezan a imprimir en el medio las variaciones representativas de sus mensajes, las magnitudes físicas se superponen. Los receptores obtienen entonces una combinación de ellas y no pueden individualizar cada una de las señales originales enviadas por cada dispositivo.
+
+Matemáticamente, si dos estaciones transmiten las señales $s_1(t)$ y $s_2(t)$, lo que recibe una estación puede expresarse como
+\[
+  r(t)=s_1(t)+s_2(t)+n(t),
+\]
+donde $n(t)$ representa el ruido del medio. Aun si $n(t)=0$, un receptor convencional que no cuenta con una dimensión de separación entre ambos emisores recibe la combinación de las dos señales y no puede determinar cuál parte corresponde a cada mensaje. En ese sentido, cada señal actúa como interferencia para la otra y la combinación resultante no conserva un patrón que permita demodular por separado los mensajes originales; por eso, esta superposición de transmisiones sobre el mismo recurso compartido se denomina \textit{colisión}.\par
+
+\vspace{0.3cm}
+\noindent\textbf{b) Hay dos posibles aproximaciones que refuerzan la idea de que, en un momento dado, sólo un dispositivo puede transmitir. En un sistema centralizado, una estación es la responsable del control y podrá transmitir o decidir que lo haga cualquier otra. En el método descentralizado, las estaciones cooperan entre sí, estableciéndose una serie de turnos. ¿Qué ventajas y desventajas presentan ambas aproximaciones?}\par
+Para contrastar ambas aproximaciones, creemos conveniente analizar las técnicas empleadas en cada enfoque. Esto permitirá identificar características comunes entre los protocolos y, a partir de ellas, evaluar las ventajas y desventajas de cada categoría.\par
+
+Para este análisis se consideran \textit{Polling} y \textit{Request/grant}, por ser técnicas representativas del control centralizado y permitir identificar sus características generales:
+\begin{itemize}
+  \item \textit{Polling}.
+  \begin{description}
+    \item[\textbf{Mecanismo de control:}] Un controlador coordinador es quien otorga tiempo de transmisión a cada estación, en el cual debe transmitir sus datos.
+    \item[\textbf{Objetivo:}] Otorgar oportunidades de transmisión a las estaciones para evitar colisiones e intentando priorizar aquellas que tienen datos pendientes.
+    \item[\textbf{Uso del medio:}] El coordinador hace \textit{poll} a una estación; esta transmite si tiene datos y, durante ese tiempo, ninguna otra estación puede transmitir.
+    \item[\textbf{Latencia y equidad:}] Mientras más estaciones formen parte del ciclo, mayor será la espera. Las estaciones sin datos consumen tiempo del medio sin utilidad, que no pueden aprovechar las estaciones con datos. Si el coordinador mantiene un ciclo rotativo entre todas las estaciones, estas son consultadas equitativamente y no hay \textit{starvation}.
+    \item[\textbf{Tolerancia a fallos:}] El coordinador es el punto débil del sistema. Si deja de funcionar, las estaciones dejan de ser sondeadas y la comunicación se interrumpe, ya que ninguna puede transmitir. Por ello, son necesarios mecanismos de reemplazo y recuperación del coordinador. Además, si una estación es eliminada del ciclo de sondeo, deja de recibir oportunidades para transmitir.
+    \item[\textbf{Sobrecarga y complejidad:}] Requiere tramas de \textit{polling} y sus respuestas. Una estación sin datos para transmitir ocupa el canal innecesariamente durante el sondeo del coordinador. Se necesita mantener un listado de estaciones administrado por el coordinador.
+  \end{description}
+  \item \textit{Request/grant}.
+  \begin{description}
+    \item[\textbf{Mecanismo de control:}] Un coordinador escucha a las estaciones que solicitarán recursos y les concederá acceso al medio, indicándoles cuándo y cuánto pueden transmitir.
+    \item[\textbf{Objetivo:}] Asignar tiempo de transmisión según la demanda informada por cada estación.
+    \item[\textbf{Uso del medio:}] Las estaciones pueden ser coordinadas por el controlador o competir entre sí para solicitar recursos, según el protocolo. Esta competencia puede aumentar el riesgo de \textit{starvation}; puede mitigarse con una política justa de atención de solicitudes o mecanismos de reintento.
+    \item[\textbf{Latencia y equidad:}] Agrega el tiempo de solicitud, planificación y concesión. La equidad depende de la política que use el controlador; por ejemplo, con \textit{Longest Queue First} (LQF), la latencia de una emisora con baja carga de datos puede incrementarse considerablemente.
+    \item[\textbf{Tolerancia a fallos:}] El acceso depende de completar dos mensajes: la solicitud y la concesión. Si la solicitud se pierde, el coordinador no conoce la demanda de la estación; si se pierde la concesión, la estación queda esperando una autorización que ya pudo haber sido emitida. Una falla del coordinador también deja pendientes las demandas en curso y obliga a recuperar su estado al reemplazarlo.
+    \item[\textbf{Sobrecarga y complejidad:}] Necesita señalización de solicitud/concesión y mantener información actualizada sobre las demandas. Para manejar pérdidas, se deben usar temporizadores y reintentos.
+  \end{description}
+\end{itemize}
+
+Para el enfoque descentralizado se consideran \textit{Token passing} y \textit{Contention}, por representar acceso ordenado por turnos y acceso autónomo por competencia, respectivamente:
+\begin{itemize}
+  \item \textit{Token passing}.
+  \begin{description}
+    \item[\textbf{Mecanismo de control:}] Las estaciones coordinan sus transmisiones mediante un \textit{token}; la que lo posee transmite sus datos y luego se lo cede a la siguiente.
+    \item[\textbf{Objetivo:}] Que el acceso sea ordenado y evite colisiones mediante la circulación del \textit{token}.
+    \item[\textbf{Uso del medio:}] La estación que posee el \textit{token} tiene libertad de transmitir; las demás esperan por su turno.
+    \item[\textbf{Latencia y equidad:}] Con un orden definido y conociendo la cantidad de estaciones participantes, la espera máxima puede estimarse a partir del tiempo de posesión del \textit{token} de cada una.
+    \item[\textbf{Tolerancia a fallos:}] Si una estación cae mientras posee el \textit{token}, este no se transfiere a la siguiente estación y la comunicación se interrumpe. Si durante la coordinación del traspaso se produce un error, puede duplicarse el \textit{token}, lo que permite que más de una estación intente transmitir sus datos.
+    \item[\textbf{Sobrecarga y complejidad:}] La coordinación para mantener el estado, conformado por el \textit{token} y el anillo lógico de delegación, agrega una cuota de uso del medio que no se destina a transmitir datos. Para coordinarse y recuperarse ante fallos, las estaciones deben alcanzar un estado común sin un coordinador central que determine cuál es el estado válido de la red.
+  \end{description}
+  \item Contention: ALOHA, CSMA/CD y CSMA/CA.
+  \begin{description}
+    \item[\textbf{Mecanismo de control:}] Cada protocolo define parámetros locales que las estaciones utilizan para realizar intentos de toma de control sobre el medio y transmitir. No hay asignación de tiempos ni turnos: cada estación aplica las reglas definidas para intentar hacerse con el canal. Si lo logra, transmite; si surge un conflicto con otra estación, el mensaje queda para reintento.
+    \item[\textbf{Objetivo:}] Permitir acceso autónomo y simple al medio cuando una estación tiene datos para transmitir.
+    \item[\textbf{Uso del medio:}] Las estaciones compiten por transmitir; bajo carga pueden producirse colisiones, esperas y retransmisiones. Dentro de las reglas definidas por el protocolo, se establece de alguna forma el tiempo máximo que cada estación puede transmitir.
+    \item[\textbf{Latencia y equidad:}] El retardo es variable y aumenta con la carga. Los sorteos aleatorios no garantizan una espera máxima ni equidad estricta.
+    \item[\textbf{Tolerancia a fallos:}] No existe un punto central de fallo; la caída de una estación suele afectar principalmente a esa estación.
+    \item[\textbf{Sobrecarga y complejidad:}] Usa mecanismos de escucha, espera aleatoria, confirmaciones o retransmisiones; las colisiones desperdician capacidad.
+  \end{description}
+\end{itemize}
+
+Del análisis de estas técnicas y sus características se desprenden las siguientes ventajas y desventajas generales del enfoque centralizado:
+
+\textbf{Ventajas:}
+\begin{itemize}
+  \item Si una estación transmite, tiene la certeza de que las demás sólo escuchan y no se verá involucrada en una colisión.
+  \item Al estar centrada la coordinación, es fácil definir políticas que eviten relegar a estaciones e impedir que queden sin transmitir durante un tiempo prolongado. También permite establecer prioridades globales y asignar recursos según requisitos de QoS.
+\end{itemize}
+
+\textbf{Desventajas:}
+\begin{itemize}
+  \item Al depender de un coordinador para otorgar acceso al medio, el funcionamiento de la red queda ligado a la eficacia de los mecanismos de recuperación y reemplazo de ese nodo ante fallos. Por ello, estas técnicas deben dar gran relevancia a cómo lograr esa recuperación de manera eficiente y efectiva.
+  \item Los recursos de control generan una sobrecarga importante, que reduce el tiempo disponible del medio para transmitir datos reales.
+  \item El coordinador debe mantener y actualizar el estado de estaciones, solicitudes, turnos y concesiones. Gestionar esa información y aplicar las políticas de asignación incrementa la complejidad del sistema y el riesgo de posibles fallos en la coordinación.
+  \item Si la técnica sondea a todas las estaciones o les asigna intervalos fijos de manera centralizada, la latencia puede aumentar cuando hay muchas estaciones o cuando la mayoría sólo escucha, porque se dedican turnos de control a estaciones sin datos.
+\end{itemize}
+
+Del análisis de estas técnicas y sus características se desprende la siguiente ventaja general del enfoque descentralizado:
+
+\textbf{Ventajas:}
+\begin{itemize}
+  \item Los protocolos descentralizados permiten que, ante la caída de una estación, el resto de la red recupere la coordinación y continúe operando. Aunque la falla puede interrumpir temporalmente el acceso, como cuando la estación posee el \textit{token}, la recuperación se realiza entre las estaciones restantes.
+\end{itemize}
+
+\textbf{Desventajas:}
+\begin{itemize}
+  \item La coordinación y la recuperación ante fallos deben resolverse entre varias estaciones, que deben reconstruir de manera distribuida el estado de la red. Esto puede volverlo más complejo que mantenerlo centralizado.
+  \item Definir y aplicar prioridades globales o garantías de QoS resulta más complejo, porque ninguna estación tiene por sí sola una visión completa de la demanda de toda la red.
+\end{itemize}
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.2}\par
-Dado que el período es la inversa de la frecuencia:
+\noindent\textbf{Una señal tiene una frecuencia fundamental de 1000 Hz. ¿Cuál es su período?}\par
+La frecuencia define la cantidad de ocurrencias del ciclo de una señal en un segundo. Por lo tanto, una señal de 1000 Hz repite su ciclo 1000 veces en un segundo. Para determinar su período, primero debemos considerar que el período $T$ es el tiempo que demora la señal en completar un único ciclo.
+
+Podemos plantear una regla de tres simple:
 \[
-  T = \frac{1}{f} = \frac{1}{1000\,\mathrm{Hz}} = 0{,}001\,\mathrm{s} = 1\,\mathrm{ms}
+  \begin{aligned}
+    1000\ \text{ciclos} &\longrightarrow 1\,\mathrm{s}, \\
+    1\ \text{ciclo} &\longrightarrow T.
+  \end{aligned}
+\]
+Por lo tanto, el período es:
+\[
+  T = \frac{1\ \text{ciclo} \cdot 1\,\mathrm{s}}{1000\ \text{ciclos}} = 0{,}001\,\mathrm{s} = 1\,\mathrm{ms}.
+\]
+
+Dado que el período siempre se busca para un ciclo y la frecuencia se define como cantidad de ciclos por segundo, la regla puede simplificarse y generalizarse: el período es la inversa de la frecuencia.
+\[
+  T = \frac{1}{f} = \frac{1}{1000\,\mathrm{Hz}} = 0{,}001\,\mathrm{s} = 1\,\mathrm{ms}.
 \]
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.3}\par
-\noindent a) Sea \(x(t)=\sin(2\pi ft)\) la señal de referencia. Su amplitud oscila entre \(-1\) y \(1\).
-Un desfase de \(\pm\pi\) invierte la señal:
+\noindent\textbf{Simplifique las siguientes expresiones:}\par
+\noindent{\boldmath\textbf{a) \(\sin(2\pi ft+\pi)+\sin(2\pi ft-\pi)\)}}\par
+Sea \(A=2\pi ft\) y \(x(t)=\sin(A)\). Un desfase de \(\pm\pi\) invierte la señal:
 \[
-  \sin(2\pi ft \pm \pi) = -\sin(2\pi ft)
+  \sin(A+\pi)=\sin(A-\pi)=-\sin(A).
 \]
-Por lo tanto, ambas señales desfasadas son iguales y su suma duplica la amplitud:
+Entonces:
 \[
-  x_+(t) = x_-(t) = -\sin(2\pi ft), \qquad
-  x_R(t) = x_+(t) + x_-(t) = -2\sin(2\pi ft)
+  \sin(A+\pi)+\sin(A-\pi)
+  =-\sin(A)-\sin(A)
+  =-2\sin(A)
+  =-2\sin(2\pi ft).
 \]
 
 \begin{center}
@@ -393,7 +512,7 @@ Por lo tanto, ambas señales desfasadas son iguales y su suma duplica la amplitu
     \begin{scope}[yshift=-3.3cm]
       \EjeTiempo{1.35}
       \draw[red!70!black,thick,domain=-1:1,samples=100,smooth] plot (\x,{-sin(360*\x)});
-      \node[red!70!black,anchor=west] at (0.15,1.18) {\small $x_+(t)=\sin(2\pi ft+\pi)$};
+      \node[red!70!black,anchor=west] at (0.15,1.18) {\small $x_{\pm}(t)=\sin(2\pi ft\pm\pi)$};
       \draw (-0.06,1) -- (0.06,1); \draw (-0.06,-1) -- (0.06,-1);
       \node[anchor=east,xshift=-2pt] at (0,1) {\scriptsize $1$};
       \node[anchor=east,xshift=-2pt] at (0,-1) {\scriptsize $-1$};
@@ -402,7 +521,7 @@ Por lo tanto, ambas señales desfasadas son iguales y su suma duplica la amplitu
     \begin{scope}[yshift=-6.6cm]
       \EjeTiempo{2.35}
       \draw[blue!70!black,thick,domain=-1:1,samples=100,smooth] plot (\x,{-2*sin(360*\x)});
-      \node[blue!70!black,anchor=west] at (0.15,2.18) {\small $x_R(t)=2\sin(2\pi ft\pm\pi)=-2\sin(2\pi ft)$};
+      \node[blue!70!black,anchor=west] at (0.15,2.18) {\small $x_R(t)=-2\sin(2\pi ft)$};
       \draw (-0.06,2) -- (0.06,2); \draw (-0.06,-2) -- (0.06,-2);
       \node[anchor=east,xshift=-2pt] at (0,2) {\scriptsize $2$};
       \node[anchor=east,xshift=-2pt] at (0,-2) {\scriptsize $-2$};
@@ -410,13 +529,12 @@ Por lo tanto, ambas señales desfasadas son iguales y su suma duplica la amplitu
   \end{tikzpicture}
 \end{center}
 
-\noindent b) Sean las señales:
+\noindent{\boldmath\textbf{b) \(\sin(2\pi ft)+\sin(2\pi ft-\pi)\)}}\par
+Sea \(A=2\pi ft\). Como \(\sin(A-\pi)=-\sin(A)\), se obtiene:
 \[
-  x_1(t)=\sin(2\pi ft), \qquad x_2(t)=\sin(2\pi ft-\pi)=-\sin(2\pi ft)
-\]
-El desfase de \(\pi\) hace que \(x_2(t)\) sea la opuesta de \(x_1(t)\). Por ello, para cada instante sus amplitudes se cancelan y la señal resultante es nula:
-\[
-  x_R(t)=x_1(t)+x_2(t)=\sin(2\pi ft)+\sin(2\pi ft-\pi)=0
+  \sin(A)+\sin(A-\pi)
+  =\sin(A)-\sin(A)
+  =0.
 \]
 
 \begin{center}
@@ -758,21 +876,81 @@ El aumento vertical es menor que el horizontal. Esto se debe a que los $11~\mu$s
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.13}\par
-Un sistema de transmisión telefónica de voz opera típicamente en el rango de $300\,\mathrm{Hz}$ a $3400\,\mathrm{Hz}$ (ancho de banda de $3100\,\mathrm{Hz}$). Si se requiere transmitir voz con mayor fidelidad, se incrementa el ancho de banda asignado por canal, lo que disminuye el número de canales multiplexados posibles en el mismo medio físico.
+\noindent\textbf{a) Velocidad de transmission R de la fuente}\par
+Siendo $R$ la velocidad de transmisión de la fuente en bps, cada imagen contiene $480*500=240\,000$ puntos. Los 32 valores posibles de intensidad requieren 5 bits porque $2^5=32$. Por lo tanto, cada imagen requiere:
+
+$$240\,000\frac{puntos}{imagen}*5\frac{bits}{punto}=1\,200\,000\frac{bits}{imagen}$$
+
+Luego, segundo suponiendo que se envían 30 imágenes por segundo, resulta la velocidad de transmisión $R$ la siguiente en bps
+
+$$1\,200\,000\frac{bits}{imagen}*30=36\,000\,000bps=36Mbps$$
+
+
+\noindent\textbf{b) Capacidad del canal}
+Como el canal presenta ruido, usando la formula de Shannon (cuestionario 3.8):
+
+\[
+  C = B\log_2\!\left(1+\mathrm{SNR}\right) 
+\]
+
+donde $B$ es el ancho de banda en hercios y $SNR$ el cociente entre la potencia de la señal y la potencia del ruido. La capacidad $C$ se expresa en bps. Los $35dB$ es la expresión logarítmica de $SNR$ entonces e convierte a escala lineal:
+
+$$SNR_{dB}=10\log_{10}(SNR) \quad\Longrightarrow\quad SNR=10^{35/10}\approx3162,28$$
+
+
+Con $B=4,5\,MHz=4,5\times10^6Hz$:
+
+$$C=4{,}5\times10^6\log_2(1+3162{,}28) \approx\boxed{52\,322\,420\ bps=52{,}32\ Mbps}$$
+
+Como $R=36Mbps<C$, la velocidad de transmisión de la fuente esta por debajo del limite teórico del canal. Esto significa que el limite de Shannon no impide transmitir esa información pero no garantiza que cualquier implementación lo consiga. Hay que considerar los datos adicionales que requiere un sistema real y señalización y codificación adecuadas.
+
+\noindent\textbf{c) Transmisión en color sin aumentar R}
+
+En una representación RGB, cada punto se puede describir mediante 3 componentes (Red, Green, Blue). Si asignamos 32 valores a cada componente, cada uno require 5 bits. Entonces como cada punto requirer 3 componentes, entonces tenemos 15 bits necesarios por punto:
+
+$$b_{color}=3\times 5 = 15\ \text{bits/punto}$$
+
+sin embargo esto triplica la velocidad de transmisión necesaria:
+
+$$R_{color}=480\times500\times15\times30=108Mbps$$
+
+Para conservar los $36Mbps$ tenemos que modificar algunos de los siguientes parametros:
+\begin{itemize}
+  \item Reducir la cantidad de imágenes por segundo
+  \item Reducir los puntos por imagen
+\end{itemize}
+
+Si reducimos las imagenes por segundo de 30 a 10, tendríamos una tasa de 35Mbps. Si reducimos ls puntos por imágenes, por ejemplo en vez de $480\times500$ a $160\times500$ entonces también tendríamos 36Mbps. La primera conserva el detalle de cada imagen pero menos cuadros por segundo. La segunda conserva los cuadros por segundo pero reduce el detalle (la dimension). Se podrían también reducir con combinaciones de ambos parametros. En caso de aceptar una representacion limitada de RGB utilizando solo 32 posibles valores, podríamos mantener los parametros originales
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.14}\par
-Si se duplica el ancho de banda de un canal, la capacidad máxima teórica según la ley de Shannon ($C = B \log_2(1 + \mathrm{SNR})$) se duplica linealmente, manteniendo constante la SNR. Según el límite de Nyquist ($C = 2B \log_2 M$), también permite duplicar la tasa de baudios máxima.
+El ruido térmico se origina en la agitación térmica de los electrones. La potencia por hercio es $N_0=kT$ si la densidad de potencia se considera constante dentro de la banda analizada. Al considerar un ancho de banda $B$ en hercios, la potencia total es
+
+$$N=kTB$$
+
+donde $k=1,38\times10^{-23}\text{J/K}$ es la constante de Boltzmann (Stallings, sección 3.3).
+
+Entonces, dado $T=10^4K$ y $B=10Mhz$ aplicando estos valores en la formula anterior obtenemos la potencia de ruido en watts $\boxed{N=1,387\times10^{-12}W}$ también conocido como el nivel del ruido. A temperatura efectiva constante, duplicar el ancho de banda duplicaría la potencia de ruido recogida. 
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.15}\par
-Relación de la tasa de transmisión y el ancho de banda en presencia de ruido gaussiano blanco aditivo (AWGN):
-Con una $\mathrm{SNR} = 30\,\text{dB} \implies \mathrm{SNR} = 10^{30/10} = 1000$.
-Aplicando Shannon:
+Como se especifica una relacion señal-ruido, calculamos la capacidad mediante Shannon (Stallings seccion 3.4, ejercicio 3.13b y cuestionario 3.8) 
+
 \[
-  C = B \log_2(1 + 1000) = B \cdot 9{,}966 \text{ bps/Hz}
+  C = B\log_2\!\left(1+\mathrm{SNR}\right) 
 \]
-Por lo tanto, la capacidad máxima teórica del canal es aproximadamente $9{,}97$ bps por hertz de ancho de banda.
+
+donde $B$ es el ancho de banda en hercios y $SNR$ el cociente entre la potencia de la señal y la potencia del ruido expresado en escala lineal.
+
+Para el canal de un teletipo de 300 Hz de ancho de banda con una relación señal-ruido de 3 dB, primero convertimos el $SNR_{db}$:
+
+$$SNR=10^{3/10}\approx1,995$$
+
+Sustituyendo:
+
+$$C=300\log_2(1+1,995)\approx\boxed{474,8\ \mathrm{bps}\approx475\ \mathrm{bps}}.$$
+
+Siendo $475bps$ la capacidad máxima teórica del canal, es decir, la cota superior de la velocidad de transmisión que podés lograr sin errores
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.16}\par
@@ -899,6 +1077,44 @@ En el diseño práctico, aumentar $M$ permite transmitir más bits por símbolo,
 
 En conclusión, Nyquist establece una limitación asociada al ancho de banda y a los niveles de señalización, mientras que Shannon determina la capacidad teórica del canal considerando el ruido. Ambos criterios permiten evaluar la viabilidad de una transmisión y seleccionar los parámetros de diseño adecuados.
 
+
+\vspace{0.3cm}
+\noindent\textbf{Ejercicio 3.19}\par
+Los datos son $C = 20\,\mathrm{Mbps}$ y $B = 3\,\mathrm{MHz}$, y lo que se busca es la relación señal-ruido necesaria para alcanzar esa capacidad, es decir, la SNR mínima. Como lo que limita al canal es el ruido, el modelo que corresponde es el de Shannon, que según Stallings y Tanenbaum da la capacidad máxima de un canal con ruido (con ruido blanco como hipótesis). Nyquist, en cambio, supone un canal sin ruido, así que lo usamos más abajo solo como comparación:
+\[
+  C = B\log_2(1+\mathrm{SNR})
+\]
+Despejamos la SNR pasando el logaritmo del otro lado:
+\[
+  \frac{C}{B}=\log_2(1+\mathrm{SNR})
+  \;\Longrightarrow\;
+  \mathrm{SNR}=2^{C/B}-1
+\]
+La eficiencia espectral que se necesita es
+\[
+  \frac{C}{B}=\frac{20\times10^{6}}{3\times10^{6}}=6{,}667~\mathrm{bps/Hz}
+\]
+y entonces
+\[
+  2^{6{,}667}=2^{6}\cdot2^{2/3}\approx64\cdot1{,}5874\approx101{,}59
+  \;\Longrightarrow\;
+  \mathrm{SNR}\approx101{,}59-1=100{,}59
+\]
+Como las SNR suelen expresarse en decibeles, lo convertimos:
+\[
+  \mathrm{SNR}_{\mathrm{dB}}=10\log_{10}(100{,}59)\approx\boxed{20{,}03\,\mathrm{dB}}
+\]
+Para verificar, reemplazamos en la fórmula original: $3\times10^{6}\cdot\log_2(101{,}59)=3\times10^{6}\cdot6{,}667=20\,\mathrm{Mbps}$, que coincide con el dato.
+
+Nos pareció interesante comparar este resultado con Nyquist. En un canal sin ruido, $C=2B\log_2M$ pediría $\log_2M=20/6=3{,}33$, es decir, unos $10{,}1$ niveles. Como $M$ debe ser potencia de 2, en la práctica se usarían $16$ niveles, con $4$ bits por símbolo. Las dos fórmulas se complementan: Nyquist indica cuántos niveles se pueden definir y Shannon cuántos se pueden distinguir con el ruido presente. Que la SNR requerida sea de unos $20\,\mathrm{dB}$ es coherente con esto: cuantos más niveles se quieren distinguir, menor tiene que ser el ruido relativo a la señal.
+
+Stallings introduce también la relación $E_b/N_0$ (energía por bit sobre densidad espectral de ruido) como una medida de SNR normalizada por bit, útil para comparar esquemas de modulación y codificación. Como $S=E_bC$ y $N=N_0B$, la SNR vale $\mathrm{SNR}=\frac{E_b}{N_0}\frac{C}{B}$, y de la fórmula de Shannon se despeja
+\[
+  \frac{E_b}{N_0}=\frac{B}{C}\left(2^{C/B}-1\right)=\frac{100{,}59}{6{,}667}\approx15{,}09
+  \;\Rightarrow\;10\log_{10}(15{,}09)\approx11{,}8\,\mathrm{dB}
+\]
+
+Hay que tener presente que $20{,}03\,\mathrm{dB}$ es un mínimo teórico. Con menos SNR no existe codificación que permita llegar a $20\,\mathrm{Mbps}$ en este canal, y alcanzar justo ese límite exigiría códigos ideales. Como advierte Stallings, en la práctica se alcanzan velocidades menores que la capacidad de Shannon, así que un sistema real necesita un margen adicional de SNR.
 
 \vspace{0.3cm}
 \noindent\textbf{Ejercicio 3.20}\par

@@ -26,6 +26,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\usepackage{float}
 
 % lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
 \newif\ifHayUltimaPagina
@@ -124,7 +125,29 @@
 
   \item
         \textbf{¿Por qué hay dos cables en un par trenzado de cobre?} \\
-        Un enlace de conexión que se realiza con un par trenzado usa dos conductores ya que al momento de conectar los dispositivos a sus puntas estos formarán un bucle cerrado en el que la señal viajará como variaciones de corriente en ese bucle. Los dispositivos sensarán esas variaciones de corriente, que representarán la codificación de la señal que se envía.
+        Para establecer una comunicación eléctrica se necesita un camino de ida y otro de retorno para la señal. Esto puede realizarse mediante una conexión no equilibrada o una conexión equilibrada. En una conexión no equilibrada, la señal viaja por un conductor y se mide respecto de una referencia de masa, que puede ser otro cable, un plano conductor u otro camino de retorno. En una conexión equilibrada, en cambio, ambos conductores transportan la señal de manera complementaria a lo largo del trayecto.
+
+        En la conexión no equilibrada, el receptor compara la señal con la masa. Por eso, cualquier ruido o diferencia de potencial que afecte de forma distinta al conductor de señal y al camino de retorno puede alterar la información recibida.
+
+        Para reducir este problema se utiliza un circuito equilibrado, formado por dos conductores con características eléctricas similares, especialmente en cuanto a su impedancia respecto del entorno. En lugar de enviar la señal por un hilo y utilizar el otro solamente como masa, se transmite una señal diferencial: en un conductor circula una variación de tensión y en el otro una variación de igual amplitud, pero de polaridad opuesta.
+
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.78\textwidth]{21401_07.jpg}
+        \end{figure}
+
+        Como ambos conductores recorren prácticamente el mismo espacio físico, las interferencias externas tienden a afectar a los dos de forma muy parecida. El receptor no interpreta cada señal por separado, sino que mide la diferencia de potencial entre ambas. Por eso, si un ruido externo introduce un pico de tensión similar en los dos hilos, ese ruido queda en gran medida eliminado al calcular la diferencia, mientras que se conserva la señal útil.
+
+        El trenzado mejora todavía más este comportamiento. A lo largo del cable, ambos conductores intercambian continuamente sus posiciones. De esta forma, los dos quedan expuestos de manera más uniforme a los campos electromagnéticos del entorno. Si los cables estuvieran rectos y paralelos, uno podría quedar más cerca de una fuente de ruido que el otro y recibir una interferencia mayor, lo que dificultaría su cancelación en el receptor.
+
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{Diagrama de corrientes entrelazadas.png}
+        \end{figure}
+
+        Además, las corrientes que circulan por ambos conductores tienen sentidos opuestos en cada instante. Por ello, los campos electromagnéticos que generan también tienden a ser opuestos y a cancelarse. El trenzado contribuye a que esta cancelación se mantenga a lo largo del cable. Así, el par trenzado no solo reduce el ruido que recibe del exterior, sino que también disminuye la interferencia electromagnética que puede emitir hacia otros cables cercanos.
+
+        En conclusión, se utilizan dos cables porque permiten formar un circuito equilibrado entre emisor y receptor y transmitir una señal diferencial. Esto hace posible que el receptor elimine gran parte del ruido externo común a ambos hilos. El trenzado ayuda a que ambos conductores reciban interferencias lo más similares posible y, al mismo tiempo, reduce la radiación generada por el propio cable.
   \item
         \textbf{¿Cuáles son las limitaciones del par trenzado?} \\
         El par trenzado es un medio de transmisión ampliamente utilizado en redes LAN debido a su bajo costo y facilidad de instalación. Sin embargo, sus características físicas y eléctricas limitan la distancia, el ancho de banda y la velocidad de transmisión.
@@ -234,20 +257,68 @@
         Esto importa ya que Stallings destaca que la atenuación es significativamente menor en las fibras ópticas que en los cables coaxiales y los pares trenzados, y que los sistemas de fibra no se ven afectados por campos electromagnéticos exteriores, por lo que no son vulnerables a interferencias, ruido impulsivo ni diafonía. Por eso la fibra tiene una gran aceptación en las telecomunicaciones a larga distancia y cada vez se usa más en redes de área local. Finalmente, Tanenbaum aclara que las fibras por lo general se agrupan en haces, protegidas por una funda exterior común.
   \item \textbf{¿Qué ventajas y desventajas tiene la transmisión de microondas?}
 
-        \textbf{Ventajas:}
+        La comunicación por microondas utiliza ondas electromagnéticas de alta frecuencia para transmitir información entre dos puntos. Sus principales aplicaciones incluyen los enlaces terrestres, las redes de telefonía móvil y las comunicaciones por satélite. A diferencia de los medios guiados, como los cables de cobre o la fibra óptica, no necesita un medio físico que conecte al emisor con el receptor.
+
+        En los enlaces terrestres se suelen utilizar antenas direccionales para transmitir y recibir señales entre puntos determinados. Esta tecnología permite establecer comunicaciones a distancias considerables y transportar grandes cantidades de información, aunque presenta algunas limitaciones relacionadas con las condiciones del entorno y la propagación de las señales.
+
+        \textbf{Ventajas}
         \begin{itemize}
-          \item Las microondas permiten realizar enlaces de larga distancia sin necesidad de un medio físico.
-          \item En los sistemas de microondas, los amplificadores o repetidores pueden estar más separados entre sí, generalmente entre \(10\) km y \(100\) km.
-          \item Las frecuencias más altas permiten utilizar antenas más pequeñas y más baratas, por lo que son adecuadas para distancias más cortas.
-          \item Las microondas también pueden utilizarse en comunicaciones vía satélite, permitiendo establecer enlaces entre estaciones terrestres alejadas.
+          \item \textbf{Permiten realizar enlaces de larga distancia sin instalar cables:}
+          las microondas permiten comunicar puntos alejados mediante señales que se transmiten por el aire. Esto resulta útil en lugares donde instalar cables sería complicado o costoso, por ejemplo, en zonas rurales o entre edificios separados. También permiten ampliar redes de comunicaciones sin tener que realizar grandes obras de infraestructura.
+
+          \item \textbf{Los repetidores pueden estar separados por distancias relativamente grandes:}
+          en los enlaces terrestres, las estaciones repetidoras permiten recibir y retransmitir la señal para cubrir distancias mayores. Según las condiciones del terreno, la altura de las antenas y la frecuencia utilizada, pueden existir separaciones de varios kilómetros entre estaciones. En el material de la materia se mencionan distancias aproximadas de 10 a 100 km. La distancia concreta depende de las condiciones del enlace y no es igual para todos los sistemas.
+
+          \item \textbf{Permiten utilizar antenas relativamente pequeñas y direccionales:}
+          al trabajar con longitudes de onda cortas, es posible construir antenas de dimensiones reducidas en comparación con las que se necesitarían para frecuencias mucho más bajas. Además, las antenas direccionales concentran la señal hacia el receptor, lo que ayuda a mejorar la recepción y a reducir la captación de señales provenientes de otras direcciones.
+
+          \item \textbf{Pueden ofrecer una gran capacidad de transmisión:}
+          las bandas de microondas permiten utilizar canales de gran ancho de banda y transportar cantidades importantes de información. Por eso, se emplean para transmitir datos entre estaciones de una red de telecomunicaciones y para conectar estaciones base de telefonía móvil con el resto de la red.
+
+          \item \textbf{Se utilizan en las comunicaciones por satélite:}
+          las microondas permiten establecer enlaces entre estaciones terrestres y satélites, que luego retransmiten las señales hacia otras estaciones. Esto permite comunicar regiones muy alejadas y llegar a lugares donde no existe infraestructura terrestre suficiente. Entre sus aplicaciones se encuentran la televisión satelital, el acceso a Internet y otras comunicaciones a larga distancia.
+
+          \item \textbf{Permiten una instalación relativamente rápida:}
+          cuando existe una ubicación adecuada para las antenas, un enlace de microondas puede instalarse en menos tiempo que una conexión que requiera tender cables o construir canalizaciones. Esto resulta especialmente útil para ampliar redes o conectar temporalmente instalaciones.
         \end{itemize}
 
-        \textbf{Desventajas:}
+        \textbf{Desventajas}
         \begin{itemize}
-          \item La atenuación aumenta con la lluvia, siendo especialmente significativa para frecuencias superiores a \(10\) GHz.
-          \item Debido a la creciente popularidad de las microondas, las áreas de cobertura pueden solaparse, haciendo que las interferencias sean un peligro potencial.
-          \item Las bandas de \(4\) a \(6\) GHz, utilizadas habitualmente en transmisiones de larga distancia, sufren una creciente congestión.
-          \item Las bandas de frecuencias superiores son menos útiles para distancias largas debido a que la atenuación aumenta.
+          \item \textbf{Necesitan una línea de vista adecuada:}
+          en los enlaces terrestres, las antenas transmisora y receptora necesitan un recorrido suficientemente despejado. Los edificios, las montañas y otros obstáculos pueden debilitar o bloquear la señal. Por este motivo, en algunos casos es necesario instalar torres más altas o agregar estaciones intermedias para mantener la comunicación.
+
+          \item \textbf{Inclemencias climáticas y condiciones ambientales:}
+          las condiciones del ambiente pueden afectar el funcionamiento y la calidad de los enlaces de microondas. La lluvia y otros cambios atmosféricos pueden modificar la propagación de la señal y provocar desvanecimientos, es decir, disminuciones temporales de su intensidad. Por este motivo, al diseñar un enlace es importante tener en cuenta el clima de la zona y las condiciones en las que deberá funcionar el sistema.
+
+          Entre los principales factores se encuentran:
+          \begin{itemize}
+            \item \textbf{Lluvia y presencia de agua:}
+            el agua puede atenuar las señales de microondas, reduciendo su intensidad durante la transmisión. Además, la humedad que ingresa en los componentes del sistema puede afectar su funcionamiento. Para reducir estos problemas, las antenas suelen contar con cubiertas protectoras llamadas radomos, que ayudan a repeler el agua. También se sellan los sistemas de alimentación de las antenas para evitar la entrada de humedad.
+
+            \item \textbf{Viento:}
+            las ráfagas de viento pueden mover o desalinear las antenas, afectando la recepción de la señal. Por este motivo, al instalar un enlace se deben tener en cuenta la velocidad del viento que puede soportar la antena y la resistencia de la estructura donde está montada. Se considera la velocidad operativa del viento, que es aquella a partir de la cual el movimiento de la antena puede afectar la calidad de la señal. Por otro lado, la velocidad de supervivencia indica el viento máximo que puede soportar la antena sin sufrir daños físicos ni quedar desalineada de forma permanente.
+
+            \item \textbf{Acumulación de nieve y hielo:}
+            la nieve y el hielo pueden acumularse sobre las antenas y otros componentes, especialmente cuando la temperatura se encuentra cerca del punto de congelación. Esta acumulación puede perjudicar el funcionamiento del enlace. Además, el hielo acumulado en otras partes de la torre puede desprenderse y caer sobre la antena, por lo que en algunas instalaciones se utilizan protecciones específicas.
+
+            \item \textbf{Corrosión:}
+            la exposición al aire marino, a la contaminación industrial o al contacto entre metales diferentes puede producir corrosión en las antenas y sus soportes. Con el tiempo, esto puede deteriorar los materiales y afectar la vida útil de los equipos. Por eso, es importante utilizar materiales y recubrimientos adecuados para las condiciones del lugar de instalación.
+
+            \item \textbf{Radiación ultravioleta:}
+            la exposición prolongada a la radiación ultravioleta del sol puede deteriorar los materiales no metálicos utilizados en las antenas. Por este motivo, estos materiales deben estar preparados para resistir la exposición solar durante períodos prolongados.
+          \end{itemize}
+
+          \item \textbf{Pueden producirse interferencias:}
+          cuando varios enlaces utilizan frecuencias iguales o cercanas y sus señales llegan a una misma zona, pueden interferirse entre sí. Esto puede afectar la calidad de la comunicación. Para reducir este problema, es necesario planificar las frecuencias, orientar correctamente las antenas y coordinar el uso del espectro radioeléctrico.
+
+          \item \textbf{Existe congestión en algunas bandas de frecuencia:}
+          las bandas utilizadas para enlaces de larga distancia, como las de 4 a 6 GHz mencionadas en el material de la materia, pueden tener una gran cantidad de sistemas operando. Esto limita la disponibilidad de frecuencias para instalar nuevos enlaces y hace necesario administrar el espectro para evitar interferencias.
+
+          \item \textbf{Las frecuencias más altas pueden limitar la distancia del enlace:}
+          aunque permiten utilizar antenas pequeñas y disponer de mayor capacidad en determinadas bandas, las frecuencias altas suelen sufrir mayores pérdidas de propagación y son más sensibles a la lluvia. Por eso, los enlaces que trabajan en frecuencias elevadas generalmente requieren distancias más cortas o medidas adicionales para mantener una comunicación confiable.
+
+          \item \textbf{Requieren equipos y una planificación adecuados:}
+          para establecer un enlace se necesitan antenas, transmisores, receptores y sistemas de montaje correctamente instalados y alineados. También hay que calcular la distancia, la frecuencia y las pérdidas previstas. En las bandas que requieren autorización, es necesario contar con los permisos correspondientes para utilizar el espectro.
         \end{itemize}
 \item \textbf{¿Qué es la difusión directa por satélite (DBS, Direct Broadcast Satellite)?} \\
 Es la distribución de televisión en la que la señal de vídeo se transmite desde el satélite directamente al domicilio del usuario, sin pasar por la cabecera de un operador de cable. El usuario la recibe con una antena parabólica propia.
@@ -306,7 +377,13 @@ El sistema tiene tres partes:
 \end{figure}
   \item
         \textbf{¿Por qué un satélite debe usar frecuencias ascendentes y descendentes distintas?} \\
-        Debe usar frecuencias distintas porque, en una transmisión continua y sin interferencias, el satélite no puede transmitir y recibir en el mismo rango de frecuencias. Se produciría una interferencia entre la señal entrante y la saliente.
+        El enlace ascendente lleva la señal desde una estación terrestre hasta el satelite y el descendente del satellite hacia la tierra. Un transponedor recibe una banda de la señal ascendente, la amplifica y la retransmite en otra banda de frecuencia (Stallings sección 4.2, Tanenbaum sección 2.4). Utiliza bandas de frecuencias distintas para evitar que su propia transmisión interfiera con la señal que esta recibiendo.
+        
+        La señal  ascendente llega debilitada por la gran distancia recorrida mientras que el transmisor del satelite genera una señal de mayor potencia para enviarla hacia la tierra. Si ambas ocuparan la misma banda, una parte de la transmission que se acople al receptor podría enmascarar la señal que se desea recibir. Generando una interferencia producida por su propio equipo aunque no hubiera otros transmisores utilizando el canal.
+        
+        Por ejemplo, La banda C fue la primera que se destinó al tráfico comercial por satélite. Tiene dos rangos de frecuencia, el inferior para el tráfico descendente o de bajada (proveniente del satélite) y el superior para el tráfico ascendente o de subida (hacia el satélite). 6 GHz para la subida y 4 GHz para la bajada. El satélite recibe la información alrededor de 6 GHz y la retransmite alrededor de 4 GHz. No se trata de dos mensajes diferentes, sino de la misma información transportada en bandas distintas.
+        
+        Esta separación, junto con el aislamiento entre los circuitos y las antenas, permite que el satélite reciba y retransmita simultáneamente facilitando la separación de la señal y conservando la información transportada.
   \item
         \textbf{Indique las diferencias más significativas entre la difusión de radio y las microondas.}
 
@@ -384,10 +461,33 @@ El sistema tiene tres partes:
   \item
         \textbf{¿Qué es una antena isotrópica?}
 
-        Una antena isotrópica es un punto en el espacio que radia potencia de igual forma en todas las direcciones. Su diagrama de radiación consiste en una esfera centrada en la posición de la antena isotrópica.
+        Una antena isotrópica es una antena teórica que radia la potencia por igual en todas las direcciones del espacio. Esto significa que, a una misma distancia de la antena, la potencia radiada es igual independientemente de la dirección en la que se mida.
+
+        Su diagrama de radiación tiene forma de esfera, centrada en la posición de la antena, ya que la radiación se distribuye uniformemente en todas las direcciones. Se utiliza como modelo de referencia para comparar el comportamiento de otras antenas reales, que generalmente concentran la radiación en determinadas direcciones.
+
+        En la práctica, una antena isotrópica ideal no se puede construir, pero resulta útil para estudiar y describir las características de las antenas y su ganancia.
+
+        \begin{figure}[htbp]
+          \centering
+          \includegraphics[width=0.45\textwidth]{antena_isotropica.png}
+          \caption{Diagrama de radiación de una antena isotrópica.}
+          \label{fig:antena-isotropica}
+        \end{figure}
   \item
         \textbf{¿Cuál es la ventaja de una antena parabólica por reflexión?} \\
-        La ventaja es el direccionamiento de la señal en la emisión y en la recepción. Debido a la forma de la antena una señal emitida desde el foco de la parábola y reflejarse en la antena tendrá una dirección de transmisión paralela al eje de la antena, esto generará un haz de señal que podrá viajar casi en línea recta hacia donde apunte la misma. Además, al recibir una señal con haces que lleguen paralelos al eje de la antena, al reflejarse en la parábola todas incidirán en el foco de la parábola, lo que permite concentrar en un solo punto mayor potencia de la señal.
+        Una antena parabólica por reflexión está formada, por lo general, por dos componentes principales:
+
+        \begin{enumerate}[label=\arabic*., itemsep=0.15cm]
+          \item \textbf{Reflector:} es un plato con forma parabólica.
+          \item \textbf{Elemento de alimentación:} es donde se recogen o se transmiten las señales.
+        \end{enumerate}
+
+        El elemento de alimentación se ubica directamente en el foco del reflector principal. Algunas antenas utilizan un \textbf{subreflector}, un reflector parabólico más pequeño que ayuda a redirigir y concentrar las señales en el elemento de alimentación. En las antenas que utilizan subreflector, el elemento de alimentación se encuentra en el foco de este.
+
+        Al transmitir, el elemento de alimentación genera ondas que, sin un plato reflector, se distribuirían en distintas direcciones. La forma parabólica del reflector permite que las ondas emitidas desde el foco se reflejen y se dirijan hacia donde apunta el eje central de la antena. De esta manera, parte de la señal que se perdería en otras direcciones se concentra en un haz, lo que permite que llegue al receptor con mayor potencia.
+
+        De forma similar, al recibir una señal, el plato capta una mayor proporción de las ondas que llegan en la dirección de su eje y las concentra en el foco. Allí, el elemento de alimentación puede captarlas con mayor potencia. En esto radican las ventajas de este tipo de antenas: permiten una transmisión de señal más potente y alcanzan receptores a mayor distancia y con mejor calidad. Sin embargo, esta misma direccionalidad es su principal desventaja, ya que requieren una alineación precisa con la señal durante su instalación y operación.
+
   \item \textbf{¿Qué factores determinan la ganancia de una antena?} \\
 La ganancia mide la directividad de la antena: es la relación entre la potencia radiada en una dirección dada y la que radiaría una antena isotrópica ideal. Se expresa en dBi. La antena no agrega potencia, sino que la concentra en un haz: a mayor ganancia, haz más angosto. Por reciprocidad, la ganancia es la misma al transmitir y al recibir.
 
@@ -472,12 +572,18 @@ La misma antena a 4~GHz da $\approx 35{,}9$~dBi: al dividir la frecuencia por 3,
         En conclusión, la pérdida en el espacio libre es el principal mecanismo de atenuación asociado a la distancia en un enlace satelital, mientras que los fenómenos atmosféricos y las condiciones de instalación introducen pérdidas adicionales que deben considerarse en el balance del enlace.
   \item
         \textbf{¿Qué es la refracción?} \\
-        Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado.
+        Cuando una onda electromagnética pasa de un medio con una densidad a otro con densidad distinta, su velocidad cambia. El efecto de esto es desviar la dirección de la onda en la separación entre los dos medios. Al pasar de un medio menos denso a otro con densidad mayor, la onda se desviará hacia el medio más denso. Este fenómeno se puede observar sumergiendo parcialmente un palo en agua. La refracción se produce debido a que la velocidad de las ondas electromagnéticas es una función de la densidad del medio atravesado. La refracción es el cambio en la propagación de una onda al pasar entre regiones donde su velocidad es diferente.
 
-        Las ondas de radio se pueden refractar (o desviar) cuando se propagan a través de la atmósfera. La refracción es causada por los cambios en la velocidad de la señal al cambiar su altura o por otro tipo de cambios espaciales debido a las condiciones atmosféricas. Normalmente, la velocidad de la señal aumenta con la altura, haciendo que las ondas de radio se desvíen hacia la superficie terrestre. las condiciones metereológicas pueden implicar variaciones
-        en la velocidad con la altura que sean significativamente distintas de las variaciones típicas esperadas. Esto puede dar lugar a que sólo una fracción, o incluso nada, de la onda transmitida siguiendo la trayectoria visual llegue a la antena receptora.
+        Para describir este comportamiento se utiliza el indice de refracción $n$:
+
+        $$n = \frac{c}{v}$$
+        donde $c$ es la velocidad de la luz en el vació y $v$ su velocidad en el medio. Un indice mayor indica una velocidad de propagación menor. Para explicar hacia donde se desvía la onda, se comparan los indices de refracción de los medios. La relación entre las direcciones de incidencia y transmisión se expresa mediante la ley de Snell:
+        $$n_1\sin\theta_1=n_2\sin\theta_2$$
+        Donde los ángulos $\theta_1$ y $\theta_2$ se miden respecto de la normal. Si la onda pasa a un medio de mayor indice, se desvía hacia la normal. Si pasa a uno de menor indice, se desvía alejándose de la normal.
+
+        Las ondas de radio se pueden refractar (o desviar) cuando se propagan a través de la atmósfera. La refracción es causada por los cambios en la velocidad de la señal al cambiar su altura o por otro tipo de cambios espaciales debido a las condiciones atmosféricas. Normalmente, la velocidad de la señal aumenta con la altura, haciendo que las ondas de radio se desvíen hacia la superficie terrestre. Es decir, el indice de refracción disminuye con la altura y las ondas de radio curvan su trayectoria suavemente hacia la tierra. (Stallings, sección 4.3)
   \item
-        \textbf{¿Qué diferencia hay entre difracción y dispersión?} \\
+        \textbf{¿Qué diferencia hay entre difracción y dispersión?}
 
         Nos pareció que valía la pena no quedarnos solo con la definición de cada fenómeno, sino mostrar dónde aparece cada uno en el propio capítulo, porque eso ayuda a fijar la diferencia.
 
