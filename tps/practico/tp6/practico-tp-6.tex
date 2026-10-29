@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{article}
 
 % -----------------------------------------------------------------------------
-% Paquetes: todos forman parte de una instalacion estandar de LaTeX.
+% Paquetes: todos forman parte de una instalación estándar de LaTeX.
 % -----------------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
@@ -10,7 +10,7 @@
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage[T1]{fontenc}
-% Fecha en espanol sin depender de babel ni de spanish.ldf.
+% Fecha en español sin depender de babel ni de spanish.ldf.
 \newcommand{\FechaEnEspanol}{%
   \number\day\space de\space
   \ifcase\month
@@ -23,7 +23,7 @@
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 
-% lastpage no es necesario para compilar, pero permite mostrar "pagina de N".
+% lastpage no es necesario para compilar, pero permite mostrar "página de N".
 \newif\ifHayUltimaPagina
 \IfFileExists{lastpage.sty}{
   \usepackage{lastpage}
@@ -33,20 +33,20 @@
 }
 
 % -----------------------------------------------------------------------------
-% CONFIGURACION DEL TRABAJO: editar solamente este bloque para reutilizarlo.
+% CONFIGURACIÓN DEL TRABAJO: editar solamente este bloque para reutilizarlo.
 % -----------------------------------------------------------------------------
 \newcommand{\NombreMateria}{Redes de Computadoras}
 \newcommand{\TipoTrabajo}{Trabajo Práctico}
 \newcommand{\NumeroTrabajo}{6}
 % Cambiar por "Teórico" o "Práctico" según corresponda.
 \newcommand{\TipoTP}{Práctico}
-\newcommand{\NombreTrabajo}{Trabajo Practico N° 6}
+\newcommand{\NombreTrabajo}{Trabajo Práctico N° 6}
 \newcommand{\NombreGrupo}{NetRunners}
 \newcommand{\Docente}{SANTIAGO MARTIN HENN}
 \newcommand{\LogoArchivo}{logo.png}
 \newcommand{\LogoRuta}{\LogoArchivo}
 
-% Una linea por integrante. Se pueden agregar o quitar filas.
+% Una línea por integrante. Se pueden agregar o quitar filas.
 \newcommand{\Integrantes}{%
   \begin{tabular}{ll}
     Bastida, Lucas Ramiro & DNI 39444511 \\
@@ -60,7 +60,7 @@
 }
 
 % -----------------------------------------------------------------------------
-% Elementos comunes de caratula y encabezado.
+% Elementos comunes de carátula y encabezado.
 % -----------------------------------------------------------------------------
 \newcommand{\InsertarLogo}[1][0.24\textwidth]{%
   \ifx\LogoRuta\empty
@@ -78,7 +78,7 @@
 \fancyhead[C]{\small\textbf{\TituloCorto}}
 \fancyhead[R]{\small\NombreGrupo}
 \renewcommand{\headrulewidth}{0.4pt}
-\fancyfoot[C]{\small Pagina \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
+\fancyfoot[C]{\small Página \thepage\ifHayUltimaPagina\ de \pageref{LastPage}\fi}
 \renewcommand{\footrulewidth}{0pt}
 
 \begin{document}
@@ -124,17 +124,41 @@ conductores según la disposición indicada por la norma y
 colocamos los conectores RJ-45 manteniendo el mismo orden
 en ambos extremos.
 
-La disposición de colores utilizada fue la siguiente:
+Para crimpar cada extremo seguimos estos pasos:
 
 \begin{enumerate}
-    \item Blanco-naranja
-    \item Naranja
-    \item Blanco-verde
-    \item Azul
-    \item Blanco-azul
-    \item Verde
-    \item Blanco-marrón
-    \item Marrón
+    \item Retiramos aproximadamente entre 2 y 3 cm de la cubierta
+    exterior del cable. Para realizar el corte utilizamos el cúter
+    rotatorio incorporado en la pinza crimpeadora, procurando no dañar
+    el aislamiento de los conductores internos.
+    \item Retiramos la sección de cubierta cortada, separamos los
+    cuatro pares trenzados y desarmamos cada par.
+    \item Aplanamos y ordenamos los ocho conductores según el estándar
+    elegido. La disposición de colores T568B utilizada fue la siguiente:
+    \begin{enumerate}[label=\arabic*.]
+        \item Blanco-naranja
+        \item Naranja
+        \item Blanco-verde
+        \item Azul
+        \item Blanco-azul
+        \item Verde
+        \item Blanco-marrón
+        \item Marrón
+    \end{enumerate}
+    \item Recortamos las puntas de los conductores para que quedaran
+    todas del mismo largo, sin perder el orden ni la forma aplanada.
+    \item Insertamos los conductores en la ficha RJ-45, sosteniéndola
+    con los contactos visibles hacia quien realiza el armado. Verificamos
+    que no se cruzaran conductores, que no ingresaran dos en una misma
+    ranura y que todos llegaran hasta el tope de la ficha.
+    \item Una vez comprobado que los ocho conductores alcanzaban el
+    extremo de la ficha, la colocamos en el orificio correspondiente de
+    la pinza crimpeadora y presionamos hasta el tope. Abrimos y volvimos
+    a presionar una o dos veces para asegurar la sujeción.
+    \item Finalmente, verificamos que el retenedor de la ficha presionara
+    la cubierta exterior del cable. Esta sujeción evita que el cable se
+    mueva y reduce el riesgo de que los conductores se corten o se
+    desprendan.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -154,10 +178,13 @@ Auracast había utilizado el estándar T568A en ambos extremos, por lo que
 también se trataba de un cable directo.
 
 Durante la inspección revisamos la disposición de los
-conductores y el armado de los conectores. No encontramos
-defectos visibles ni aspectos constructivos que consideráramos
-incorrectos. Además, el cable funcionó correctamente durante
-la prueba realizada.
+conductores y el armado de los conectores. Los conductores de
+cobre estaban correctamente ordenados y asentados en la ficha,
+y el cable funcionó correctamente durante la prueba realizada.
+Sin embargo, observamos que el plástico de la ficha parecía haber
+recibido poca presión durante el crimpado. Por ello, no sujetaba
+correctamente la cubierta externa del cable, que podía moverse y
+daba la apariencia de estar flojo.
 
 \begin{figure}[H]
     \centering
@@ -166,6 +193,16 @@ la prueba realizada.
     \caption{Cable del grupo Auracast, armado con la disposición
     T568A en ambos extremos.}
     \label{fig:cable-t568a}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]
+    {WhatsApp Image 2026-10-15 at 20.12.41.jpeg}
+    \caption{Detalle de la ficha del cable Auracast: los conductores
+    están correctamente armados, pero el retenedor plástico no
+    presiona adecuadamente la cubierta externa del cable.}
+    \label{fig:cable-auracast-retenedor}
 \end{figure}
 
 \subsection*{Verificación eléctrica mediante tester}
@@ -181,10 +218,92 @@ la comprobación realizada con el instrumento.
 
 \section*{Parte 2: Equipamiento físico, verificación y utilización de equipos de red y generación de tráfico.}
 
+\subsection*{Configuración de la LAN y prueba de tráfico UDP}
+
+Configuramos manualmente la interfaz de red de la PC del grupo con
+la dirección IPv4 \texttt{192.168.9.245} y la máscara
+\texttt{255.255.255.0}, por lo que las PCs participantes quedaron
+en la red \texttt{192.168.9.0/24}. La otra PC utilizada durante las
+pruebas tenía la dirección \texttt{192.168.9.244}.
+
+La configuración mostraba \texttt{192.168.9.0} como gateway. Esta
+dirección identifica la red y no una interfaz utilizable como gateway;
+además, no era necesaria para la comunicación entre equipos de la
+misma subred. Las transferencias locales se realizaron correctamente
+porque ambas direcciones pertenecían a \texttt{192.168.9.0/24}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]
+    {configuracion-ipv4-manual.jpeg}
+    \caption{Configuración manual de la interfaz IPv4 de la PC del grupo.}
+    \label{fig:ipv4-manual-tp6}
+\end{figure}
+
+Verificamos la conectividad con la PC del grupo Auracast mediante
+\texttt{ping} a la dirección \texttt{192.168.9.244}. Se recibieron
+tres respuestas ICMP consecutivas, con tiempos inferiores a un
+milisegundo, lo que confirmó la comunicación entre ambas PCs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {ping-auracast.png}
+    \caption{Respuestas ICMP obtenidas al ejecutar \texttt{ping} a la
+    PC del grupo Auracast.}
+    \label{fig:ping-auracast-tp6}
+\end{figure}
+
+Para probar UDP utilizamos \texttt{ncat}. En la PC receptora se
+ejecutó \texttt{nc -u -l 5000}; desde la otra PC se enviaron mensajes
+al puerto \texttt{5000} de la dirección \texttt{192.168.9.245}. Se
+intercambiaron mensajes en ambos sentidos entre los grupos NetRunners
+y Auracast.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]
+    {ncat-recepcion.png}
+    \caption{Mensajes UDP recibidos por NetRunners mediante \texttt{ncat}.}
+    \label{fig:ncat-recepcion-tp6}
+\end{figure}
+
+Capturamos el tráfico con Wireshark aplicando el filtro
+\texttt{udp.port == 5000}. Se observan datagramas UDP desde
+\texttt{192.168.9.244} hacia \texttt{192.168.9.245} y respuestas en
+sentido inverso. También se registra un mensaje ICMP
+\emph{Destination unreachable (Port unreachable)} al enviar un
+datagrama cuando el puerto receptor no estaba disponible.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]
+    {wireshark-udp.jpeg}
+    \caption{Captura de Wireshark de los datagramas UDP intercambiados
+    por el puerto 5000.}
+    \label{fig:wireshark-udp-tp6}
+\end{figure}
+
+\begin{enumerate}[label=\alph*)]
+    \item No se observa un procedimiento de establecimiento de conexión
+    antes del envío de datos, ya que UDP es no orientado a conexión.
+    \item UDP no posee un mecanismo de confirmación de recepción
+    equivalente a los ACK de TCP.
+    \item Si el receptor UDP no está ejecutándose, el datagrama no es
+    entregado a una aplicación. En esta prueba se observó la respuesta
+    ICMP \emph{Destination unreachable (Port unreachable)}.
+    \item UDP no garantiza ni la entrega ni el orden de los mensajes;
+    la red puede perderlos, duplicarlos o entregarlos fuera de orden.
+    \item Entre las aplicaciones que usan UDP se encuentran DNS, DHCP,
+    streaming en tiempo real, videollamadas y juegos en línea. Priorizan
+    baja latencia y, cuando hace falta, resuelven pérdidas u orden en la
+    propia aplicación.
+\end{enumerate}
+
 \textbf{Desarrollar un pequeño servidor}
   \begin{enumerate}
     \item
-    En una de las PCS de la LAN creamos el directorio y agregamos los 3 archivos diferentes (.txt, .pdf, .jpg) para posterior poder levantar el servidor web.
+    En una de las PC de la LAN creamos el directorio y agregamos tres archivos de diferentes tipos (.txt, .pdf y .jpg) para luego levantar el servidor web.
   
     \begin{figure}[H]
           \centering
@@ -223,7 +342,7 @@ la comprobación realizada con el instrumento.
     \end{figure}
 
     \item
-    Capturamos el trafico generado por la transferencia de archivos con Wireshark, observamos que es una transferencia de archivos de tipo HTTP mediante una petición GET.
+    Capturamos el tráfico generado por la transferencia de archivos con Wireshark. Observamos que se trató de una transferencia HTTP mediante una petición GET.
     \begin{figure}[H]
           \centering
           \includegraphics[width=\linewidth]{wireshark.png}
