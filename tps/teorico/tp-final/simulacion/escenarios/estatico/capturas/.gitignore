@@ -1,0 +1,3 @@
+# Raw captures can be large; retain only derived evidence in Git.
+*.pcap
+*.pcapng

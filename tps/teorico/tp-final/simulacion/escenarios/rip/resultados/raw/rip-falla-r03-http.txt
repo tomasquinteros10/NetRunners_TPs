@@ -1,0 +1,8 @@
+Running 5m test @ http://10.10.4.10:80/archivo-256k.bin
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.44s     2.43s   18.63s    94.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  71 requests in 5.00m, 17.87MB read
+Requests/sec:      0.24
+Transfer/sec:     60.98KB

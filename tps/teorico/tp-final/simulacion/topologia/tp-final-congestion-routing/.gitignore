@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+
+# GNS3 runtime artifacts are rebuilt locally from the tracked topology.
+project-files/
+snapshots/
+*.qcow2
+*.img
+*.log
