@@ -261,6 +261,20 @@ timeouts, y los PCAP de R5-R4 contienen tráfico de datos durante la falla. La
 mediana de recuperación de cinco respuestas ICMP fue 2,381 s. No quedan
 corridas de convergencia pendientes.
 
+## Estado De Cierre
+
+El escenario activo en GNS3 es OSPF. R1 usa R2 como primario a
+`10.10.4.0/24`; el enlace R2-R4 quedó restaurado, las adyacencias relevantes
+están en `Full` y RIP ya no está configurado. No ejecutar más corridas de
+convergencia salvo que se solicite explícitamente repetir una medición.
+
+La rama correcta es `tp-final` del repositorio `NetRunners_TPs`. El último
+commit publicado es `c5d9df0` (`feat: agregar OSPF y capturas directas`). Los
+PCAP se versionan como archivos individuales: se eliminaron los ZIP previos y
+no se deben volver a crear salvo instrucción explícita. Los únicos no
+rastreables esperados fuera de `tp-final` son el PDF de `tps/practico/tp6` y
+un temporal bajo `simulacion/experimentos/`; no modificarlos ni incluirlos.
+
 Los PCAP de respaldo SI contienen trafico de datos. No concluir ausencia de
 ICMP o TCP a partir de un filtro rapido de TShark que no devuelve filas.
 Primero usar siempre estadisticas completas:

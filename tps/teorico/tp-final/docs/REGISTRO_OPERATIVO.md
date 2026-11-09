@@ -144,3 +144,16 @@ errores ni timeouts. La mediana de recuperación de cinco respuestas ICMP fue
 2,381 s; las cinco mediciones fueron 1,753, 3,135, 2,448, 2,381 y 1,833 s.
 La mediana HTTP fue 0,30 solicitudes/s y 78,47 KB/s. Tras la serie, R1 volvió
 a la ruta OSPF primaria por `10.10.12.2%ether3`.
+
+## Cierre De Sesion
+
+Fecha: 2026-11-09.
+
+Se reemplazaron los ZIP de capturas por 102 PCAP individuales y se conservaron
+los logs y resultados como archivos planos. El cambio, la configuración OSPF,
+las cinco corridas y su evidencia se publicaron en `tp-final` con el commit
+`c5d9df0` (`feat: agregar OSPF y capturas directas`).
+
+Al reanudar, verificar primero que R1 conserve la ruta OSPF primaria por
+`10.10.12.2%ether3` y leer `AGENT.md` antes de ejecutar cambios. No hay
+corridas de convergencia pendientes.
