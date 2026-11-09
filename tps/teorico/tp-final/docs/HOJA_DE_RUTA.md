@@ -2,9 +2,9 @@
 
 Esta guia define un camino reproducible para simular congestion y
 convergencia de encaminamiento con GNS3, MikroTik CHR, iperf3 y Wireshark.
-La topologia, las configuraciones, los comandos y los resultados derivados
-deben quedar versionados en este repositorio. Las imagenes de maquinas
-virtuales y las capturas grandes no se versionan.
+La topologia, las configuraciones, los comandos, los resultados derivados y
+las capturas PCAP deben quedar versionados en este repositorio. Las imagenes de
+maquinas virtuales no se versionan.
 
 ## Convenciones
 
@@ -210,13 +210,13 @@ comando ejecutado, captura, nombre de archivo o hash de la imagen.
    Responsable: rac877. Fecha: 2026-11-08. Evidencia: exports estáticos de
    R1-R5, sin `system id`, en `simulacion/escenarios/estatico/config/`.
 - [ ] **OpenCode** Incorporar reglas de `.gitignore` para imagenes CHR,
-  overlays QEMU, snapshots, temporales, logs y capturas crudas grandes.
+  overlays QEMU, snapshots y temporales.
 - [ ] **Todos / manual** Confirmar que `git status` no propone subir
-  `.qcow2`, `.img`, `project-files/tmp`, `snapshots` ni capturas masivas.
+  `.qcow2`, `.img`, `project-files/tmp` ni `snapshots`.
 
   **Check de aceptacion:** una clonacion limpia contiene la documentacion,
-  topologia, configuraciones y scripts, pero no requiere descargar binarios
-  desde Git para evitar conflictos y problemas de licencia.
+  topologia, configuraciones, scripts y capturas PCAP de evidencia; no requiere
+  descargar binarios desde Git para evitar conflictos y problemas de licencia.
 
 ## 3. Armar la topologia manualmente
 
@@ -272,9 +272,14 @@ cambian entre esquemas. Solo cambia el encaminamiento.
 - [ ] **Manual** Configurar RIPv2 en los cinco routers. El camino por R2 debe
   tener dos saltos entre R1 y R4, mientras que el respaldo por R3-R5 debe
   tener tres.
-- [ ] **Manual** Configurar OSPF en area 0. Ajustar costos de interfaz para
-  que R2 sea el camino preferido y R3-R5 el respaldo. No depender del costo
-  automatico por defecto.
+- [x] **Manual** Configurar OSPF en area 0. Ajustar costos de interfaz para
+   que R2 sea el camino preferido y R3-R5 el respaldo. No depender del costo
+   automatico por defecto.
+
+   Responsable: OpenCode. Fecha: 2026-11-08. Evidencia: configuraciones OSPF
+   sin secretos en `simulacion/escenarios/ospf/config/`; R1 usa costos 10 por
+   R2 y 20 por R3. La prueba piloto de corte R2-R4 validó la conmutación por
+   R3-R5 y el posterior retorno al primario.
 - [ ] **Manual** Antes de cada ensayo, exportar la configuracion efectiva y
   compararla con el `.rsc` correspondiente del repositorio.
 
@@ -407,8 +412,9 @@ Conclusiones que solo se pueden afirmar si los datos las respaldan:
 
 ## 8. Compartir una copia ejecutable
 
-- [ ] **Todos / manual** Subir mediante Git solo topologia, Dockerfile,
-  configuraciones sin secretos, matriz, scripts, CSV derivados y documentacion.
+- [ ] **Todos / manual** Subir mediante Git topologia, Dockerfile,
+  configuraciones sin secretos, matriz, scripts, CSV derivados, capturas PCAP
+  y documentacion.
 - [ ] **Manual** Para compartir una copia operativa puntual de GNS3, detener
   el proyecto y usar `File -> Export portable project`.
 - [ ] **Manual** En esa exportacion, no marcar `Include base images`,

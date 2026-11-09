@@ -228,9 +228,9 @@ La captura de GNS3 se valido en el enlace cuello `R2:Ethernet2` a
 `R4:Ethernet1`. El servidor GNS3 local esta limitado a `localhost` y la API
 local quedo disponible sin autenticacion, por lo que las capturas pueden
 iniciarse y detenerse por API, sin Wireshark. No registrar ni restaurar
-credenciales locales al reanudar. Los PCAP crudos y `project-files/` estan
-excluidos de Git; conservar en el repositorio solo los JSON, la matriz, las
-configuraciones y evidencia derivada.
+credenciales locales al reanudar. `project-files/` esta excluido de Git. Los
+PCAP crudos, resultados, matriz y configuraciones se versionan directamente
+en sus escenarios para conservar la evidencia reproducible.
 
 ## Nota De Validacion RIP
 
@@ -244,6 +244,22 @@ entrando por la misma interfaz; esas reglas fueron eliminadas al terminar.
 Las cinco corridas formales `rip-falla-r01` a `rip-falla-r05` completaron y
 estan registradas en la matriz. Los intentos previos de r01 y r02 se
 archivaron bajo `simulacion/escenarios/rip/{resultados,capturas}/diagnostico/`.
+
+## Nota De Configuracion OSPF
+
+OSPF esta configurado y validado en R1-R5 con area 0, instancia `ospf-v2` y
+costos explicitos: 10 para R1-R2-R4 y 20 por enlace del respaldo R1-R3-R5-R4.
+RIP fue eliminado de los routers. Las configuraciones sin secretos estan en
+`simulacion/escenarios/ospf/config/`. Una prueba piloto suspendió R2-R4,
+confirmó un ping por el respaldo con TTL 60 y la ruta de R1 por
+`10.10.13.2%ether4`; el enlace se restauró y R1 volvió al primario por R2.
+La validación inicial no ejecutó corridas formales. Un piloto corto sin
+artefactos validó ICMP, HTTP, conmutación por R3-R5 y retorno al primario. Las
+cinco corridas formales `ospf-falla-r01` a `ospf-falla-r05` completaron y se
+validaron: cada una tiene cinco artefactos, `wrk` terminó sin errores ni
+timeouts, y los PCAP de R5-R4 contienen tráfico de datos durante la falla. La
+mediana de recuperación de cinco respuestas ICMP fue 2,381 s. No quedan
+corridas de convergencia pendientes.
 
 Los PCAP de respaldo SI contienen trafico de datos. No concluir ausencia de
 ICMP o TCP a partir de un filtro rapido de TShark que no devuelve filas.

@@ -77,11 +77,9 @@ simulacion/scripts/ejecutar_udp.sh --all
 ```
 
 `--all` tarda al menos 60 segundos por corrida y no sobrescribe corridas ni
-artefactos ya registrados. Los PCAP individuales permanecen excluidos de Git,
-pero los datos crudos se distribuyen comprimidos en
-`simulacion/escenarios/estatico/capturas-raw.zip` y
-`simulacion/escenarios/rip/capturas-raw.zip`. Al extraerlos desde la raiz del
-TP, conservan las rutas `capturas/<id>.pcap` referidas por la matriz.
+artefactos ya registrados. Los PCAP se versionan directamente bajo
+`simulacion/escenarios/<esquema>/capturas/`, en las rutas
+`capturas/<id>.pcap` referidas por la matriz.
 
 Antes de ejecutar una corrida se puede verificar la topologia, los nodos y el
 enlace de captura sin generar trafico ni archivos:
