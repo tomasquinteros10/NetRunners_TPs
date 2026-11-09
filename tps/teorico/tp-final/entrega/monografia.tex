@@ -1,11 +1,12 @@
 \documentclass[11pt,a4paper]{article}
+\setlength{\emergencystretch}{1.5em}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[a4paper,margin=2.7cm]{geometry}
 \usepackage{parskip}
 \usepackage{enumitem}
 \usepackage{titlesec}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{tikz}
@@ -13,6 +14,8 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
 \usepackage{needspace}
+\usepackage{url}
+\Urlmuskip=0mu plus 1mu
 
 \titleformat{\section}{\large\bfseries}{\thesection}{0.5em}{}
 \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
@@ -32,12 +35,12 @@
 {\large Facultad de Ciencias Exactas, F\'isicas y Naturales}\\[2.0cm]
 
 \rule{\linewidth}{0.5pt}\\[0.5cm]
-{\LARGE\bfseries Monograf\'ia Final -- Avance}\\[0.4cm]
-{\large Simulaci\'on y an\'alisis de congesti\'on en redes bajo distintos esquemas de encaminamiento}\\[0.5cm]
+{\LARGE\bfseries Simulaci\'on y an\'alisis de congesti\'on en redes bajo distintos esquemas de encaminamiento}\\[0.5cm]
+{\large Monograf\'ia Final}\\[0.5cm]
 \rule{\linewidth}{0.5pt}\\[2.0cm]
 
 {\large C\'atedra: Redes de Computadoras}\\[0.2cm]
-{\large Docente: Santiago Mart\'in Henn}\\[1.5cm]
+{\large Docentes: Santiago Mart\'in Henn, Facundo Nicol\'as Oliva Cuneo}\\[1.5cm]
 
 {\large\bfseries Grupo NetRunners}\\[0.6cm]
 \begin{tabular}{c}
@@ -51,14 +54,8 @@ Vasconsellos Blason, Benjam\'in Alejandro \\
 \end{tabular}
 
 \vfill
-{\large 7 de noviembre de 2026}
 
 \end{titlepage}
-
-\section*{T\'itulo}
-
-\noindent
-Simulaci\'on y an\'alisis de congesti\'on en redes bajo distintos esquemas de encaminamiento
 
 \section*{Introducci\'on}
 
@@ -71,6 +68,7 @@ Nos interesan puntualmente dos cosas. Primero, qu\'e esquema de encaminamiento u
 
 La idea es ir desarrollando estos dos ejes a lo largo del trabajo y, sobre el final, comparar los resultados entre las distintas arquitecturas que simulemos, apoy\'andonos en los mecanismos de control de congesti\'on que vimos en la materia.
 
+\clearpage
 \section*{Objetivos}
 
 \subsection*{Objetivo general}
@@ -89,12 +87,13 @@ Analizar de forma experimental c\'omo se comportan distintas arquitecturas de re
   \item Comparar el rendimiento de las arquitecturas simuladas seg\'un p\'erdida de paquetes, latencia y estabilidad del tr\'afico.
 \end{itemize}
 
+\clearpage
 \section{Herramientas y entorno}
 \label{sec:herramientas}
 
-Antes de meternos con la parte experimental nos parece importante dejar documentado con qu\'e herramientas vamos a trabajar y por qu\'e, porque esto fue justo uno de los puntos que ajustamos despu\'es de la \'ultima devoluci\'on del profesor.
+Antes de meternos con la parte experimental nos parece importante dejar documentado con qu\'e herramientas vamos a trabajar y por qu\'e.
 
-Vamos a armar las topolog\'ias en GNS3 en lugar de Packet Tracer. La diferencia clave es que GNS3 corre cada router y switch como una m\'aquina virtual real, con interfaces de red que s\'i existen a nivel del sistema operativo del host; Packet Tracer, en cambio, es un simulador cerrado donde el tr\'afico nunca sale de su propio motor interno. Packet Tracer trae su propio analizador de tr\'afico (el modo Simulaci\'on), pero, como se\~nal\'o el profesor, queda restringido al marco del simulador: no es el tr\'afico real de una placa de red. Como para nosotros es central poder capturar con Wireshark de verdad, GNS3 es la opci\'on que nos permite hacerlo sin ning\'un truco.
+Vamos a armar las topolog\'ias en GNS3 en lugar de Packet Tracer. La diferencia clave es que GNS3 corre cada router y switch como una m\'aquina virtual real, con interfaces de red que s\'i existen a nivel del sistema operativo del host; Packet Tracer, en cambio, es un simulador cerrado donde el tr\'afico nunca sale de su propio motor interno. Packet Tracer trae su propio analizador de tr\'afico (el modo Simulaci\'on), pero queda restringido al marco del simulador: no es el tr\'afico real de una placa de red. Como para nosotros es central poder capturar con Wireshark de verdad, GNS3 es la opci\'on que nos permite hacerlo sin ning\'un truco.
 
 Para los routers vamos a usar la imagen de MikroTik CHR (\textit{Cloud Hosted Router}), que corre RouterOS, el mismo sistema operativo de los routers MikroTik f\'isicos. La elegimos por dos motivos: primero, porque MikroTik es una marca barata y muy com\'un en redes chicas en Argentina, as\'i que lo que configuremos ac\'a se traduce directamente a lo que configurar\'iamos en un equipo real (retomamos esto en la Secci\'on~\ref{sec:costos}); segundo, porque la licencia de prueba gratuita de CHR alcanza para todo lo que necesitamos, con la \'unica limitaci\'on de que capa la velocidad de cada interfaz a 1~Mbps, lo cual en realidad nos viene bien: nos da un cuello de botella ya armado sin tener que configurar \textit{traffic shaping} aparte (volvemos sobre esto en la Secci\'on~\ref{sec:metodologia}).
 
@@ -102,6 +101,7 @@ Wireshark se conecta directamente a los enlaces virtuales de GNS3: con el bot\'o
 
 Para generar el tr\'afico de prueba vamos a usar \texttt{iperf3} desde las puntas de la topolog\'ia (m\'aquinas Linux livianas dentro de GNS3), tanto en modo TCP como UDP; la Secci\'on~\ref{sec:metodologia} detalla c\'omo lo vamos a combinar con el cuello de botella para generar congesti\'on controlada.
 
+\clearpage
 \section{Marco te\'orico}
 
 Esta secci\'on desarrolla los tres ejes que ya hab\'iamos adelantado en el plan de trabajo: control de congesti\'on (que es el centro de la monograf\'ia), encaminamiento y capa de aplicaci\'on. En cada uno tratamos de apoyarnos primero en lo que da Stallings, que es la bibliograf\'ia de la c\'atedra, y s\'olo recurrimos a otras fuentes cuando el libro no cubre algo con el detalle que necesitamos, como pasa con los protocolos de encaminamiento concretos y con algunos mecanismos de congesti\'on que quedaron desactualizados desde que se escribi\'o.
@@ -246,9 +246,63 @@ RIPv2 (RFC~2453) manda su tabla completa de rutas cada 30~segundos por multicast
 
 OSPF (RFC~2328) funciona distinto: en lugar de mandar toda la tabla peri\'odicamente, cada router arma una base de datos de estado de enlace (LSDB) a partir de anuncios (LSA, de distintos tipos seg\'un qu\'e describan) que intercambia y sincroniza con sus vecinos solo cuando algo cambia. Los vecinos se descubren y se mantienen con paquetes Hello cada 10~segundos; si un vecino no manda un Hello en 40~segundos (el temporizador \textit{Dead}), se lo da de baja y se recalcula. En redes multiacceso (como una LAN con varios routers), OSPF elige un router designado (DR) y uno de respaldo (BDR) para que los dem\'as sincronicen la LSDB solo con ellos y no entre todos contra todos, y para que la red no crezca indefinidamente en una sola LSDB permite dividirla en \'areas, donde el \'area~0 (\textit{backbone}) conecta a todas las dem\'as. OSPF corre directamente sobre IP, con el protocolo n\'umero 89, sin pasar por UDP ni TCP.
 
+Dentro del mecanismo de inundaci\'on, no todos los LSA describen lo mismo. Los m\'as relevantes para interpretar una captura son los que resume la Tabla~3.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+\centering
+\small
+\begin{tabular}{@{}p{1.3cm}p{3.1cm}p{8.4cm}@{}}
+\toprule
+\textbf{Tipo} & \textbf{Nombre} & \textbf{Qu\'e describe} \\
+\midrule
+1 & Router LSA & Los enlaces directos de un router y su costo; cada router lo genera \'unicamente para su propia \'area. \\
+2 & Network LSA & La red multiacceso y los routers conectados a ella; lo genera el router designado (DR) de esa red, no cada router por separado. \\
+3 & Summary LSA & Una ruta aprendida en otra \'area, reinundada por un router de borde de \'area (ABR) hacia el resto de las \'areas para que sepan c\'omo llegar sin conocer su topolog\'ia interna. \\
+5 & AS External LSA & Una ruta aprendida fuera del dominio OSPF (por ejemplo, redistribuida desde una ruta est\'atica o desde BGP), inundada por un router de borde de sistema aut\'onomo (ASBR). \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 3. Tipos de LSA m\'as comunes en OSPF (RFC~2328, Secci\'on 12).}
+\end{minipage}
+\end{center}
+
+En nuestra topolog\'ia de laboratorio, chica y de una sola \'area, el tipo~1 alcanza para explicar casi todo lo que vamos a ver en las capturas: cuando cae \texttt{R2-R4}, lo que se inunda es un Router~LSA actualizado de R2 y de R4, cada uno sin ese enlace en su lista. No vamos a tener tipo~2 (no hay ninguna LAN multiacceso con m\'as de un router OSPF en nuestro diamante, todos los enlaces son punto a punto) ni tipo~3 o~5 (toda la topolog\'ia vive en una \'unica \'area~0, sin rutas redistribuidas desde afuera), pero nos pareci\'o importante dejarlos documentados porque son justamente los que aparecer\'ian en cualquier red OSPF un poco m\'as grande que la nuestra, y porque explican por qu\'e OSPF escala mejor que un vector-distancia plano: puede resumir y ocultar el detalle topol\'ogico de un \'area entera detr\'as de un \'unico Summary~LSA.
+
 La m\'etrica de OSPF merece una aclaraci\'on aparte, porque nos puede jugar en contra si no la ajustamos: el costo de un enlace se calcula como un ancho de banda de referencia dividido el ancho de banda real del enlace, y por defecto, en equipos Cisco, esa referencia es 100~Mbps. El problema es que, si no tocamos ese valor con \texttt{auto-cost reference-bandwidth}, cualquier enlace de 100~Mbps o m\'as nos queda con costo~1, as\'i que OSPF termina sin poder distinguir un enlace de 100~Mbps de uno de 1~Gbps y elige caminos casi como si solo contara saltos. Como en nuestras topolog\'ias vamos a tener un enlace deliberadamente angosto (el cuello de botella que armamos a prop\'osito, Secci\'on~\ref{sec:metodologia}), vamos a tener que revisar este valor para que el costo realmente refleje esa diferencia.
 
 Para completar el panorama de las rutas est\'aticas que ya mencionamos en la Tabla~1: cada ruta, est\'atica o aprendida por un protocolo, tiene asociada una distancia administrativa, que es lo que un router usa para decidir cu\'al preferir cuando aprende la misma ruta por m\'as de una fuente (cuanto m\'as baja, m\'as confiable se la considera; una ruta est\'atica suele tener distancia administrativa~1, m\'as confiable que RIP~120 u OSPF~110). Esto permite armar rutas est\'aticas flotantes: una ruta est\'atica con distancia administrativa deliberadamente alta, que el router ignora mientras tenga una ruta mejor (por ejemplo, aprendida por OSPF) y que solo entra en uso si esa ruta mejor desaparece -- una forma de darle a la red est\'atica algo de respaldo ante una ca\'ida sin volverla din\'amica.
+
+\subsubsection*{Por qu\'e vector-distancia converge m\'as lento que estado de enlace}
+
+La Tabla~2 ya anticipa que RIP converge m\'as lento que OSPF, pero vale la pena detenerse en el porqu\'e, porque no tiene que ver con qu\'e tan ``r\'apido piensa'' cada protocolo sino con qu\'e tan completa es la informaci\'on con la que arranca a pensar. Un router que corre RIP solo sabe el costo que le reportan sus vecinos directos -- no tiene idea de c\'omo est\'a conectado el resto de la red m\'as all\'a de ellos --, as\'i que cuando algo cambia, esa novedad tiene que viajar salto a salto: cada router espera (o dispara) una actualizaci\'on, la procesa, decide si cambi\'o su propia mejor ruta y reci\'en ah\'i se la pasa al siguiente. Es una cadena de decisiones dependientes, y cada eslab\'on de esa cadena puede, adem\'as, estar temporalmente equivocado con informaci\'on vieja que todav\'ia no se actualiz\'o -- que es exactamente la ra\'iz del problema de \textit{cuenta a infinito} que mencionamos m\'as arriba. Un router OSPF, en cambio, no interpreta nada: cuando recibe un LSA simplemente lo guarda en su base de datos de estado de enlace (LSDB) tal cual lo describe, y una vez que esa base est\'a sincronizada con sus vecinos, calcula su propio camino de punta a punta con Dijkstra sin depender de lo que ning\'un otro router haya ``decidido'' mientras tanto. La diferencia de fondo es que RIP propaga conclusiones (mi costo a X es Y) mientras que OSPF propaga hechos (A est\'a conectado a B con costo C), y una conclusi\'on vieja se puede confundir con una nueva, mientras que un hecho viejo simplemente se sobrescribe con uno nuevo.
+
+Para que esto no quede solo en la idea general, vale la pena ver con un ejemplo num\'erico simple c\'omo se arma concretamente el problema de cuenta a infinito: una cadena de cuatro routers (A--B--C--D) que originalmente llegan a una red detr\'as de A con costos 1, 2 y 3 respectivamente. El siguiente cuadro muestra qu\'e pasar\'ia, ronda a ronda, si el enlace A--B se cae y ninguna de las medidas de mitigaci\'on que ya mencionamos estuviera activa:
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.85\linewidth}
+\centering
+\small
+\begin{tabular}{@{}p{2.6cm}p{4.7cm}p{4.7cm}@{}}
+\toprule
+\textbf{Ronda} & \textbf{Qu\'e sabe B (costo a la red de A)} & \textbf{Qu\'e sabe C (costo a la red de A)} \\
+\midrule
+0 (antes de la falla) & 1, directo & 2, v\'ia B \\
+1 (A--B se cae) & Infinito -- B lo detecta directo & 2 -- todav\'ia no se enter\'o \\
+2 & 3 -- B escucha a C (2+1) y, sin horizonte dividido, le cree & 2 -- sin cambios a\'un \\
+3 & 3 & 4 -- C escucha a B (3+1) y le cree \\
+4 & 5 -- B vuelve a escuchar a C (4+1) & 4 \\
+\ldots & \ldots sigue subiendo de a uno por ronda \ldots & \ldots hasta llegar a 16, el ``infinito'' de RIP \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Ejemplo num\'erico ilustrativo: cuenta a infinito sin horizonte dividido ni envenenamiento en reversa (no corresponde a una corrida real).}
+\end{minipage}
+\end{center}
+
+Lo que hace que esta cadena ascendente no ocurra en la pr\'actica es justamente el horizonte dividido con envenenamiento en reversa que describimos m\'as arriba: C nunca le anuncia a B una ruta que aprendi\'o del propio B (o se la anuncia con m\'etrica infinita), as\'i que B nunca tiene la oportunidad de creerle a C una ruta que, en el fondo, sali\'o originalmente de \'el mismo. Pero esa protecci\'on tiene un costo en tiempo: el \textit{hold-down} que la acompa\~na hace que un router ignore, durante un per\'iodo prudencial, cualquier anuncio que empeore una ruta reci\'en ca\'ida, por si todav\'ia hay informaci\'on vieja circulando -- y ese per\'iodo de prudencia es, en buena medida, la raz\'on estructural de que RIP necesite varios segundos para converger incluso cuando la actualizaci\'on disparada funciona bien, mientras que OSPF, al no depender de una cadena de reinterpretaciones sucesivas sino de una \'unica inundaci\'on de hechos, no necesita ninguna protecci\'on equivalente ni el tiempo de prudencia que eso implica.
 
 \subsubsection*{El punto clave para nuestro tema}
 
@@ -277,10 +331,11 @@ SNMP, por su parte, lo traemos a colaci\'on por un motivo distinto. Es el protoc
 
 En conjunto, estos tres ejes nos dan el marco que necesit\'abamos para dise\~nar la parte experimental: sabemos qu\'e mecanismos de congesti\'on vamos a buscar en las capturas, qu\'e protocolos de encaminamiento vamos a comparar y qu\'e tipo de tr\'afico vamos a generar para poner a prueba todo esto.
 
+\clearpage
 \section{Metodolog\'ia}
 \label{sec:metodologia}
 
-Esta secci\'on describe c\'omo vamos a generar la congesti\'on, qu\'e vamos a medir y con qu\'e herramienta, y c\'omo vamos a estructurar el an\'alisis de los resultados -- este \'ultimo punto fue justamente lo que nos pidi\'o reforzar el profesor en su devoluci\'on.
+Esta secci\'on describe c\'omo vamos a generar la congesti\'on, qu\'e vamos a medir y con qu\'e herramienta, y c\'omo vamos a estructurar el an\'alisis de los resultados.
 
 \subsection*{El cuello de botella}
 
@@ -288,7 +343,7 @@ Antes de simular nada nos topamos con un problema pr\'actico: en GNS3, por defec
 
 \subsection*{Generaci\'on de tr\'afico y m\'etricas}
 
-Para generar tr\'afico de prueba entre las puntas de la topolog\'ia vamos a usar \texttt{iperf3}, que nos permite tanto tr\'afico TCP (para ver el comportamiento de HTTP) como UDP a tasa fija (para simular el flujo RTP en tiempo real que describimos en la Secci\'on~\ref{sec:aplicacion}). La Tabla~3 resume qu\'e herramienta usamos para medir cada m\'etrica.
+Para generar tr\'afico de prueba entre las puntas de la topolog\'ia vamos a usar \texttt{iperf3}, que nos permite tanto tr\'afico TCP (para ver el comportamiento de HTTP) como UDP a tasa fija (para simular el flujo RTP en tiempo real que describimos en la Secci\'on~\ref{sec:aplicacion}). La Tabla~4 resume qu\'e herramienta usamos para medir cada m\'etrica.
 
 \needspace{1cm}
 \begin{center}
@@ -307,30 +362,31 @@ Tiempo de convergencia & Cortar un enlace y medir cu\'anto tardan en volver los 
 \bottomrule
 \end{tabular}
 \par\vspace{0.1cm}
-\figcaption{Tabla 3. M\'etricas a registrar y herramienta usada para cada una.}
+\figcaption{Tabla 4. M\'etricas a registrar y herramienta usada para cada una.}
 \end{minipage}
 \end{center}
 
 \subsection*{De detectar a explicar}
 
-El profesor nos marc\'o algo importante en la devoluci\'on: no alcanza con mostrar que hay una diferencia entre las capturas de las distintas topolog\'ias, hay que explicarla. Para que esto no quede librado a c\'omo le salga a cada uno, proponemos que cada resultado que presentemos siga siempre la misma estructura de tres pasos: primero, qu\'e observamos concretamente en la captura (el n\'umero, el gr\'afico, el paquete puntual); segundo, qu\'e predec\'ia la teor\'ia que desarrollamos en el marco te\'orico, con referencia expl\'icita a la secci\'on correspondiente; y tercero, por qu\'e coincide o por qu\'e no -- y si no coincide, qu\'e variable de nuestra simulaci\'on (por ejemplo, que usamos CUBIC en lugar de Reno, o que no ajustamos el costo de referencia de OSPF) puede explicar la diferencia.
+No alcanza con mostrar que hay una diferencia entre las capturas de las distintas topolog\'ias: hay que explicarla. Para que esto no quede librado a c\'omo le salga a cada uno, proponemos que cada resultado que presentemos siga siempre la misma estructura de tres pasos: primero, qu\'e observamos concretamente en la captura (el n\'umero, el gr\'afico, el paquete puntual); segundo, qu\'e predec\'ia la teor\'ia que desarrollamos en el marco te\'orico, con referencia expl\'icita a la secci\'on correspondiente; y tercero, por qu\'e coincide o por qu\'e no -- y si no coincide, qu\'e variable de nuestra simulaci\'on (por ejemplo, que usamos CUBIC en lugar de Reno, o que no ajustamos el costo de referencia de OSPF) puede explicar la diferencia.
 
-\subsection*{Cronograma}
+\subsection*{Etapas de trabajo}
 
-Con la semana extra que nos dio el profesor, as\'i pensamos seguir hasta el 9 de noviembre:
+As\'i organizamos el trabajo:
 
 \begin{itemize}
-  \item Primero vamos a armar las topolog\'ias en GNS3: al menos dos id\'enticas entre s\'i, que solo se diferencien en el esquema de encaminamiento (est\'atica y RIP seguro, OSPF si llegamos con los tiempos), dejando documentado c\'omo generamos el tr\'afico creciente y qu\'e m\'etricas anotamos en cada corrida.
-  \item Con eso armado, corremos las capturas con Wireshark en los mismos puntos de cada topolog\'ia para que las corridas sean realmente comparables entre s\'i.
-  \item Despu\'es viene lo m\'as laborioso: cruzar lo que vimos en las capturas con lo que desarrollamos ac\'a, siguiendo la estructura de tres pasos que planteamos arriba (por ejemplo, encontrar en una captura real el arranque lento de TCP que graficamos, o ver si RIP tarda m\'as en converger que OSPF como dice la teor\'ia, y explicar por qu\'e).
-  \item En paralelo, cerramos la secci\'on de implementaci\'on real y costos (Secci\'on~\ref{sec:costos}) con las cotizaciones definitivas.
+  \item Primero armamos las tres topolog\'ias en GNS3 -- id\'enticas entre s\'i, diferenci\'andose solo en el esquema de encaminamiento (est\'atica, RIP y OSPF) --, documentando c\'omo generamos el tr\'afico creciente y qu\'e m\'etricas anotamos en cada corrida.
+  \item Con eso armado, corrimos las capturas con Wireshark en los mismos puntos de cada topolog\'ia para que las corridas fueran realmente comparables entre s\'i.
+  \item Despu\'es vino lo m\'as laborioso: cruzar lo que vimos en las capturas con lo que desarrollamos ac\'a, siguiendo la estructura de tres pasos que planteamos arriba.
+  \item En paralelo, cerramos la secci\'on de implementaci\'on real y costos (Secci\'on~\ref{sec:costos}) con las cotizaciones del mercado.
   \item Y cerramos con las conclusiones, volviendo a los objetivos que planteamos al principio para ver qu\'e tanto los cumplimos, sin esconder las limitaciones de trabajar con una simulaci\'on y no con una red real.
 \end{itemize}
 
+\clearpage
 \section{Implementaci\'on real y costos}
 \label{sec:costos}
 
-Esta secci\'on responde al \'ultimo pedido del profesor: ponerle nombre, apellido y precio a los equipos, distinguiendo entre lo que usamos gratis para simular en la facultad y lo que costar\'ia armar esto mismo con hardware real.
+Esta secci\'on le pone nombre, apellido y precio a los equipos, distinguiendo entre lo que usamos gratis para simular en la facultad y lo que costar\'ia armar esto mismo con hardware real.
 
 \subsection*{Alcance: nuestra propia topolog\'ia, no una red hipot\'etica de empresa}
 
@@ -342,7 +398,7 @@ Todo lo que usamos en la computadora para simular es gratuito o de c\'odigo abie
 
 \subsection*{Equipos reales: tres niveles de calidad}
 
-Para la implementaci\'on real armamos tres opciones por rol, pensando en el tri\'angulo calidad / tiempo / presupuesto que nos pidi\'o el profesor. Los precios son los que cotiz\'o uno de nuestros compa\~neros en el mercado argentino; los convertimos a pesos con el tipo de cambio oficial del 28 de octubre de 2026 (\$1.560 por d\'olar, fuente: indicadores.ar) para que el n\'umero final tenga sentido en nuestro contexto, ya que un precio en d\'olares sin fecha ni tipo de cambio no dice mucho en la Argentina de hoy.
+Para la implementaci\'on real armamos tres opciones por rol, pensando en el tri\'angulo calidad, tiempo y presupuesto. Los precios son los que cotiz\'o uno de nuestros compa\~neros en el mercado argentino; los convertimos a pesos con el tipo de cambio oficial del 28 de octubre de 2026 (\$1.560 por d\'olar, fuente: indicadores.ar) para que el n\'umero final tenga sentido en nuestro contexto, ya que un precio en d\'olares sin fecha ni tipo de cambio no dice mucho en la Argentina de hoy.
 
 \needspace{1cm}
 \begin{center}
@@ -359,7 +415,7 @@ Monitoreo (SNMP) & Zabbix / LibreNMS, software libre (USD 0) & Zabbix / LibreNMS
 \bottomrule
 \end{tabular}
 \par\vspace{0.1cm}
-\figcaption{Tabla 4. Equipos por rol y nivel de calidad, para armar nuestra propia topolog\'ia de laboratorio con hardware real.}
+\figcaption{Tabla 5. Equipos por rol y nivel de calidad, para armar nuestra propia topolog\'ia de laboratorio con hardware real.}
 \end{minipage}
 \end{center}
 
@@ -378,7 +434,7 @@ Empresarial & USD 5.000+ & \$7.800.000+ \\
 \bottomrule
 \end{tabular}
 \par\vspace{0.1cm}
-\figcaption{Tabla 5. Costo total aproximado por nivel, cotizado por el grupo en el mercado argentino (28/10/2026, d\'olar oficial \$1.560 -- fuente: indicadores.ar).}
+\figcaption{Tabla 6. Costo total aproximado por nivel, cotizado por el grupo en el mercado argentino (28/10/2026, d\'olar oficial \$1.560 -- fuente: indicadores.ar).}
 \end{minipage}
 \end{center}
 
@@ -392,7 +448,7 @@ Ya mencionamos SNMP en la Secci\'on~\ref{sec:aplicacion} como el protocolo que s
 
 \subsection*{Calidad, tiempo y presupuesto}
 
-Cerramos con c\'omo pensamos el triple borde que nos pidi\'o el profesor, aplicado a nuestro propio caso:
+Cerramos con c\'omo pensamos ese equilibrio entre calidad, tiempo y presupuesto, aplicado a nuestro propio caso:
 
 \begin{itemize}
   \item La \textbf{ruta est\'atica} es la opci\'on m\'as barata en equipos -- no necesita routers con soporte de protocolos din\'amicos avanzados -- pero la m\'as cara en horas de operaci\'on: cada cambio en la red hay que cargarlo a mano, y un error humano tarda en notarse.
@@ -400,8 +456,612 @@ Cerramos con c\'omo pensamos el triple borde que nos pidi\'o el profesor, aplica
   \item Para nuestro propio escenario de laboratorio, el nivel econ\'omico (USD~200--350) ya alcanza para validar todo lo que planteamos: los tres esquemas de encaminamiento, el cuello de botella y las capturas. El nivel intermedio (USD~700--1.200) tendr\'ia sentido reci\'en si pensamos en una red que vaya a seguir creciendo despu\'es del laboratorio; el nivel empresarial (USD~5.000+) queda totalmente fuera de escala para lo que necesitamos nosotros, pero lo dejamos documentado porque muestra hasta d\'onde llega el mismo problema de encaminamiento cuando la red es mucho m\'as grande.
 \end{itemize}
 
-\section*{Estado actual}
+\clearpage
+\section{Resultados y an\'alisis}
+\label{sec:resultados}
 
-Con estos cambios creemos que respondimos a todo lo que marc\'o el profesor en su \'ultima devoluci\'on: ampliamos el marco te\'orico de encaminamiento y capa de aplicaci\'on, dejamos la metodolog\'ia apuntada a explicar y no solo detectar, y sumamos la secci\'on de implementaci\'on real y costos. Nos encantar\'ia que le vuelva a pegar una mirada antes de que nos pongamos a armar las topolog\'ias en GNS3, por si queda algo para ajustar.
+Esta secci\'on presenta lo que efectivamente medimos en la simulaci\'on, siguiendo la estructura de tres pasos que fijamos en la metodolog\'ia: qu\'e observamos, qu\'e predec\'ia la teor\'ia y por qu\'e coincide o no. Todos los n\'umeros salen directo de los JSON de \texttt{iperf3} y de las salidas de \texttt{wrk} que el equipo gener\'o y version\'o en cada corrida; donde reportamos una mediana, es la mediana de las cinco repeticiones de esa fila de la matriz de experimentos.
+
+Como ya adelantamos, el nivel de detalle no es parejo entre esquemas: la curva de congesti\'on UDP, el TCP y HTTP/1.1 de referencia, y la contenci\'on TCP+UDP/HTTP+UDP se corrieron solo sobre rutas est\'aticas. Esto no es un casillero vac\'io por falta de tiempo: como desarrollamos en la Secci\'on~\ref{sec:congestion}, ni RIP ni OSPF cambian su m\'etrica con la carga del enlace, as\'i que el comportamiento del cuello de botella (la misma cola, el mismo l\'imite de 500~Kbit/s) no tendr\'ia motivo te\'orico para ser distinto si repiti\'eramos estos ensayos con otro esquema de ruteo activo; por eso priorizamos la convergencia ante falla, que s\'i es sensible al esquema, antes que repetir una curva cuyo resultado la propia teor\'ia ya anticipa. La convergencia ante falla, en cambio, ya tiene corridas formales completas y una mediana de indisponibilidad consolidada en los tres esquemas -- est\'atica, RIP y OSPF --. La Tabla~7 resume el estado de cada ensayo por esquema.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{4.1cm}p{3.5cm}p{3.5cm}p{3.1cm}@{}}
+\toprule
+\textbf{Ensayo} & \textbf{Est\'atica} & \textbf{RIP} & \textbf{OSPF} \\
+\midrule
+Curva de congesti\'on UDP (8 tasas, 5 repeticiones) & Completo (40 corridas) & No priorizado$^{*}$ & No priorizado$^{*}$ \\
+TCP y HTTP/1.1 de referencia & Completo (10 corridas) & No priorizado$^{*}$ & No priorizado$^{*}$ \\
+Contenci\'on TCP+UDP y HTTP+UDP & Completo (10 corridas) & No priorizado$^{*}$ & No priorizado$^{*}$ \\
+Convergencia ante falla (5 repeticiones) & Completo, mediana de indisponibilidad 27,3 s (rango 23,4--29,3 s) & Completo, mediana de indisponibilidad 14,6 s (rango 12,3--29,2 s) & Completo, mediana de indisponibilidad 2,4 s (rango 1,8--3,1 s) \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+{\footnotesize $^{*}$No priorizado porque no cambia el resultado esperado: ni RIP ni OSPF alteran el comportamiento del cuello de botella (Secci\'on~\ref{sec:congestion}), as\'i que repetir estos ensayos consumir\'ia tiempo de laboratorio sin una hip\'otesis nueva que contrastar.\par}
+\figcaption{Tabla 7. Estado de las corridas experimentales por esquema de encaminamiento.}
+\end{minipage}
+\end{center}
+
+\subsection*{Curva de congesti\'on UDP}
+
+\textbf{Qu\'e observamos.} Hicimos cinco repeticiones de 60~segundos para cada una de ocho tasas de UDP ofrecidas (100K a 800K), siempre contra el mismo cuello de 500~Kbit/s en \texttt{R2-R4}. La Tabla~8 muestra la mediana de throughput, jitter y p\'erdida recibidos en cada tasa; agregamos tambi\'en qu\'e porcentaje de la tasa ofrecida efectivamente se retuvo, para que el punto de quiebre de la curva se lea de un vistazo sin tener que calcularlo.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\small
+\begin{tabular}{@{}p{2.1cm}p{3cm}p{2.3cm}p{2.3cm}p{2.9cm}@{}}
+\toprule
+\textbf{Tasa ofrecida} & \textbf{Throughput mediano} & \textbf{Jitter mediano} & \textbf{P\'erdida mediana} & \textbf{\% de la tasa retenido} \\
+\midrule
+100 Kbit/s & 99,996 Kbit/s & 0,512 ms & 0,000\,\% & \cellcolor{green!20}100,0\,\% \\
+200 Kbit/s & 199,989 Kbit/s & 0,809 ms & 0,000\,\% & \cellcolor{green!20}100,0\,\% \\
+300 Kbit/s & 299,989 Kbit/s & 1,252 ms & 0,000\,\% & \cellcolor{green!20}100,0\,\% \\
+400 Kbit/s & 399,983 Kbit/s & 0,846 ms & 0,000\,\% & \cellcolor{green!20}100,0\,\% \\
+500 Kbit/s & 483,788 Kbit/s & 2,155 ms & 2,944\,\% & \cellcolor{yellow!35}96,8\,\% \\
+600 Kbit/s & 503,554 Kbit/s & 5,401 ms & 15,787\,\% & \cellcolor{orange!35}83,9\,\% \\
+700 Kbit/s & 518,503 Kbit/s & 7,106 ms & 25,669\,\% & \cellcolor{orange!55}74,1\,\% \\
+800 Kbit/s & 533,567 Kbit/s & 5,201 ms & 33,080\,\% & \cellcolor{red!45}66,7\,\% \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 8. Curva de congesti\'on UDP, esquema est\'atico (mediana de 5 repeticiones por tasa). El color de la \'ultima columna va de verde (retenci\'on total) a rojo (mayor p\'erdida).}
+\end{minipage}
+\end{center}
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=9.5cm, height=5.2cm,
+  scale only axis,
+  xlabel={Tasa UDP ofrecida (Kbit/s)},
+  ylabel={Throughput mediano (Kbit/s)},
+  xmin=0, xmax=850, ymin=0, ymax=600,
+  grid=major,
+  grid style={gray!20},
+  axis lines=left,
+  axis y line*=left,
+  label style={font=\small},
+  tick label style={font=\scriptsize},
+  legend style={font=\scriptsize, at={(0.03,0.97)}, anchor=north west, draw=none},
+]
+\addplot[thick, color=blue, mark=*, mark size=1.3pt] coordinates {
+  (100,99.996)(200,199.989)(300,299.989)(400,399.983)(500,483.788)(600,503.554)(700,518.503)(800,533.567)
+};
+\addlegendentry{Throughput (eje izq.)}
+\draw[dashed, gray!70] (axis cs:500,0) -- (axis cs:500,600);
+\node[font=\scriptsize, align=left, gray!70, anchor=south west] at (axis cs:510,430) {cuello\\500 Kbit/s};
+\end{axis}
+\begin{axis}[
+  width=9.5cm, height=5.2cm,
+  scale only axis,
+  xmin=0, xmax=850, ymin=0, ymax=40,
+  axis x line=none,
+  axis y line*=right,
+  ylabel={P\'erdida mediana (\%)},
+  label style={font=\small},
+  tick label style={font=\scriptsize},
+  legend style={font=\scriptsize, at={(0.03,0.80)}, anchor=north west, draw=none},
+]
+\addplot[thick, color=red!70!black, mark=square*, mark size=1.3pt] coordinates {
+  (100,0)(200,0)(300,0)(400,0)(500,2.944)(600,15.787)(700,25.669)(800,33.080)
+};
+\addlegendentry{P\'erdida (eje der.)}
+\end{axis}
+\end{tikzpicture}
+\figcaption{Gr\'afico 3. Curva real de congesti\'on UDP, esquema est\'atico: throughput mediano (eje izquierdo, azul) y p\'erdida mediana (eje derecho, rojo) en funci\'on de la tasa ofrecida (datos de la Tabla~8).}
+\end{minipage}
+\end{center}
+
+\textbf{Qu\'e predec\'ia la teor\'ia.} En la Secci\'on~\ref{sec:congestion} describimos, siguiendo a Stallings, que el throughput real deber\'ia acompa\~nar linealmente a la carga ofrecida hasta un punto, y despu\'es entrar primero en congesti\'on moderada (el throughput sigue creciendo pero cada vez m\'as lento) y despu\'es severa (el throughput deja de crecer o cae), tal como ilustra el Gr\'afico~1; el Gr\'afico~3 es la versi\'on con datos reales de esa misma forma.
+
+\textbf{Por qu\'e coincide.} Los datos calcan la forma de esa curva casi punto por punto: hasta 400~Kbit/s el throughput sigue exactamente a la carga ofrecida y la p\'erdida es cero, porque la cola de R2 todav\'ia tiene margen para absorber el tr\'afico sin descartar nada. A partir de 500~Kbit/s -- el l\'imite configurado en la cola \texttt{cuello-R2-R4} -- el throughput deja de crecer al mismo ritmo que la carga (pasa de 483,8 a solo 533,6~Kbit/s mientras la carga ofrecida se duplica de 400K a 800K) y la p\'erdida sube de forma sostenida hasta el 33,1\,\%; en t\'erminos del \% de la tasa retenido, la ca\'ida es igual de clara: del 100\,\% constante hasta 400~Kbit/s se pasa a apenas 66,7\,\% a 800~Kbit/s. A diferencia de TCP, UDP no retransmite ni reacciona a la p\'erdida, as\'i que ac\'a el mecanismo no es la avalancha de retransmisiones que describimos para TCP, sino algo m\'as directo: la cola \'arbol que configuramos en R2 simplemente descarta todo paquete que exceda los 500~Kbit/s una vez que se llena (descarte de cola, \textit{tail drop}), que es justamente el mecanismo por defecto que contrastamos en la Secci\'on~\ref{sec:congestion} con RED.
+
+\subsection*{TCP y HTTP/1.1 de referencia}
+
+\textbf{Qu\'e observamos.} Para el flujo TCP de referencia (\texttt{iperf3}, sin tr\'afico competidor) corrimos cinco repeticiones de 60~segundos contra el mismo cuello; la Tabla~9 muestra el detalle por corrida. Para HTTP/1.1 generamos tr\'afico real con Nginx sirviendo un recurso de 256~KiB y \texttt{wrk} solicit\'andolo desde el cliente; la Tabla~10 resume las cinco corridas.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.85\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2cm}p{3.5cm}p{3.5cm}p{3.5cm}@{}}
+\toprule
+\textbf{Corrida} & \textbf{Throughput} & \textbf{Retransmisiones} & \textbf{RTT medio} \\
+\midrule
+r01 & 484,472 Kbit/s & 39 & 292,0 ms \\
+r02 & 484,638 Kbit/s & 33 & 285,7 ms \\
+r03 & 484,947 Kbit/s & 52 & 302,4 ms \\
+r04 & 485,141 Kbit/s & 35 & 294,4 ms \\
+r05 & 538,275 Kbit/s & 58 & 267,9 ms \\
+\midrule
+\textbf{Mediana} & \textbf{484,947 Kbit/s} & \textbf{39} & \textbf{292,0 ms} \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 9. TCP de referencia, esquema est\'atico (\texttt{iperf3}, sin competencia).}
+\end{minipage}
+\end{center}
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.85\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2cm}p{3.2cm}p{3.6cm}p{3.6cm}@{}}
+\toprule
+\textbf{Corrida} & \textbf{Latencia} & \textbf{Solicitudes/s} & \textbf{Transferencia} \\
+\midrule
+r01 & 4,37 s & 0,22 & 58,67 KB/s \\
+r02 & 4,36 s & 0,22 & 58,82 KB/s \\
+r03 & 4,33 s & 0,22 & 59,12 KB/s \\
+r04 & 4,33 s & 0,22 & 59,12 KB/s \\
+r05 & 4,34 s & 0,22 & 59,12 KB/s \\
+\midrule
+\textbf{Mediana} & \textbf{4,34 s} & \textbf{0,22} & \textbf{59,12 KB/s} \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 10. HTTP/1.1 de referencia, esquema est\'atico (Nginx + \texttt{wrk}, recurso de 256~KiB).}
+\end{minipage}
+\end{center}
+
+\textbf{Qu\'e predec\'ia la teor\'ia.} Para TCP, la Secci\'on~\ref{sec:congestion} anticipaba que, ante un enlace angosto, iban a aparecer retransmisiones y un RTT inflado por la espera en cola, con CUBIC (no Reno/Tahoe) marcando la forma exacta de esa reacci\'on. Para HTTP, la Secci\'on~\ref{sec:aplicacion} anticipaba que, al usar HTTP/1.1 con conexiones persistentes, el efecto dominante del cuello iba a ser el throughput disponible y no el arranque lento repetido en cada solicitud.
+
+\textbf{Por qu\'e coincide.} Las cinco corridas TCP efectivamente retransmitieron (mediana de 39 veces) y el RTT medio de 292~ms queda muy por encima de lo que se esperar\'ia en una red de laboratorio sin carga -- t\'ipicamente unos pocos milisegundos --, lo que es justamente el efecto de que los paquetes esperan en la cola de R2 antes de salir (lo que a veces se llama \textit{bufferbloat}). El throughput mediano de TCP (484,9~Kbit/s) qued\'o apenas por debajo del l\'imite de 500~Kbit/s de la cola, descontando el overhead de encabezados y retransmisiones. Para HTTP, la correspondencia es todav\'ia m\'as directa: a 59,12~KB/s (\'equiv. 473~Kbit/s aproximadamente) transferir un recurso de 256~KiB tarda 256~KiB~$\times$~8~/~473~Kbit/s~$\approx$~4,3~segundos, que es exactamente la latencia mediana que midi\'o \texttt{wrk} (4,34~s) y coincide con que la conexi\'on persistente haya logrado solo 13 solicitudes completas en el minuto de prueba. Esto confirma que, con HTTP/1.1 reutilizando la conexi\'on, el cuello se refleja directamente en el throughput disponible, sin el ruido adicional de repetir el arranque lento en cada solicitud.
+
+\subsection*{Contenci\'on TCP+UDP y HTTP+UDP}
+
+\textbf{Qu\'e observamos.} En estos ensayos arrancamos un flujo UDP a tasa fija (400K) y, a los 10~segundos, sumamos un segundo flujo -- TCP de referencia en un caso, HTTP/1.1 en el otro -- compitiendo por el mismo cuello durante el resto de la corrida. Las Tablas~11 y~12 muestran el detalle de las cinco repeticiones de cada ensayo, agregando en cada una el total combinado de los dos flujos (expresando el HTTP en Kbit/s equivalentes) para poder comparar ese total contra el cuello de 500~Kbit/s.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{1.6cm}p{2.3cm}p{2.3cm}p{2.3cm}p{2.2cm}p{2.4cm}@{}}
+\toprule
+\textbf{Corrida} & \textbf{TCP} & \textbf{UDP} & \textbf{P\'erdida UDP} & \textbf{Jitter UDP} & \textbf{Total} \\
+\midrule
+r01 & \cellcolor{red!20}142,2 Kbit/s & \cellcolor{blue!15}351,2 Kbit/s & 11,76\,\% & 8,16 ms & 493,4 Kbit/s \\
+r02 & \cellcolor{red!20}164,3 Kbit/s & \cellcolor{blue!15}333,0 Kbit/s & 16,44\,\% & 12,36 ms & 497,3 Kbit/s \\
+r03 & \cellcolor{red!20}150,6 Kbit/s & \cellcolor{blue!15}344,4 Kbit/s & 13,60\,\% & 7,39 ms & 495,0 Kbit/s \\
+r04 & \cellcolor{red!20}156,4 Kbit/s & \cellcolor{blue!15}339,2 Kbit/s & 14,80\,\% & 7,90 ms & 495,6 Kbit/s \\
+r05 & \cellcolor{red!20}174,7 Kbit/s & \cellcolor{blue!15}324,3 Kbit/s & 18,60\,\% & 7,20 ms & 499,0 Kbit/s \\
+\midrule
+\textbf{Mediana} & \cellcolor{red!20}\textbf{156,4 Kbit/s} & \cellcolor{blue!15}\textbf{339,2 Kbit/s} & \textbf{14,80\,\%} & \textbf{7,90 ms} & \textbf{495,6 Kbit/s} \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 11. Contenci\'on TCP+UDP, esquema est\'atico (UDP a 400K desde los 0~s, TCP desde los 10~s). Rojo: flujo que cede ancho de banda (TCP); azul: flujo que lo retiene (UDP).}
+\end{minipage}
+\end{center}
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{1.4cm}p{1.9cm}p{2cm}p{2cm}p{1.9cm}p{1.9cm}p{2cm}@{}}
+\toprule
+\textbf{Corrida} & \textbf{Latencia HTTP} & \textbf{Transf. HTTP} & \textbf{UDP recibido} & \textbf{P\'erdida UDP} & \textbf{Jitter UDP} & \textbf{Total equiv.} \\
+\midrule
+r01 & \cellcolor{red!20}13,39 s & \cellcolor{red!20}18,82 KB/s & \cellcolor{blue!15}341,1 Kbit/s & 14,43\,\% & 6,78 ms & 491,7 Kbit/s \\
+r02 & \cellcolor{red!20}11,53 s & \cellcolor{red!20}20,32 KB/s & \cellcolor{blue!15}330,9 Kbit/s & 16,99\,\% & 8,30 ms & 493,5 Kbit/s \\
+r03 & \cellcolor{red!20}13,09 s & \cellcolor{red!20}18,84 KB/s & \cellcolor{blue!15}341,1 Kbit/s & 14,43\,\% & 6,91 ms & 491,8 Kbit/s \\
+r04 & \cellcolor{red!20}12,16 s & \cellcolor{red!20}19,70 KB/s & \cellcolor{blue!15}335,2 Kbit/s & 15,87\,\% & 9,08 ms & 492,8 Kbit/s \\
+r05 & \cellcolor{red!20}11,96 s & \cellcolor{red!20}20,04 KB/s & \cellcolor{blue!15}332,5 Kbit/s & 16,59\,\% & 8,41 ms & 492,8 Kbit/s \\
+\midrule
+\textbf{Mediana} & \cellcolor{red!20}\textbf{12,16 s} & \cellcolor{red!20}\textbf{19,70 KB/s} & \cellcolor{blue!15}\textbf{335,2 Kbit/s} & \textbf{15,87\,\%} & \textbf{8,30 ms} & \textbf{492,8 Kbit/s} \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 12. Contenci\'on HTTP+UDP, esquema est\'atico (UDP a 400K en reversa desde los 0~s, HTTP desde los 10~s). Total equivalente: Kbit/s de UDP m\'as la transferencia HTTP expresada en Kbit/s (KB/s~$\times$~8). Rojo: HTTP cede; azul: UDP retiene.}
+\end{minipage}
+\end{center}
+
+\textbf{Qu\'e predec\'ia la teor\'ia.} En la Secci\'on~\ref{sec:congestion} mencionamos la imparcialidad como uno de los criterios de gesti\'on de tr\'afico que describe Stallings: en un esquema imparcial, todos los flujos deber\'ian sufrir la congesti\'on en una medida parecida. Tambi\'en anticipamos, en la Secci\'on~\ref{sec:aplicacion}, que UDP no tiene ning\'un mecanismo de control de congesti\'on -- sigue mandando a tasa fija pase lo que pase --, mientras que TCP y HTTP s\'i reaccionan bajando su rendimiento efectivo.
+
+\textbf{Por qu\'e coincide.} Los dos ensayos muestran exactamente esa asimetr\'ia, y no el reparto parejo que exigir\'ia la imparcialidad: en la contenci\'on TCP+UDP, UDP se qued\'o con 339,2~Kbit/s medianos (apenas por debajo de los 400~Kbit/s que ofrece) mientras TCP colaps\'o a 156,4~Kbit/s, menos de un tercio de los 484,9~Kbit/s que obten\'ia sin competencia. En HTTP+UDP pasa lo mismo: UDP mantiene 335,2~Kbit/s mientras la transferencia de HTTP cae de 59,12 a 19,70~KB/s y su latencia casi se triplica (de 4,34 a 12,16~segundos). La raz\'on es que la cola \'arbol que configuramos en R2 y R4 es una cola FIFO simple, sin ning\'un mecanismo de reparto como WFQ: no distingue entre flujos, as\'i que un flujo que no reacciona a la p\'erdida (UDP) termina qued\'andose con la mayor parte del ancho de banda disponible a costa del flujo que s\'i reacciona (TCP/HTTP). Esto es, de hecho, el mismo argumento que ya hab\'iamos usado en la Secci\'on~\ref{sec:congestion} para justificar por qu\'e nos interesaba comparar estos dos tipos de tr\'afico. Vale la pena notar, de todos modos, que el total combinado se mantiene muy cerca del cuello en los dos ensayos (mediana de 495,6~Kbit/s en TCP+UDP y 492,8~Kbit/s en HTTP+UDP, contra un l\'imite de 500~Kbit/s): la cola no pierde capacidad de v\'alvula por repartir mal entre flujos, simplemente no decide \textit{a qui\'en} le saca el ancho de banda.
+
+\subsection*{Convergencia ante falla}
+
+\textbf{Qu\'e observamos.} En las cinco repeticiones de cada esquema -- est\'atica, RIP y OSPF --, deshabilitamos el enlace \texttt{R2-R4} a los 20~segundos de empezada la corrida y lo restauramos 60~segundos despu\'es, con ping continuo y tr\'afico HTTP corriendo en paralelo; en los tres casos \texttt{wrk} complet\'o la corrida completa sin errores ni \textit{timeouts}, as\'i que el servicio nunca se cort\'o del todo, solo se demor\'o. Usando la definici\'on que fijamos en la metodolog\'ia -- desde la \'ultima respuesta antes de la falla hasta la primera de cinco respuestas consecutivas tras la conmutaci\'on --, la indisponibilidad mediana para rutas est\'aticas fue de 27,3~segundos (rango 23,4 a 29,3~s), para RIP de 14,6~segundos (rango 12,3 a 29,2~s) y para OSPF de 2,4~segundos (rango 1,8 a 3,1~s). Para RIP, adem\'as, confirmamos con una captura dedicada en \texttt{R5-R4} que el tr\'afico efectivamente cruza por el camino de respaldo durante la falla. La Tabla~13 resume la comparaci\'on.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{1.8cm}p{5.4cm}p{3.2cm}p{3cm}@{}}
+\toprule
+\textbf{Esquema} & \textbf{C\'omo detecta y conmuta} & \textbf{Mediana de indisponibilidad} & \textbf{Rango} \\
+\midrule
+Est\'atica & Monitoreo activo (\texttt{check-gateway=ping}) sobre el pr\'oximo salto & \cellcolor{red!30}27,3 s & 23,4--29,3 s \\
+RIP & Temporizadores peri\'odicos/disparados (actualizaci\'on 30 s, inv\'alido 180 s) & \cellcolor{orange!25}14,6 s & 12,3--29,2 s \\
+OSPF & \textit{Flooding} de LSA al caer la interfaz y recalculo de Dijkstra & \cellcolor{green!25}2,4 s & 1,8--3,1 s \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 13. Indisponibilidad ante falla por esquema de encaminamiento (mediana de 5 repeticiones).}
+\end{minipage}
+\end{center}
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.8\linewidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=9cm, height=5cm,
+  scale only axis,
+  ybar,
+  bar width=24pt,
+  symbolic x coords={Estatica,RIP,OSPF},
+  xtick={Estatica,RIP,OSPF},
+  xticklabels={Est\'atica,RIP,OSPF},
+  enlarge x limits=0.25,
+  ymin=0, ymax=32,
+  ylabel={Indisponibilidad mediana (s)},
+  grid=major,
+  grid style={gray!20},
+  axis line style={gray!50},
+  label style={font=\small},
+  tick label style={font=\scriptsize},
+  nodes near coords,
+  every node near coord/.append style={font=\scriptsize},
+]
+\addplot[fill=red!45] coordinates {(Estatica,27.3)};
+\addplot[fill=orange!60] coordinates {(RIP,14.6)};
+\addplot[fill=green!55!black!60] coordinates {(OSPF,2.4)};
+\end{axis}
+\end{tikzpicture}
+\figcaption{Gr\'afico 4. Indisponibilidad mediana ante falla por esquema de encaminamiento (datos de la Tabla~13).}
+\end{minipage}
+\end{center}
+
+El detalle corrida por corrida que sustenta las medianas de la Tabla~13 se muestra en las Tablas~14 y~15, para est\'atica y RIP respectivamente: la \'ultima respuesta buena antes de la falla, el momento de la recuperaci\'on sostenida y la indisponibilidad resultante en cada una de las cinco repeticiones.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2cm}p{4cm}p{4cm}p{3cm}@{}}
+\toprule
+\textbf{Corrida} & \textbf{\'Ultimo ping antes de la falla} & \textbf{Reanudaci\'on sostenida} & \textbf{Indisponibilidad} \\
+\midrule
+r01 & +0,291 s & +27,638 s & 27,347 s \\
+r02 & +0,009 s & +23,423 s & 23,414 s \\
+r03 & +0,441 s & +26,774 s & 26,334 s \\
+r04 & +0,777 s & +30,086 s & 29,310 s \\
+r05 & +0,848 s & +28,729 s & 27,880 s \\
+\midrule
+\textbf{Mediana} & -- & -- & \textbf{27,347 s} \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 14. Detalle de corridas, convergencia ante falla -- est\'atica (tiempos relativos al instante en que se suspende \texttt{R2-R4}).}
+\end{minipage}
+\end{center}
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2cm}p{4cm}p{4cm}p{3cm}@{}}
+\toprule
+\textbf{Corrida} & \textbf{\'Ultimo ping antes de la falla} & \textbf{Reanudaci\'on sostenida} & \textbf{Indisponibilidad} \\
+\midrule
+r01 & -0,075 s & +12,887 s & 12,963 s \\
+r02 & +0,408 s & +29,591 s & 29,183 s \\
+r03 & -0,008 s & +14,603 s & 14,611 s \\
+r04 & +0,405 s & +26,885 s & 26,481 s \\
+r05 & -0,059 s & +12,247 s & 12,306 s \\
+\midrule
+\textbf{Mediana} & -- & -- & \textbf{14,611 s} \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 15. Detalle de corridas, convergencia ante falla -- RIP (tiempos relativos al instante en que se suspende \texttt{R2-R4}).}
+\end{minipage}
+\end{center}
+
+Vale la pena notar dos cosas de esta tabla. Primero, el \'ultimo ping bueno antes de la falla cae sistem\'aticamente un poco \emph{despu\'es} del instante nominal de suspensi\'on (hasta +0,85~s en algunas corridas de est\'atica): eso no es un error de medici\'on, es el intervalo de 0,2~s entre sondeos de \texttt{ping} sumado a la demora propia de que el script de orquestaci\'on ejecute el comando de suspensi\'on; no afecta la indisponibilidad calculada, porque esta se mide como diferencia entre dos eventos del propio log, no contra el instante nominal del evento. Segundo, la variabilidad de RIP es visible corrida por corrida y no solo en el rango agregado: r02 y r04 tardan m\'as del doble que r01, r03 y r05, lo que es consistente con que, seg\'un el momento exacto de la falla dentro del ciclo de 30~s, la actualizaci\'on disparada le gana o no a la pr\'oxima actualizaci\'on peri\'odica.
+
+\textbf{Qu\'e predec\'ia la teor\'ia y por qu\'e coincide.} Como desarrollamos en la Secci\'on~\ref{sec:congestion}, ni rutas est\'aticas ni RIP ni OSPF reaccionan a la congesti\'on -- sus m\'etricas no cambian con la carga --, as\'i que la \'unica diferencia que pod\'iamos esperar entre esquemas no era c\'omo evitan saturarse, sino c\'omo conmutan ante una ca\'ida real del enlace; la Tabla~2 ya anticipaba que OSPF converge ``m\'as r\'apida ante cambios en la red'' que RIP. Eso es justamente lo que confirma este ensayo, aunque con una diferencia mucho m\'as marcada de lo que esper\'abamos: OSPF conmut\'o casi 11,5~veces m\'as r\'apido que rutas est\'aticas (2,4~s contra 27,3~s). La raz\'on no tiene tanto que ver con qu\'e tan r\'apido converge el protocolo de ruteo en s\'i, sino con \textbf{c\'omo se entera cada esquema de que algo cambi\'o}: las rutas est\'aticas dependen de que el monitoreo recursivo (\texttt{check-gateway=ping}) note, mediante sondeos peri\'odicos propios, que el pr\'oximo salto dej\'o de responder, lo cual agrega una demora de detecci\'on antes de siquiera empezar a conmutar; OSPF, en cambio, detecta la ca\'ida de la interfaz casi al instante (sin depender del temporizador \textit{Hello}/\textit{Dead} de 10/40~s, porque ac\'a el enlace se cae f\'isicamente y no es un vecino que deja de saludar), inunda esa novedad mediante un LSA y recalcula el camino con Dijkstra de inmediato. RIP, con 14,6~segundos de mediana, confirma esa predicci\'on: queda claramente entre los otros dos esquemas, m\'as lento que OSPF pero mucho m\'as r\'apido que la demora de detecci\'on de las rutas est\'aticas, consistente con depender de temporizadores peri\'odicos de 30~s que las actualizaciones disparadas aceleran bastante respecto de ese peor caso.
+
+\clearpage
+\section*{Conclusiones}
+\label{sec:conclusiones}
+
+Con la fase experimental del esquema est\'atico completa y la convergencia ante falla medida en los tres esquemas, el trabajo deja tres conclusiones centrales, cada una ligada a un eje distinto de lo que nos propusimos estudiar: c\'omo se comporta la red cuando la carga supera lo que el enlace soporta, qu\'e pasa cuando dos tipos de tr\'afico con comportamiento muy distinto compiten por ese mismo enlace saturado, y cu\'anto tarda la red en recuperarse cuando, en lugar de saturarse, directamente se corta un camino. Las tres coinciden con lo que anticipamos en el marco te\'orico; en alguna, como vamos a ver, coinciden pero con una magnitud que no esper\'abamos.
+
+\subsection*{La congesti\'on no es un evento, es una curva -- y la cruzamos exactamente donde la cola lo permite}
+
+El Gr\'afico~3 y la Tabla~8 muestran algo que vale la pena remarcar porque no es trivial: el quiebre de la curva no es gradual, es casi un escal\'on. Hasta 400~Kbit/s ofrecidos, el throughput sigue a la carga de forma perfectamente lineal y la p\'erdida es exactamente cero en las cinco repeticiones de cada tasa; a partir de 500~Kbit/s -- el l\'imite exacto configurado en la cola \texttt{cuello-R2-R4} -- la red pasa, en un solo escal\'on de 100~Kbit/s de diferencia en la carga ofrecida, de retener el 100\,\% de lo que se le pide a retener apenas el 96,8\,\%, y de ah\'i sigue cayendo hasta el 66,7\,\% a 800~Kbit/s (33,1\,\% de p\'erdida). Esto es exactamente lo que predice un mecanismo de \textit{tail drop}: mientras la cola tiene lugar, todo pasa; apenas se llena, todo lo que excede el l\'imite se descarta sin ning\'un aviso previo ni degradaci\'on progresiva. No hay zona intermedia de ``congesti\'on moderada'' con alguna p\'erdida chica y creciente antes del quiebre -- hay una zona sin ninguna p\'erdida y despu\'es, de golpe, una zona con p\'erdida de dos d\'igitos. Esa es, de hecho, la diferencia pr\'actica m\'as concreta entre \textit{tail drop} y RED que discutimos en la Secci\'on~\ref{sec:congestion}: RED existe justamente para evitar este tipo de quiebre abrupto, descartando o marcando paquetes al azar un poco antes de que la cola se llene del todo, de manera que los flujos TCP reaccionen de a poco en lugar de que todos choquen contra la pared al mismo tiempo. Ac\'a no tuvimos eso, y se nota.
+
+Hay un detalle m\'as fino en el jitter que tambi\'en dice algo: crece de forma sostenida de 0,5~ms a 7,1~ms entre 100 y 700~Kbit/s, pero a 800~Kbit/s -- la tasa m\'as congestionada de todas -- baja a 5,2~ms. A primera vista parecer\'ia una inconsistencia, pero tiene una explicaci\'on razonable: mientras la cola todav\'ia tiene margen variable (encol\'andose a veces m\'as, a veces menos seg\'un el instante), el tiempo de espera de cada paquete var\'ia bastante, lo que empuja el jitter hacia arriba; una vez que la cola queda permanentemente llena -- que es lo que pasa a partir de 700--800~Kbit/s --, el tiempo de encolado m\'aximo se vuelve casi constante (la cola siempre est\'a a tope) y lo que var\'ia, en cambio, es cu\'antos paquetes se descartan directamente, no cu\'anto tardan los que s\'i pasan. Dicho de otra forma: a partir de cierto punto, la red deja de tener jitter variable y empieza a tener p\'erdida masiva, que es casi peor. Esto importa en la pr\'actica porque UDP, como vimos en la Secci\'on~\ref{sec:aplicacion}, no tiene ning\'un mecanismo propio de control de congesti\'on: un flujo de video o voz en tiempo real que dependiera de este enlace no tendr\'ia forma de enterarse de que algo anda mal salvo por la p\'erdida misma, porque no hay ninguna se\~nal intermedia -- ni ECN, ni un jitter que avise antes de tiempo -- que lo prepare. Toda la responsabilidad de evitar este colapso recae del lado de la red (en una cola con gesti\'on activa) y no del emisor, precisamente porque el emisor no coopera.
+
+\subsection*{Compartir un enlace no es repartirlo: lo que separa a UDP de TCP y HTTP bajo presi\'on}
+
+Las Tablas~11 y~12 muestran la asimetr\'ia que anticipamos en la Secci\'on~\ref{sec:congestion} al hablar de imparcialidad, pero los n\'umeros dejan ver algo m\'as interesante que ``UDP gana y TCP pierde''. Comparado con su propio desempe\~no sin competencia (Tabla~9: 484,9~Kbit/s), TCP cay\'o a 156,4~Kbit/s bajo contenci\'on -- se qued\'o con poco menos de un tercio de lo que ten\'ia disponible solo. HTTP tuvo el mismo destino desde otro \'angulo: su transferencia cay\'o de 59,12 a 19,70~KB/s y su latencia casi se triplic\'o, de 4,34 a 12,16~segundos. UDP, en cambio, apenas se resinti\'o: comparado con los 399,98~Kbit/s que entregaba solo a esa misma tasa de 400~Kbit/s (Tabla~8), bajo contenci\'on entreg\'o entre 335,2 y 339,2~Kbit/s seg\'un el ensayo -- una p\'erdida real, del orden del 15\,\%, pero nada parecido al colapso de TCP y HTTP.
+
+Esa diferencia de magnitud (15\,\% contra m\'as del 65\,\%) no se explica solo con ``la cola es FIFO y no distingue flujos''. Si la \'unica causa fuera el descarte ciego de la cola, UDP y TCP deber\'ian perder una proporci\'on de paquetes parecida, porque ambos llegan a la misma cola y se descartan con el mismo criterio (el que llega cuando ya est\'a llena, se pierde, sin importar el protocolo). Lo que realmente separa a los dos casos es que esa p\'erdida inicial -- m\'as o menos pareja -- dispara reacciones completamente distintas en cada extremo: UDP la ignora y sigue mandando exactamente a la misma tasa que ten\'ia planeada, as\'i que su ca\'ida de throughput es, b\'asicamente, su p\'erdida cruda. TCP, en cambio, interpreta esa misma p\'erdida como una se\~nal de congesti\'on (tal como describimos en la Secci\'on~\ref{sec:congestion}: expira un temporizador de retransmisi\'on o crece el RTT) y reacciona reduciendo a la mitad su ventana de congesti\'on cada vez que eso pasa; con un flujo UDP constante ocupando buena parte del cuello durante toda la corrida, TCP nunca tiene margen para volver a crecer en serio antes de la pr\'oxima p\'erdida. El resultado es que la p\'erdida se multiplica dos veces: una vez en la cola (f\'isica, igual para los dos) y otra vez en el emisor TCP, que se autolimita mucho m\'as de lo que la cola lo oblig\'o. Es, en el fondo, el mismo mecanismo que hace que un flujo que no reacciona termine ganando frente a uno que s\'i reacciona: no es que la red lo favorezca, es que el que coopera paga el costo de cooperar y el que no, no.
+
+Vale la pena notar tambi\'en que el total combinado se mantuvo siempre muy cerca del l\'imite de la cola (495,6~Kbit/s en TCP+UDP y 492,8~Kbit/s en HTTP+UDP, contra 500~Kbit/s configurados): la cola hace perfectamente su trabajo de techo, lo que no hace es repartir ese techo con ning\'un criterio. Esto tiene una lectura pr\'actica directa y bastante cotidiana: es exactamente lo que le pasa a cualquier conexi\'on hogare\~na chica cuando una videollamada (no reactiva, como nuestro UDP) compite con una descarga grande (reactiva, como nuestro TCP) -- la videollamada sigue mandando a su tasa, la descarga se aplasta, y nadie configur\'o nada para que fuera as\'i: es simplemente lo que pasa por default sin un mecanismo de reparto como WFQ o alguna forma de clasificaci\'on de tr\'afico (lo que Stallings llama calidad de servicio, Secci\'on~\ref{sec:congestion}).
+
+\subsection*{El protocolo de ruteo no evita la congesti\'on, pero decide cu\'anto dura apagada la red}
+
+La Tabla~13 y el Gr\'afico~4 muestran la comparaci\'on que, seg\'un desarrollamos en la Secci\'on~\ref{sec:congestion}, era la \'unica diferencia real que pod\'iamos esperar entre esquemas de encaminamiento: no c\'omo evitan saturarse (ninguno lo hace), sino c\'omo conmutan ante una ca\'ida real del enlace. La magnitud de la diferencia, sin embargo, fue mayor a lo que anticipaba la teor\'ia: la Tabla~2 solo dec\'ia que OSPF converge ``m\'as r\'apida'' que RIP ante cambios en la red, sin cuantificarlo, y lo que medimos fue que OSPF conmut\'o casi 11,5~veces m\'as r\'apido que rutas est\'aticas (2,4~segundos contra 27,3~segundos). Puesto en t\'erminos que cualquiera que haya usado internet reconoce: 27~segundos sin servicio es tiempo m\'as que suficiente para que un usuario abandone un checkout de compra o corte una videollamada; 2,4~segundos es, para la mayor\'ia de los usos, casi imperceptible. RIP qued\'o, como anticipaba la teor\'ia, en un punto intermedio: 14,6~segundos de mediana (rango 12,3 a 29,2~s), bastante m\'as lento que OSPF pero tambi\'en bastante m\'as r\'apido que rutas est\'aticas.
+
+Esa diferencia no viene de qu\'e tan r\'apido ``piensa'' cada protocolo, sino de c\'omo se entera cada uno de que algo cambi\'o. Las rutas est\'aticas no tienen ninguna noci\'on propia de que un enlace se cay\'o: dependen de que el monitoreo activo (\texttt{check-gateway=ping}) note, mediante sondeos peri\'odicos propios, que el pr\'oximo salto dej\'o de responder, lo que agrega una demora de detecci\'on antes incluso de empezar a conmutar. OSPF, en cambio, se entera casi al instante porque la ca\'ida es f\'isica (la interfaz se cae, no es un vecino que simplemente deja de mandar un \textit{Hello}), inunda esa novedad mediante un LSA a toda la red y recalcula el camino con Dijkstra de inmediato -- sin esperar ning\'un temporizador. Esto conecta directamente con algo que ya hab\'iamos adelantado en la Secci\'on~\ref{sec:costos}: OSPF pide m\'as conocimiento t\'ecnico para configurarlo bien (\'areas, costos expl\'icitos, autenticaci\'on) que una ruta est\'atica, que cualquiera arma en minutos. Este resultado le pone un n\'umero concreto a esa complejidad extra: pagarla compra, en nuestra topolog\'ia de laboratorio, una recuperaci\'on ante falla casi 11,5~veces m\'as r\'apida. RIP, con una mediana de 14,6~segundos, confirma exactamente el punto intermedio que anticipaba la Tabla~2: no detecta la ca\'ida tan r\'apido como OSPF porque depende de temporizadores peri\'odicos de 30~segundos en lugar de un aviso inmediato tipo LSA, pero tampoco queda tan expuesto como las rutas est\'aticas porque las actualizaciones disparadas por el propio cambio de topolog\'ia aceleran bastante la propagaci\'on respecto del peor caso te\'orico. La variabilidad entre corridas de RIP (rango 12,3 a 29,2~segundos, mucho m\'as amplio que el de est\'atica u OSPF) tambi\'en tiene sentido con esa misma l\'ogica: cu\'anto tarda en converger depende de si la actualizaci\'on disparada alcanza a viajar antes del pr\'oximo ciclo peri\'odico de 30~segundos, algo que var\'ia corrida a corrida seg\'un el momento exacto en que se corta el enlace.
+
+\subsection*{Relaci\'on con los objetivos}
+
+Mirando los objetivos espec\'ificos que planteamos al principio a la luz de estas tres conclusiones: armar la topolog\'ia con los tres esquemas de encaminamiento qued\'o cumplido (los tres est\'an configurados y validados); generar tr\'afico creciente hasta un punto de congesti\'on controlada y relacionarlo con los mecanismos de TCP qued\'o cumplido para el esquema est\'atico, que es el que tiene la caracterizaci\'on completa; contrastar tr\'afico reactivo contra no reactivo qued\'o cubierto con un resultado m\'as preciso del que busc\'abamos (no solo que UDP ``gana'', sino por qu\'e gana tanto m\'as de lo que la sola asimetr\'ia de la cola explicar\'ia); y comparar el rendimiento de las tres arquitecturas entre s\'i qued\'o cumplido espec\'ificamente para convergencia ante falla, que termin\'o siendo, como anticipaba nuestro propio marco te\'orico, el \'unico punto de comparaci\'on donde el esquema de ruteo realmente hace una diferencia medible.
+
+\subsection*{Limitaciones}
+
+Nos parece importante dejar expl\'icitas las limitaciones de trabajar con una simulaci\'on y no con una red real, porque condicionan qu\'e tan lejos se puede generalizar lo que medimos:
+
+\begin{itemize}
+  \item La licencia gratuita de MikroTik CHR limita cada egreso a 1~Mbit/s, lo que nos oblig\'o a fijar el cuello experimental por debajo de ese valor (500~Kbit/s) para que la saturaci\'on observada no se confundiera con el l\'imite propio de la plataforma.
+  \item La topolog\'ia es chica -- cinco routers en diamante --, pensada para que el experimento sea manejable y no para representar una red de producci\'on; el quiebre tan abrupto que describimos m\'as arriba podr\'ia suavizarse en una red con m\'as puntos de buffer intermedios.
+  \item El tr\'afico TCP de \texttt{iperf3} es un flujo de referencia, no HTTP real; lo complementamos con Nginx y \texttt{wrk} para tener tambi\'en tr\'afico HTTP/1.1 genuino, pero seguimos sin un flujo de tiempo real tipo RTP.
+  \item La implementaci\'on de TCP de los endpoints usa CUBIC (Linux), no los algoritmos cl\'asicos (Tahoe/Reno) que desarrollamos en el marco te\'orico, lo cual ya anticipamos que iba a cambiar la forma exacta de las curvas de \textit{cwnd} -- aunque no la direcci\'on del efecto que medimos.
+  \item Los recursos del equipo que corre la simulaci\'on acotan cu\'antas corridas y repeticiones pudimos hacer en paralelo.
+\end{itemize}
+
+\clearpage
+\section*{Bibliograf\'ia}
+\label{sec:bibliografia}
+
+A lo largo del marco te\'orico (Secci\'on~2) citamos puntualmente cada fuente junto a la idea que respalda; esta secci\'on re\'une esas mismas fuentes en un listado \'unico, que vamos a mantener actualizado a medida que incorporemos nuevas referencias en las secciones de Resultados y Conclusiones.
+
+\begin{enumerate}[leftmargin=1.3cm, label={[\arabic*]}, itemsep=0.3cm]
+  \item Cisco Systems. \textit{Enhanced Interior Gateway Routing Protocol (EIGRP)} -- documentaci\'on t\'ecnica oficial. Dispon\'ible en: \texttt{cisco.com}.
+
+  \item indicadores.ar. \textit{Cotizaci\'on del d\'olar oficial}, consultada el 28 de octubre de 2026.
+
+  \item Internet Engineering Task Force. \textit{RFC~2328 -- OSPF Version 2}. Dispon\'ible en: \url{https://www.rfc-editor.org/rfc/rfc2328}.
+
+  \item Internet Engineering Task Force. \textit{RFC~2453 -- RIP Version 2}. Dispon\'ible en: \url{https://www.rfc-editor.org/rfc/rfc2453}.
+
+  \item Internet Engineering Task Force. \textit{RFC~3168 -- The Addition of Explicit Congestion Notification (ECN) to IP}. Dispon\'ible en: \url{https://www.rfc-editor.org/rfc/rfc3168}.
+
+  \item Internet Engineering Task Force. \textit{RFC~4271 -- A Border Gateway Protocol 4 (BGP-4)}. Dispon\'ible en: \url{https://www.rfc-editor.org/rfc/rfc4271}.
+
+  \item Internet Engineering Task Force. \textit{RFC~6633 -- Deprecation of ICMP Source Quench Messages}. Dispon\'ible en: \url{https://www.rfc-editor.org/rfc/rfc6633}.
+
+  \item Kurose, J.~F. y Ross, K.~W. \textit{Redes de computadoras: un enfoque descendente}. Pearson Educaci\'on.
+
+  \item Stallings, W. \textit{Comunicaciones y redes de computadores}. Pearson Educaci\'on. Cap\'itulo~12, ``Encaminamiento en redes conmutadas'' (p\'ags.~379--402); Cap\'itulo~13, ``Congesti\'on en redes de datos'' (p\'ags.~407--441); Cap\'itulo~20, control de congesti\'on en TCP; Cap\'itulo~22, ``Aplicaciones distribuidas'' (p\'ag.~763 en adelante).
+\end{enumerate}
+
+\clearpage
+\section*{Anexos}
+\label{sec:anexos}
+
+Esta secci\'on re\'une el material de respaldo de la parte experimental: la topolog\'ia armada en GNS3, las configuraciones de los routers y el inventario de capturas y corridas. Donde el detalle completo no entra en una tabla del informe, lo resumimos ac\'a.
+
+\subsection*{Anexo A -- Topolog\'ia de red en detalle}
+
+Los tres esquemas comparten exactamente la misma topolog\'ia f\'isica y el mismo direccionamiento; lo \'unico que cambia entre ellos es la configuraci\'on de ruteo de cada router (Anexo B). El Diagrama~1 muestra la topolog\'ia en diamante: el camino primario Cliente--R1--R2--R4--Servidor, con el cuello de botella de 500~Kbit/s sobre el enlace R2--R4, y el camino de respaldo R1--R3--R5--R4.
+
+\needspace{4cm}
+\begin{center}
+\begin{tikzpicture}[
+  host/.style={draw,rectangle,rounded corners,minimum width=2cm,minimum height=0.9cm,align=center,font=\scriptsize},
+  rt/.style={draw,circle,minimum size=0.9cm,font=\scriptsize\bfseries},
+  lbl/.style={font=\scriptsize,align=center}
+]
+\node[host] (cliente) at (0,0) {Cliente\\10.10.1.10/24};
+\node[rt] (r1) at (2.7,0) {R1};
+\node[rt] (r2) at (5.5,1.1) {R2};
+\node[rt] (r4) at (8.6,1.1) {R4};
+\node[host] (servidor) at (11.3,0) {Servidor\\10.10.4.10/24};
+\node[rt] (r3) at (5.5,-1.1) {R3};
+\node[rt] (r5) at (8.6,-1.1) {R5};
+
+\draw (cliente) -- (r1) node[midway,above,lbl] {10.10.1.0/24};
+\draw (r1) -- (r2) node[midway,above,lbl] {10.10.12.0/30\\primario};
+\draw[ultra thick,red!70!black] (r2) -- (r4) node[midway,above,lbl,text=black] {10.10.24.0/30\\cuello 500 Kbit/s};
+\draw (r4) -- (servidor) node[midway,above,lbl] {10.10.4.0/24};
+\draw (r1) -- (r3) node[midway,below,lbl] {10.10.13.0/30\\respaldo};
+\draw (r3) -- (r5) node[midway,below,lbl] {10.10.35.0/30};
+\draw (r5) -- (r4) node[midway,below,lbl] {10.10.45.0/30};
+\end{tikzpicture}
+\par\vspace{0.1cm}
+\figcaption{Diagrama 1. Topolog\'ia de laboratorio (diamante), id\'entica en los tres esquemas de encaminamiento. La l\'inea roja marca el enlace con el cuello de botella configurado.}
+\end{center}
+
+El Diagrama~1 es un esquema propio pensado para mostrar claramente el direccionamiento; la Captura~1 es la topolog\'ia real tal como qued\'o armada en GNS3, con los cinco routers, el cliente y el servidor, y los tres enlaces de respaldo marcados en verde (enlace activo).
+
+\needspace{6cm}
+\begin{center}
+\includegraphics[width=0.85\linewidth]{img/topologia-gns3-enlaces-activos.png}
+\par\vspace{0.1cm}
+\figcaption{Captura 1. Topolog\'ia de laboratorio en GNS3 con los cinco routers MikroTik CHR, el cliente y el servidor, y todos los enlaces activos (puntos verdes).}
+\end{center}
+
+La Captura~2 muestra el mismo panel durante un ensayo de falla: el enlace primario R2--R4 (el del cuello de botella) queda en pausa -- GNS3 lo marca con el \'icono amarillo de enlace suspendido en lugar del punto verde --, mientras en el enlace de respaldo R5--R4 se ve el \'icono de lupa que indica una captura de Wireshark activa, registrando el tr\'afico que efectivamente cruza por ese camino durante la ventana de indisponibilidad.
+
+\needspace{6cm}
+\begin{center}
+\includegraphics[width=0.85\linewidth]{img/topologia-gns3-falla-r2-r4-captura-r5-r4.png}
+\par\vspace{0.1cm}
+\figcaption{Captura 2. Ensayo de falla en GNS3: el enlace R2--R4 suspendido (\'icono amarillo) y una captura de Wireshark activa sobre R5--R4 (\'icono de lupa), registrando el tr\'afico de respaldo durante el corte.}
+\end{center}
+
+La Tabla~16 vuelca el direccionamiento completo de cada enlace, extra\'ido directamente de los exports de RouterOS (\texttt{/ip address} de cada router).
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\small
+\begin{tabular}{@{}p{2.6cm}p{2.5cm}p{4.3cm}p{4.3cm}@{}}
+\toprule
+\textbf{Enlace} & \textbf{Subred} & \textbf{Extremo A} & \textbf{Extremo B} \\
+\midrule
+Cliente -- R1 & 10.10.1.0/24 & Cliente: 10.10.1.10/24 & R1 (\texttt{ether2}): 10.10.1.1/24 \\
+R1 -- R2 (primario) & 10.10.12.0/30 & R1 (\texttt{ether3}): 10.10.12.1/30 & R2 (\texttt{ether2}): 10.10.12.2/30 \\
+R1 -- R3 (respaldo) & 10.10.13.0/30 & R1 (\texttt{ether4}): 10.10.13.1/30 & R3 (\texttt{ether2}): 10.10.13.2/30 \\
+R2 -- R4 (cuello) & 10.10.24.0/30 & R2 (\texttt{ether3}): 10.10.24.1/30 & R4 (\texttt{ether2}): 10.10.24.2/30 \\
+R3 -- R5 (respaldo) & 10.10.35.0/30 & R3 (\texttt{ether3}): 10.10.35.1/30 & R5 (\texttt{ether2}): 10.10.35.2/30 \\
+R5 -- R4 (respaldo) & 10.10.45.0/30 & R5 (\texttt{ether3}): 10.10.45.1/30 & R4 (\texttt{ether3}): 10.10.45.2/30 \\
+R4 -- Servidor & 10.10.4.0/24 & R4 (\texttt{ether4}): 10.10.4.1/24 & Servidor: 10.10.4.10/24 \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 16. Direccionamiento IP por enlace (id\'entico en est\'atica, RIP y OSPF).}
+\end{minipage}
+\end{center}
+
+\subsection*{Anexo B -- Configuraciones de routers}
+
+Cada router tiene su export de RouterOS (\texttt{export}, sin usuarios, contrase\~nas ni \texttt{system id}): 5 routers $\times$ 3 esquemas, 15 exports en total. El direccionamiento (Tabla~16) y la cola del cuello de botella son id\'enticos en los tres; lo que cambia es exclusivamente el bloque de ruteo. A continuaci\'on mostramos los fragmentos m\'as relevantes de cada uno.
+
+\subsubsection*{Cola y marcado del cuello de botella (igual en los tres esquemas)}
+
+Ejemplo del export de R2 en el esquema est\'atico; R4 tiene la regla sim\'etrica (\texttt{cuello-R4-R2} sobre \texttt{ether2}) para limitar tambi\'en el sentido servidor-cliente.
+
+{\scriptsize
+\begin{verbatim}
+/queue tree
+add max-limit=500k name=cuello-R2-R4 packet-mark=cuello-R2-R4 parent=ether3
+/ip firewall mangle
+add action=mark-packet chain=forward comment=marca-cuello-R2-R4 \
+    new-packet-mark=cuello-R2-R4 out-interface=ether3 passthrough=no
+\end{verbatim}
+}
+
+\subsubsection*{Rutas est\'aticas con monitoreo activo}
+
+Del export de R1 en el esquema est\'atico. La ruta primaria usa \texttt{check-gateway=ping} sobre un monitoreo recursivo (no sobre R2 directamente, sino sobre la IP de R4 del otro lado del cuello); la de respaldo es una ruta flotante con distancia administrativa~2.
+
+{\scriptsize
+\begin{verbatim}
+/ip route
+add check-gateway=ping comment=primaria-R2 distance=1 dst-address=\
+    10.10.4.0/24 gateway=10.10.24.2 target-scope=11
+add comment=respaldo-R3-R5 distance=2 dst-address=10.10.4.0/24 gateway=\
+    10.10.13.2
+\end{verbatim}
+}
+
+\subsubsection*{RIPv2}
+
+Del export de R1 en el esquema RIP. El mismo patr\'on se repite en R2 a R5, aplicando la instancia a las interfaces que corresponda en cada router.
+
+{\scriptsize
+\begin{verbatim}
+/routing rip instance
+add name=rip-v2 redistribute=connected
+/routing rip interface-template
+add instance=rip-v2 interfaces=ether3,ether4
+add instance=rip-v2 interfaces=ether2
+\end{verbatim}
+}
+
+\subsubsection*{OSPF}
+
+Del export de R1 en el esquema OSPF. Los costos expl\'icitos (10 para el primario, 20 para el respaldo) se repiten en R2 y R4 sobre sus interfaces correspondientes, tal como describimos en la Secci\'on~\ref{sec:congestion}.
+
+{\scriptsize
+\begin{verbatim}
+/routing ospf instance
+add name=ospf-v2 redistribute=connected router-id=10.255.0.1
+/routing ospf area
+add area-id=0.0.0.0 instance=ospf-v2 name=backbone
+/routing ospf interface-template
+add area=backbone cost=10 interfaces=ether3
+add area=backbone cost=20 interfaces=ether4
+\end{verbatim}
+}
+
+\subsection*{Anexo C -- Capturas de Wireshark}
+
+Todas las capturas se guardaron en formato \texttt{.pcap}. La Tabla~17 resume el inventario por esquema y ensayo; los archivos en s\'i no se adjuntan a este documento por su tama\~no (m\'as de 600~MB en total).
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{1.7cm}p{4.8cm}p{1.6cm}p{3.1cm}p{2cm}@{}}
+\toprule
+\textbf{Esquema} & \textbf{Ensayo} & \textbf{Archivos} & \textbf{Punto(s) de captura} & \textbf{Tama\~no aprox.} \\
+\midrule
+Est\'atica & Congesti\'on (UDP 8 tasas + TCP + HTTP) & 50 & R2-R4 & 153,2 MB \\
+Est\'atica & Contenci\'on (TCP+UDP, HTTP+UDP) & 10 & R2-R4 & 37,9 MB \\
+Est\'atica & Convergencia (falla R2-R4) & 10 & R2-R4 y R5-R4 & 97,7 MB \\
+RIP & Convergencia (falla R2-R4) & 10 & R2-R4 y R5-R4 & 116,6 MB \\
+OSPF & Convergencia (falla R2-R4) & 10 & R2-R4 y R5-R4 & 138,9 MB \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 17. Inventario de capturas PCAP por esquema y ensayo (90 archivos, $\approx$544~MB).}
+\end{minipage}
+\end{center}
+
+Adem\'as de estas 90 capturas usadas en el an\'alisis, se conservan otras 12 capturas de diagn\'ostico ($\approx$84~MB) correspondientes a intentos descartados (por ejemplo, el primer intento de la corrida r05 de est\'atica, interrumpido por el l\'imite del proceso anfitri\'on) que no se usan para ning\'un n\'umero de este informe, pero se guardan como evidencia de por qu\'e se repiti\'o esa corrida. Como ejemplo de validaci\'on de contenido -- y siguiendo la misma l\'ogica que ya aplicamos en la Secci\'on~\ref{sec:resultados}, de no asumir ausencia de tr\'afico sin mirar las estad\'isticas completas --, la captura de \texttt{R5-R4} en la corrida r01 de RIP contiene 13.008 tramas (6.031 ICMP, 6.867 TCP y 23 RIP) y su equivalente est\'atico contiene 395 ICMP y 5.054 TCP, confirmando en ambos casos tr\'afico real cruzando por el camino de respaldo durante la falla.
+
+\subsection*{Anexo D -- Registro de corridas}
+
+La Tabla~18 condensa la matriz de experimentos completa (75 corridas), agrupando las cinco repeticiones de cada condici\'on en una sola fila. Las 75 corridas fueron ejecutadas por el mismo integrante del equipo, para no mezclar variabilidad de hardware entre corridas de una misma serie; el detalle de cada repetici\'on individual (fecha y hora exacta, par\'ametros literales) se registr\'o de forma sistem\'atica durante la ejecuci\'on.
+
+\needspace{1cm}
+\begin{center}
+\begin{minipage}{0.96\linewidth}
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{1.7cm}p{2.1cm}p{5.1cm}p{1.6cm}p{2.1cm}@{}}
+\toprule
+\textbf{Esquema} & \textbf{Ensayo} & \textbf{Tr\'afico / par\'ametro} & \textbf{Repet.} & \textbf{Fecha (UTC)} \\
+\midrule
+Est\'atica & Congesti\'on & UDP, 100 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 200 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 300 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 400 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 500 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 600 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 700 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & UDP, 800 Kbit/s ofrecidos & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & TCP (\texttt{iperf3}, referencia) & r01--r05 & 2026-11-08 \\
+Est\'atica & Congesti\'on & HTTP/1.1 (referencia) & r01--r05 & 2026-11-08 \\
+Est\'atica & Contenci\'on & TCP+UDP (UDP 400K desde 0 s, TCP desde 10 s) & r01--r05 & 2026-11-08 \\
+Est\'atica & Contenci\'on & HTTP+UDP (UDP 400K desde 0 s, HTTP desde 10 s) & r01--r05 & 2026-11-08 \\
+Est\'atica & Convergencia & HTTP/1.1~+~ICMP, falla R2-R4 a los 20 s & r01--r05 & 2026-11-08 \\
+RIP & Convergencia & HTTP/1.1~+~ICMP, falla R2-R4 a los 20 s & r01--r05 & 2026-11-08 \\
+OSPF & Convergencia & HTTP/1.1~+~ICMP, falla R2-R4 a los 20 s & r01--r05 & 2026-11-09 \\
+\bottomrule
+\end{tabular}
+\par\vspace{0.1cm}
+\figcaption{Tabla 18. Registro condensado de corridas experimentales (15 series $\times$ 5 repeticiones = 75 corridas).}
+\end{minipage}
+\end{center}
 
 \end{document}
