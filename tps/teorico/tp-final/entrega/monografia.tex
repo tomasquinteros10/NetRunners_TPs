@@ -234,6 +234,7 @@ Para decidir cu\'anto esperar antes de retransmitir un segmento, TCP necesita es
 Una aclaraci\'on importante antes de pasar a las capturas: todo lo que describimos en esta secci\'on (arranque lento, ajuste din\'amico, ca\'ida a la mitad del umbral) corresponde a los algoritmos cl\'asicos que desarrolla Stallings, b\'asicamente Tahoe y Reno. El Linux que vamos a usar en las puntas de GNS3, sin embargo, usa CUBIC como algoritmo de control de congesti\'on por defecto desde hace ya varios a\~nos, que ajusta la ventana con una funci\'on c\'ubica del tiempo transcurrido desde la \'ultima p\'erdida en lugar del crecimiento lineal de Reno, pensada para aprovechar mejor enlaces de alta velocidad y alta latencia. Lo anticipamos ac\'a para no sorprendernos despu\'es: las capturas reales probablemente no van a calcar la forma exacta del Gr\'afico~2, aunque el patr\'on general -- crecimiento, ca\'ida ante p\'erdida, nuevo crecimiento -- se va a mantener.
 
 \subsection{Encaminamiento}
+\label{sec:encaminamiento}
 
 El segundo eje tiene que ver con c\'omo decide la red por d\'onde mandar cada paquete, lo cual se vuelve clave cuando parte de la red empieza a congestionarse. Stallings presenta cuatro estrategias generales de encaminamiento, resumidas en la Tabla~1.
 
@@ -590,7 +591,7 @@ Convergencia ante falla (5 repeticiones) & Completo & Completo & Completo \\
 \begin{axis}[
   width=9.5cm, height=5.2cm,
   scale only axis,
-  xmin=0, xmax=850, ymin=0, ymax=40,
+   xmin=0, xmax=850, ymin=0, ymax=50,
   axis x line=none,
   axis y line*=right,
   ylabel={P\'erdida mediana (\%)},
@@ -798,7 +799,7 @@ OSPF & \cellcolor{green!25}[1,853; 2,054] s & 1,343--2,214 s & 1,959 s \\
 \end{minipage}
 \end{center}
 
-El detalle de las cotas de ruta para est\'atica y RIP se muestra en las Tablas~14 y~15. La recuperaci\'on ICMP se informa como indicador complementario de servicio, no como tiempo de convergencia.
+El detalle de las cotas de ruta para el esquema est\'atico se muestra en la Tabla~14. La Tabla~15 detalla la recuperaci\'on ICMP observada para RIP como indicador complementario de servicio, no como tiempo de convergencia.
 
 \needspace{1cm}
 \begin{center}
@@ -836,7 +837,7 @@ r05 & 25,034 s & 25,237 s & 24,986 s \\
 \midrule
 r01 & 0,783 s & 6,415 s & 6,284 s \\
 r02 & 1,145 s & 24,395 s & 24,127 s \\
-r03 & 1,916 s & 20,802 s & 0,149 s \\
+r03 & 1,916 s & 20,802 s & 18,886 s \\
 r04 & 1,859 s & 19,154 s & 19,007 s \\
 r05 & 1,054 s & 23,268 s & 23,040 s \\
 \midrule
@@ -844,7 +845,7 @@ r05 & 1,054 s & 23,268 s & 23,040 s \\
 \bottomrule
 \end{tabular}
 \par\vspace{0.1cm}
-\figcaption{Tabla 15. Acotaci\'on de la convergencia de reenv\'io y recuperaci\'on ICMP, RIP.}
+\figcaption{Tabla 15. Recuperaci\'on ICMP observada durante la falla, RIP.}
 \end{minipage}
 \end{center}
 
@@ -1071,7 +1072,7 @@ add instance=rip-v2 interfaces=ether2
 
 \subsubsection*{OSPF}
 
-Del export de R1 en el esquema OSPF. Los costos expl\'icitos (10 para el primario, 20 para el respaldo) se repiten en R2 y R4 sobre sus interfaces correspondientes, tal como describimos en la Secci\'on~\ref{sec:congestion}.
+Del export de R1 en el esquema OSPF. Los costos expl\'icitos (10 para el primario, 20 para el respaldo) se repiten en R2 y R4 sobre sus interfaces correspondientes, tal como describimos en la Secci\'on~\ref{sec:encaminamiento}.
 
 {\scriptsize
 \begin{verbatim}
