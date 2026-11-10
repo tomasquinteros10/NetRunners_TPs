@@ -17,10 +17,23 @@ CAPTURE_LINK_ID=
 CAPTURE_ACTIVE=false
 DRY_RUN=false
 TRAFFIC_TYPE=
+PING_PID=
+
+start_rtt_probe() {
+    local output=$1
+    docker exec "$CLIENT_ID" ping -D -i 0.2 "$SERVER_IP" > "$output" &
+    PING_PID=$!
+}
+
+stop_rtt_probe() {
+    [[ -z ${PING_PID:-} ]] || kill "$PING_PID" 2>/dev/null || true
+    [[ -z ${PING_PID:-} ]] || wait "$PING_PID" 2>/dev/null || true
+    PING_PID=
+}
 
 usage() {
-    printf 'Uso: %s --tipo <udp|tcp|http|contencion-tcp-udp|contencion-http-udp> [--dry-run] <id> [<id> ...]\n' "${0##*/}"
-    printf '     %s --tipo <udp|tcp|http|contencion-tcp-udp|contencion-http-udp> [--dry-run] --all\n' "${0##*/}"
+    printf 'Uso: %s --tipo <udp|tcp|tcp-slow-start|http|contencion-tcp-udp|contencion-http-udp> [--dry-run] <id> [<id> ...]\n' "${0##*/}"
+    printf '     %s --tipo <udp|tcp|tcp-slow-start|http|contencion-tcp-udp|contencion-http-udp> [--dry-run] --all\n' "${0##*/}"
 }
 
 require_command() {
@@ -48,6 +61,7 @@ stop_capture() {
 }
 
 cleanup() {
+    stop_rtt_probe
     stop_capture
 }
 trap cleanup EXIT
@@ -181,13 +195,15 @@ PY
 }
 
 run_tcp_udp_contention() {
-    local run_id=$1 scheme=$2 rate=$3 duration=$4 delay=$5 raw_dir capture_dir capture_name capture_response capture_path udp_tmp tcp_tmp udp_path tcp_path pcap_path timestamp secondary_duration udp_pid
+    local run_id=$1 scheme=$2 rate=$3 duration=$4 delay=$5 raw_dir capture_dir capture_name capture_response capture_path udp_tmp tcp_tmp ping_tmp udp_path tcp_path ping_path pcap_path timestamp secondary_duration udp_pid
     raw_dir="$ROOT_DIR/simulacion/escenarios/$scheme/resultados/raw"
     capture_dir="$ROOT_DIR/simulacion/escenarios/$scheme/capturas"
     udp_path="$raw_dir/$run_id-udp.json"
     tcp_path="$raw_dir/$run_id-tcp.json"
+    ping_path="$raw_dir/$run_id-ping.log"
     udp_tmp="$udp_path.tmp"
     tcp_tmp="$tcp_path.tmp"
+    ping_tmp="$ping_path.tmp"
     pcap_path="$capture_dir/$run_id-R2-R4.pcap"
     capture_name="$run_id-R2-R4.pcap"
     secondary_duration=$((duration - delay))
@@ -196,7 +212,7 @@ run_tcp_udp_contention() {
         printf 'Duraciones invalidas para %s.\n' "$run_id" >&2
         return 1
     }
-    [[ ! -e $udp_path && ! -e $tcp_path && ! -e $udp_tmp && ! -e $tcp_tmp && ! -e $pcap_path ]] || {
+    [[ ! -e $udp_path && ! -e $tcp_path && ! -e $ping_path && ! -e $udp_tmp && ! -e $tcp_tmp && ! -e $ping_tmp && ! -e $pcap_path ]] || {
         printf 'Ya existe un artefacto para %s; no se sobrescribe.\n' "$run_id" >&2
         return 1
     }
@@ -214,6 +230,7 @@ run_tcp_udp_contention() {
         --data "{\"capture_file_name\":\"$capture_name\",\"data_link_type\":\"DLT_EN10MB\"}")
     CAPTURE_ACTIVE=true
     capture_path=$(printf '%s' "$capture_response" | python3 -c 'import json, sys; print(json.load(sys.stdin)["capture_file_path"])')
+    start_rtt_probe "$ping_tmp"
 
     docker exec --detach "$SERVER_ID" iperf3 -s -1 -p 5201 >/dev/null
     docker exec --detach "$SERVER_ID" iperf3 -s -1 -p 5202 >/dev/null
@@ -223,17 +240,19 @@ run_tcp_udp_contention() {
     sleep "$delay"
     docker exec "$CLIENT_ID" iperf3 -c "$SERVER_IP" -p 5202 -t "$secondary_duration" -i 1 -J > "$tcp_tmp"
     wait "$udp_pid"
+    stop_rtt_probe
     stop_capture
 
     python3 -m json.tool "$udp_tmp" >/dev/null
     python3 -m json.tool "$tcp_tmp" >/dev/null
-    [[ -s $capture_path ]] || {
+    [[ -s $ping_tmp && -s $capture_path ]] || {
         printf 'La captura de %s no se genero correctamente.\n' "$run_id" >&2
         return 1
     }
     mv "$capture_path" "$pcap_path"
     mv "$udp_tmp" "$udp_path"
     mv "$tcp_tmp" "$tcp_path"
+    mv "$ping_tmp" "$ping_path"
     timestamp=$(python3 - "$udp_path" <<'PY'
 import datetime
 import json
@@ -244,18 +263,20 @@ with open(sys.argv[1], encoding='utf-8') as source:
 print(datetime.datetime.fromtimestamp(seconds, datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
 PY
 )
-    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id-udp.json;resultados/raw/$run_id-tcp.json;capturas/$run_id-R2-R4.pcap"
+    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id-udp.json;resultados/raw/$run_id-tcp.json;resultados/raw/$run_id-ping.log;capturas/$run_id-R2-R4.pcap"
     printf 'Completada %s (%s, TCP+UDP, UDP %s Kbit/s, TCP desde %s s).\n' "$run_id" "$scheme" "$rate" "$delay"
 }
 
 run_http_udp_contention() {
-    local run_id=$1 scheme=$2 rate=$3 duration=$4 delay=$5 raw_dir capture_dir capture_name capture_response capture_path udp_tmp http_tmp udp_path http_path pcap_path timestamp secondary_duration udp_pid
+    local run_id=$1 scheme=$2 rate=$3 duration=$4 delay=$5 raw_dir capture_dir capture_name capture_response capture_path udp_tmp http_tmp ping_tmp udp_path http_path ping_path pcap_path timestamp secondary_duration udp_pid
     raw_dir="$ROOT_DIR/simulacion/escenarios/$scheme/resultados/raw"
     capture_dir="$ROOT_DIR/simulacion/escenarios/$scheme/capturas"
     udp_path="$raw_dir/$run_id-udp.json"
     http_path="$raw_dir/$run_id-http.txt"
+    ping_path="$raw_dir/$run_id-ping.log"
     udp_tmp="$udp_path.tmp"
     http_tmp="$http_path.tmp"
+    ping_tmp="$ping_path.tmp"
     pcap_path="$capture_dir/$run_id-R2-R4.pcap"
     capture_name="$run_id-R2-R4.pcap"
     secondary_duration=$((duration - delay))
@@ -264,7 +285,7 @@ run_http_udp_contention() {
         printf 'Duraciones invalidas para %s.\n' "$run_id" >&2
         return 1
     }
-    [[ ! -e $udp_path && ! -e $http_path && ! -e $udp_tmp && ! -e $http_tmp && ! -e $pcap_path ]] || {
+    [[ ! -e $udp_path && ! -e $http_path && ! -e $ping_path && ! -e $udp_tmp && ! -e $http_tmp && ! -e $ping_tmp && ! -e $pcap_path ]] || {
         printf 'Ya existe un artefacto para %s; no se sobrescribe.\n' "$run_id" >&2
         return 1
     }
@@ -283,6 +304,7 @@ run_http_udp_contention() {
         --data "{\"capture_file_name\":\"$capture_name\",\"data_link_type\":\"DLT_EN10MB\"}")
     CAPTURE_ACTIVE=true
     capture_path=$(printf '%s' "$capture_response" | python3 -c 'import json, sys; print(json.load(sys.stdin)["capture_file_path"])')
+    start_rtt_probe "$ping_tmp"
 
     docker exec --detach "$SERVER_ID" iperf3 -s -1 -p 5201 >/dev/null
     sleep 1
@@ -292,18 +314,20 @@ run_http_udp_contention() {
     sleep "$delay"
     docker exec "$CLIENT_ID" wrk -t1 -c1 -d"${secondary_duration}s" --timeout 30s "http://$SERVER_IP:80/archivo-256k.bin" > "$http_tmp"
     wait "$udp_pid"
+    stop_rtt_probe
     stop_capture
 
     python3 -m json.tool "$udp_tmp" >/dev/null
     grep -q '^Requests/sec:' "$http_tmp"
     grep -q '^Transfer/sec:' "$http_tmp"
-    [[ -s $capture_path ]] || {
+    [[ -s $ping_tmp && -s $capture_path ]] || {
         printf 'La captura de %s no se genero correctamente.\n' "$run_id" >&2
         return 1
     }
     mv "$capture_path" "$pcap_path"
     mv "$udp_tmp" "$udp_path"
     mv "$http_tmp" "$http_path"
+    mv "$ping_tmp" "$ping_path"
     timestamp=$(python3 - "$udp_path" <<'PY'
 import datetime
 import json
@@ -314,12 +338,12 @@ with open(sys.argv[1], encoding='utf-8') as source:
 print(datetime.datetime.fromtimestamp(seconds, datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
 PY
 )
-    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id-udp.json;resultados/raw/$run_id-http.txt;capturas/$run_id-R2-R4.pcap"
+    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id-udp.json;resultados/raw/$run_id-http.txt;resultados/raw/$run_id-ping.log;capturas/$run_id-R2-R4.pcap"
     printf 'Completada %s (%s, HTTP+UDP, UDP %s Kbit/s, HTTP desde %s s).\n' "$run_id" "$scheme" "$rate" "$delay"
 }
 
 run_one() {
-    local run_id=$1 scheme traffic_type rate duration delay raw_dir capture_dir capture_name capture_response capture_path raw_extension raw_tmp raw_path pcap_path timestamp
+    local run_id=$1 scheme traffic_type rate duration delay raw_dir capture_dir capture_name capture_response capture_path raw_extension raw_tmp raw_path ping_tmp ping_path pcap_path timestamp
     read -r scheme traffic_type rate duration delay < <(matrix_run_data "$run_id" "$TRAFFIC_TYPE")
     if [[ $traffic_type == tcp-iperf3+udp ]]; then
         run_tcp_udp_contention "$run_id" "$scheme" "$rate" "$duration" "$delay"
@@ -335,10 +359,12 @@ run_one() {
     [[ $traffic_type == http-1.1 ]] && raw_extension=txt
     raw_path="$raw_dir/$run_id.$raw_extension"
     raw_tmp="$raw_path.tmp"
+    ping_path="$raw_dir/$run_id-ping.log"
+    ping_tmp="$ping_path.tmp"
     pcap_path="$capture_dir/$run_id-R2-R4.pcap"
     capture_name="$run_id-R2-R4.pcap"
 
-    [[ ! -e $raw_path && ! -e $raw_tmp && ! -e $pcap_path ]] || {
+    [[ ! -e $raw_path && ! -e $ping_path && ! -e $raw_tmp && ! -e $ping_tmp && ! -e $pcap_path ]] || {
         printf 'Ya existe un artefacto para %s; no se sobrescribe.\n' "$run_id" >&2
         return 1
     }
@@ -359,18 +385,24 @@ run_one() {
         --data "{\"capture_file_name\":\"$capture_name\",\"data_link_type\":\"DLT_EN10MB\"}")
     CAPTURE_ACTIVE=true
     capture_path=$(printf '%s' "$capture_response" | python3 -c 'import json, sys; print(json.load(sys.stdin)["capture_file_path"])')
+    start_rtt_probe "$ping_tmp"
 
     if [[ $traffic_type == udp ]]; then
         docker exec --detach "$SERVER_ID" iperf3 -s -1 >/dev/null
         sleep 1
         docker exec "$CLIENT_ID" iperf3 -c "$SERVER_IP" -u -b "${rate}K" -l 1200 -t "$duration" -i 1 -J > "$raw_tmp"
-    elif [[ $traffic_type == tcp-iperf3 ]]; then
+    elif [[ $traffic_type == tcp-iperf3 || $traffic_type == tcp-iperf3-slow-start ]]; then
         docker exec --detach "$SERVER_ID" iperf3 -s -1 >/dev/null
         sleep 1
-        docker exec "$CLIENT_ID" iperf3 -c "$SERVER_IP" -t "$duration" -O 10 -i 1 -J > "$raw_tmp"
+        if [[ $traffic_type == tcp-iperf3-slow-start ]]; then
+            docker exec "$CLIENT_ID" iperf3 -c "$SERVER_IP" -t "$duration" -i 0.2 -J > "$raw_tmp"
+        else
+            docker exec "$CLIENT_ID" iperf3 -c "$SERVER_IP" -t "$duration" -O 10 -i 1 -J > "$raw_tmp"
+        fi
     else
         docker exec "$CLIENT_ID" wrk -t1 -c1 -d"${duration}s" --timeout 10s "http://$SERVER_IP:80/archivo-256k.bin" > "$raw_tmp"
     fi
+    stop_rtt_probe
     stop_capture
 
     if [[ $raw_extension == json ]]; then
@@ -379,12 +411,13 @@ run_one() {
         grep -q '^Requests/sec:' "$raw_tmp"
         grep -q '^Transfer/sec:' "$raw_tmp"
     fi
-    [[ -s $capture_path ]] || {
+    [[ -s $ping_tmp && -s $capture_path ]] || {
         printf 'La captura de %s no se genero correctamente.\n' "$run_id" >&2
         return 1
     }
     mv "$capture_path" "$pcap_path"
     mv "$raw_tmp" "$raw_path"
+    mv "$ping_tmp" "$ping_path"
     timestamp=$(python3 - "$raw_path" "$raw_extension" <<'PY'
 import datetime
 import json
@@ -398,7 +431,7 @@ else:
     print(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
 PY
 )
-    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id.$raw_extension;capturas/$run_id-R2-R4.pcap"
+    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id.$raw_extension;resultados/raw/$run_id-ping.log;capturas/$run_id-R2-R4.pcap"
     printf 'Completada %s (%s, %s, %s s).\n' "$run_id" "$scheme" "$traffic_type" "$duration"
 }
 
@@ -414,6 +447,7 @@ fi
 case $2 in
     udp) TRAFFIC_TYPE=udp ;;
     tcp) TRAFFIC_TYPE=tcp-iperf3 ;;
+    tcp-slow-start) TRAFFIC_TYPE=tcp-iperf3-slow-start ;;
     http) TRAFFIC_TYPE=http-1.1 ;;
     contencion-tcp-udp) TRAFFIC_TYPE=tcp-iperf3+udp ;;
     contencion-http-udp) TRAFFIC_TYPE=http-1.1+udp ;;

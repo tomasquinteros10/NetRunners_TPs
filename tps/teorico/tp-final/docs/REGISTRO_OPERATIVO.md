@@ -157,3 +157,196 @@ las cinco corridas y su evidencia se publicaron en `tp-final` con el commit
 Al reanudar, verificar primero que R1 conserve la ruta OSPF primaria por
 `10.10.12.2%ether3` y leer `AGENT.md` antes de ejecutar cambios. No hay
 corridas de convergencia pendientes.
+
+## Pausa Temporal Para Captura De Topologia
+
+Fecha: 2026-11-09.
+
+Objetivo: obtener una captura visual de la topologia con la falla del enlace
+primario R2-R4 representada en GNS3. No es una corrida formal ni genera
+artefactos de resultados.
+
+Inicialmente se suspendió por error `R1:e2-R2:e1`; se restauró de inmediato
+por API y se verificó `suspend=false`. Luego se suspendió el enlace correcto
+`R2:e2-R4:e1`, con `suspend=true` confirmado por consulta a la API. También se
+inició una captura temporal en `R5:e2-R4:e2`, almacenada por GNS3 bajo
+`project-files/captures/topologia-falla-R5-R4.pcap`.
+
+No se modificaron configuraciones RouterOS, colas, rutas, matriz ni resultados
+formales. La captura temporal no debe tratarse como evidencia de una corrida.
+
+La reversion exacta, cuando termine la captura, es actualizar ese mismo enlace
+por API con el cuerpo JSON `{"suspend":false}` y verificar `suspend=false`.
+
+Al finalizar la captura, se detuvo la escucha en `R5:e2-R4:e2` y se restauró
+`R2:e2-R4:e1`. Una consulta posterior confirmó ambos enlaces con
+`suspend=false` y sin captura activa.
+
+## Incidentes Conservados Como Diagnostico
+
+Los siguientes intentos no forman parte de las filas formales de la matriz y
+sus artefactos se conservaron bajo `simulacion/escenarios/*/{resultados,capturas}/diagnostico/`:
+
+- La primera HTTP estática no tenía cuello inverso; se agregó en R4 el marcado
+  `forward` de salida por `ether2` y la cola `cuello-R4-R2` a `500k`.
+- Dos intentos HTTP+UDP no generaban competencia real: el UDP circulaba en el
+  sentido opuesto y luego se ubicó `-R` en el ejecutor TCP+UDP por error. Se
+  corrigió el ejecutor HTTP+UDP para usar UDP inverso, que comparte el cuello
+  R4-R2 con las respuestas HTTP.
+- Las cinco repeticiones HTTP+UDP con `wrk --timeout 10s` registraron
+  timeouts. Se conservaron como diagnostico y se repitieron con `--timeout
+  30s`; las filas formales vigentes son las repeticiones sin timeout.
+- El primer intento de `estatico-falla-r05` fue interrumpido antes de archivar
+  PCAP. Sus logs quedaron como diagnostico y la repetición posterior es la que
+  figura en la matriz.
+- En RIP, `rip-falla-r01` no produjo el resumen de `wrk` y `rip-falla-r02`
+  pertenecía a una serie repetida. Ambos conjuntos se archivaron como
+  diagnostico antes de registrar las corridas válidas.
+- La mediana OSPF antes informada como `2,381 s` no medía indisponibilidad:
+  contaba cinco líneas de salida de `ping` desde la suspensión, incluidas
+  respuestas `From` y respuestas que aún indicaban servicio disponible. El
+  criterio se corrigió en `docs/indisponibilidad.py`, que exige la primera de
+  cinco respuestas ICMP consecutivas posterior a la última evidencia de
+  pérdida. `docs/README.md` conserva los resultados recalculados de los tres
+  esquemas.
+
+Estos incidentes están resumidos también en `AGENT.md`; no deben reutilizarse
+como evidencia cuantitativa.
+
+## Retorno Temporal A Rutas Estaticas Para Refuerzo
+
+Fecha: 2026-11-09.
+
+Objetivo: preparar los tres pilotos de refuerzo estáticos, que agregan RTT,
+slow start y observación de rutas sin alterar las corridas formales previas.
+
+En R1-R5 se agregaron las rutas del export versionado en
+`simulacion/escenarios/estatico/config/`. En R1 se instalaron `primaria-R2`,
+`respaldo-R3-R5` y `monitor-R4-via-R2`; en R4, `primaria-R2`,
+`respaldo-R5-R3` y `retorno-monitor-R1`; R2, R3 y R5 recibieron sus rutas
+estáticas de tránsito correspondientes. Luego, en cada router se ejecutó:
+
+```routeros
+/routing ospf interface-template remove [find]
+/routing ospf area remove [find]
+/routing ospf instance remove [find]
+```
+
+Las rutas primarias activas se verificaron en R1 hacia `10.10.4.0/24` por
+`10.10.24.2` (resuelto por R2) y en R4 hacia `10.10.1.0/24` por `10.10.24.1`.
+Cliente-servidor respondió 3 de 3 ICMP y HTTP. No se modificaron direcciones,
+colas ni reglas mangle: los cuellos existentes de R2 a R4 y de R4 a R2 siguen
+limitados a `500k`.
+
+La reversión, si se necesita retomar OSPF, es reaplicar exclusivamente las
+instancias, áreas y plantillas de
+`simulacion/escenarios/ospf/config/R1.rsc` a `R5.rsc`, y retirar las rutas
+estáticas agregadas en esta operación.
+
+## Piloto UDP De Refuerzo Abortado
+
+Fecha: 2026-11-09.
+
+Se inició `estatico-udp-100k-r01-rtt`, pero la ejecución fue cancelada antes
+de finalizar. No quedaron JSON, log de ping, PCAP ni temporales para ese ID, y
+la fila de matriz permanece pendiente. La rutina de limpieza del ejecutor
+detuvo la sonda ICMP y la captura; el ID puede ejecutarse nuevamente sin
+sobrescribir evidencia.
+
+## Pilotos Estaticos De Refuerzo
+
+Fecha: 2026-11-09.
+
+Se ejecutaron y aprobaron los tres pilotos requeridos antes de iniciar la
+serie de refuerzo:
+
+- `estatico-udp-100k-r01-rtt`: 60 intervalos de `iperf3`, ping con timestamps
+  durante 61,023 s y PCAP con datos UDP/iperf3.
+- `estatico-tcp-slow-start-r01`: 300 intervalos de 0,2 s sin `-O`, cada uno
+  con `snd_cwnd`; ping durante 61,121 s y PCAP con datos TCP/iperf3.
+- `estatico-falla-r01-rutas`: ping, HTTP, eventos, dos PCAP y cinco logs de
+  rutas. Cada router produjo al menos 1.488 muestras antes, durante y después
+  de la suspensión de R2-R4. La API confirmó al final que el enlace quedó con
+  `suspend=false`.
+
+Los logs de rutas permitieron medir el plano de control sin inferirlo desde
+ping: R4 observó el respaldo a los 1,045 s y R1 a los 25,131 s luego de la
+suspensión. Por el intervalo de muestreo, la convergencia bidireccional de
+reenvío quedó acotada entre 24,928 y 25,131 s. Esta métrica es independiente
+de la recuperación de servicio observada por ICMP.
+
+## Serie Estatica De Refuerzo
+
+Fecha: 2026-11-09.
+
+Después de aprobar los pilotos, finalizaron las 70 corridas estáticas de
+refuerzo: 60 ensayos de carga con RTT, cinco TCP de slow-start y cinco fallas
+con logs de rutas. Una cancelación inicial dejó un JSON vacío y un log de ping
+parcial para `estatico-udp-100k-r02-rtt`; ambos se preservaron bajo
+`resultados/diagnostico/` y el ID se ejecutó posteriormente como una corrida
+nueva y completa. Las sondas ICMP huérfanas de esa cancelación se terminaron
+antes de iniciar la serie, para no contaminar mediciones posteriores.
+
+`simulacion/scripts/validar_refuerzo.py . estatico` aprobó las 70 filas. El
+validador comprueba artefactos listados por matriz, JSON, legibilidad de PCAP,
+cobertura temporal del ping, `snd_cwnd` de slow-start, eventos y rutas de
+respaldo de las fallas. La cobertura de ping se valida por duración observada,
+no por una cantidad fija de respuestas: bajo congestión, la pérdida es un
+resultado válido y no una razón para descartar una sonda que cubrió la ventana
+del ensayo.
+
+## Refuerzo RIP Y OSPF
+
+Fecha: 2026-11-09.
+
+Objetivo: completar las diez fallas instrumentadas pendientes y observar el
+cambio de las rutas activas de R1 a R5, sin modificar direccionamiento ni los
+dos cuellos de 500 kbit/s.
+
+Para pasar de estáticas a RIP se ejecutó en R1-R5:
+
+```routeros
+/ip route remove [find where comment~"primaria|respaldo|monitor|hacia|retorno"]
+/routing rip instance add name=rip-v2 redistribute=connected
+/routing rip interface-template add instance=rip-v2 interfaces=<interfaces-del-router>
+```
+
+R2, R3 y R5 incluyeron `redistribute=connected,rip`; R1 y R4 mantuvieron
+`redistribute=connected`. Se validó R1 por `10.10.12.2%ether3`, R4 por
+`10.10.24.1%ether2`, ICMP/HTTP extremo a extremo y, en un piloto de 45 s con
+R2-R4 suspendido, R1 por `10.10.13.2%ether4`, con ping TTL 60. El enlace fue
+restaurado antes de la serie. Las cinco filas `rip-falla-r01-rutas` a `r05-rutas`
+se validaron; los PCAP de respaldo contienen RIP, ICMP y TCP/HTTP.
+
+Para pasar de RIP a OSPF se ejecutó en R1-R5:
+
+```routeros
+/routing rip interface-template remove [find]
+/routing rip instance remove [find]
+/routing ospf instance add name=ospf-v2 redistribute=connected router-id=<id-del-router>
+/routing ospf area add area-id=0.0.0.0 instance=ospf-v2 name=backbone
+/routing ospf interface-template add area=backbone cost=<10-o-20> interfaces=<interfaz>
+```
+
+Los costos aplicados son los exports de `escenarios/ospf/config/`: 10 en el
+primario R1-R2-R4 y 20 por enlace del respaldo. Las adyacencias relevantes de
+R1 llegaron a `Full`; R1 y R4 se validaron por el primario antes de un piloto
+de 15 s, que confirmó el respaldo y TTL 60. Un primer conjunto de cinco
+corridas arrancó todavía por respaldo tras ese piloto; se archivó como
+diagnóstico bajo `ospf-rutas-inicio-en-respaldo`, se liberaron sus filas y se
+repitió la serie solamente después de confirmar ambos gateways primarios.
+
+Las cinco corridas OSPF repetidas fueron aprobadas por
+`python3 simulacion/scripts/validar_refuerzo.py . ospf`. La validación ahora
+exige una muestra primaria anterior a la suspensión para RIP y OSPF. También
+se corrigió `procesar_convergencia.py` para comparar el gateway sin el sufijo
+`%interfaz` de RouterOS. Las diez mediciones instrumentadas se procesaron y
+los derivados se regeneraron con:
+
+```bash
+python3 simulacion/scripts/procesar_resultados.py .
+```
+
+El estado persistente final es OSPF, sin RIP ni rutas estáticas de tránsito,
+R2-R4 restaurado y sin capturas activas. Los exports sin secretos de ambos
+escenarios ya corresponden a las configuraciones aplicadas.

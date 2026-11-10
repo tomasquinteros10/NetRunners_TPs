@@ -288,6 +288,82 @@ tshark -r <pcap> -q -z io,phs
 cambiar configuracion, archivar resultados o repetir ensayos, validar el PCAP
 con esas estadisticas y cotejarlo contra la matriz y los logs de eventos.
 
+## Estado De Refuerzo
+
+El 2026-11-09 se retornó temporalmente de OSPF al esquema estático para
+ejecutar los pilotos definidos en `docs/RELEVO_REFUERZO_SIMULACIONES.md`.
+Se agregaron las rutas estáticas exportadas y se removieron las instancias,
+áreas y plantillas OSPF en R1-R5. R1 volvió a seleccionar la primaria hacia el
+servidor por R2 y R4 la primaria hacia cliente por R2; ICMP y HTTP fueron
+validados. Se conservan los dos cuellos simétricos de `500k` mediante mangle y
+queue tree en R2 y R4.
+
+El primer inicio de `estatico-udp-100k-r01-rtt` fue abortado por el operador
+antes de terminar y no dejó artefactos ni modificó la matriz. Posteriormente se
+repitió como piloto junto con `estatico-tcp-slow-start-r01` y
+`estatico-falla-r01-rutas`; los tres se aprobaron antes de iniciar la serie.
+La reversión a OSPF requiere reaplicar los exports de
+`simulacion/escenarios/ospf/config/` y retirar las rutas estáticas agregadas.
+
+Actualización: los tres pilotos estáticos y las 70 corridas estáticas de
+refuerzo ya completaron y fueron validados por
+`simulacion/scripts/validar_refuerzo.py . estatico`. La única cancelación
+parcial, `estatico-udp-100k-r02-rtt`, quedó preservada como diagnóstico y se
+repitió correctamente. Las cinco fallas instrumentadas RIP y las cinco OSPF
+también completaron y fueron validadas. El escenario activo queda en OSPF, con
+R2-R4 restaurado. No repetir corridas de convergencia sin una indicación
+explícita del usuario.
+
+## Relevo De Resultados Derivados
+
+El usuario prioriza primero obtener simulaciones y evidencia cruda correcta;
+no modificar la monografía hasta que lo solicite. La serie estática de
+refuerzo está completa y validada. Incluye 60 corridas de carga con RTT, cinco
+de slow-start y quince fallas con rutas activas R1-R5. El esquema activo es
+OSPF y R2-R4 está restaurado.
+
+Para regenerar las métricas derivadas, sin modificar artefactos crudos:
+
+```bash
+python3 simulacion/scripts/procesar_resultados.py .
+python3 simulacion/scripts/validar_refuerzo.py . estatico
+```
+
+El primer comando genera en `simulacion/resultados-derivados/`:
+
+- `corridas.csv`: métricas por ID, con campaña `original` o `refuerzo`.
+- `agregados.csv`: media, mediana, mínimo, máximo, desvío y `n` por campaña,
+  esquema, ensayo, tráfico, tasa y estado de enlace.
+- `tcp_cwnd_series.csv`: `cwnd`, RTT, retransmisiones y throughput por
+  intervalo de los ensayos TCP, incluido slow-start y TCP+UDP.
+
+No mezclar las campañas `original` y `refuerzo`: la segunda incorpora ping
+continuo y debe ser la fuente de RTT. Para convergencia de reenvío, usar además
+por cada ID instrumentado:
+
+```bash
+python3 simulacion/scripts/procesar_convergencia.py . <estatico|rip|ospf> <id>
+```
+
+Esto informa una cota temporal entre la última ruta primaria y la primera ruta
+de respaldo observada en R1 y R4. Ping/HTTP son métricas de servicio; no usar
+ping solo como sustituto del cambio de ruta.
+
+Para revalidar un esquema o regenerar resultados derivados sin tocar evidencia
+cruda, ejecutar:
+
+```bash
+python3 simulacion/scripts/validar_refuerzo.py . <rip|ospf>
+python3 simulacion/scripts/procesar_resultados.py .
+```
+
+Antes de cualquier nueva corrida, comprobar nodos iniciados, conectividad,
+Nginx, `R2-R4 suspend=false`, ausencia de capturas y de sondas `ping -D`
+huérfanas en el contenedor cliente. Si una corrida se interrumpe, no borrar sus
+temporales: archivarlos en `resultados/diagnostico/`, liberar el ID sólo si la
+matriz no fue completada y documentar la incidencia en
+`docs/REGISTRO_OPERATIVO.md`.
+
 ## Protocolo Operativo Obligatorio
 
 Esta seccion prevalece sobre cualquier inferencia del agente. No asumir que
@@ -336,3 +412,21 @@ ruta. Si una corrida formal produce un resultado inesperado, conservarla como
 diagnostico y validar primero el artefacto con fuentes independientes:
 matriz, eventos, logs de endpoint, tabla de rutas y estadisticas completas del
 PCAP. Solo despues decidir si se archiva, corrige o repite.
+
+## Cierre Del Refuerzo
+
+Las cinco corridas `rip-falla-r01-rutas` a `r05-rutas` y las cinco
+`ospf-falla-r01-rutas` a `r05-rutas` están completas y aprobadas por
+`simulacion/scripts/validar_refuerzo.py`. `procesar_convergencia.py` normaliza
+el sufijo `%interfaz` que RouterOS añade al gateway. Las cotas máximas de
+convergencia de reenvío observada fueron `6.415`, `24.395`, `20.802`, `19.154`
+y `23.268 s` para RIP, y `1.891`, `2.054`, `1.343`, `2.214` y `2.095 s` para
+OSPF. No confundir estas cotas de plano de control con la recuperación de
+servicio de ping/HTTP.
+
+La primera serie OSPF instrumentada se conservó bajo
+`simulacion/escenarios/ospf/{resultados,capturas}/diagnostico/ospf-rutas-inicio-en-respaldo/`:
+comenzó antes de que OSPF regresara al primario tras el piloto y no es evidencia
+formal. El validador ahora exige en R1 y R4 una muestra primaria anterior al
+evento de suspensión para RIP y OSPF. El escenario vivo quedó en OSPF, con R1
+por `10.10.12.2%ether3`, R4 por `10.10.24.1%ether2` y R2-R4 restaurado.

@@ -36,11 +36,13 @@ python3 docs/indisponibilidad.py .
 | OSPF | 0,177 s | 0,170 s | 2,047 s | 0,198 s | 3,390 s | 0,198 s | 0,170--3,390 s |
 
 Los valores de estatica reproducen la mediana publicada de `27,347 s`. Los
-valores anteriores de OSPF, incluida la mediana `2,381 s`, no eran una medida
-de indisponibilidad: contaban cinco lineas de salida de `ping` desde el evento
-de suspension, incluso cuando esas lineas incluian errores `From` o cuando el
-servicio todavia respondia. La tabla anterior debe reemplazarse por los valores
-generados con este script para que los tres esquemas usen el mismo criterio.
+valores anteriores de OSPF, incluida la mediana `2,381 s`, usaban otra metrica:
+contaban cinco lineas de salida de `ping` desde el evento de suspension, incluso
+cuando esas lineas incluian errores `From` o cuando el servicio todavia
+respondia. Los valores generados por este script son comparables entre esquemas
+como interrupcion observada por ICMP, pero no miden la convergencia del plano de
+control. Esa medicion requiere los logs de rutas R1-R5 agregados para las nuevas
+corridas en `RELEVO_REFUERZO_SIMULACIONES.md`.
 
 ## Archivos
 

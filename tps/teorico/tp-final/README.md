@@ -58,6 +58,22 @@ artificiales.
 
 ## Corridas UDP Automatizadas
 
+## Resultados Derivados
+
+Sin alterar la matriz ni los artefactos bajo `resultados/raw`, generar los CSV
+para la monografia con Python estandar:
+
+```bash
+python3 simulacion/scripts/procesar_resultados.py .
+```
+
+El comando escribe `simulacion/resultados-derivados/corridas.csv` (una fila por
+ensayo), `agregados.csv` (media, mediana, rango y dispersion por esquema y
+condicion) y `tcp_cwnd_series.csv` (serie temporal de `snd_cwnd`). Reconoce
+JSON de iperf3 UDP/TCP, ping con `-D`, salida de wrk y, cuando existen eventos y
+logs `*-ruta.log`, recuperacion ICMP y cambio de ruta. Las metricas sin
+artefacto o sin formato reconocido quedan vacias, no se infieren.
+
 Con el proyecto GNS3 abierto, todos los nodos iniciados y el esquema estatico
 activo, ejecutar una corrida pendiente con:
 

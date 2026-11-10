@@ -15,6 +15,12 @@ CAPTURE_R2_R4=false
 CAPTURE_R5_R4=false
 PING_PID=
 HTTP_PID=
+R1_ROUTE_PID=
+R2_ROUTE_PID=
+R3_ROUTE_PID=
+R4_ROUTE_PID=
+R5_ROUTE_PID=
+ROUTE_MONITOR="$ROOT_DIR/simulacion/scripts/monitor_rutas.py"
 
 usage() {
     printf 'Uso: %s [--dry-run] <id> [<id> ...]\n' "${0##*/}"
@@ -70,6 +76,21 @@ stop_processes() {
     [[ -z ${HTTP_PID:-} ]] || wait "$HTTP_PID" 2>/dev/null || true
     PING_PID=
     HTTP_PID=
+    [[ -z ${R1_ROUTE_PID:-} ]] || kill "$R1_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R2_ROUTE_PID:-} ]] || kill "$R2_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R3_ROUTE_PID:-} ]] || kill "$R3_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R4_ROUTE_PID:-} ]] || kill "$R4_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R5_ROUTE_PID:-} ]] || kill "$R5_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R1_ROUTE_PID:-} ]] || wait "$R1_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R2_ROUTE_PID:-} ]] || wait "$R2_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R3_ROUTE_PID:-} ]] || wait "$R3_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R4_ROUTE_PID:-} ]] || wait "$R4_ROUTE_PID" 2>/dev/null || true
+    [[ -z ${R5_ROUTE_PID:-} ]] || wait "$R5_ROUTE_PID" 2>/dev/null || true
+    R1_ROUTE_PID=
+    R2_ROUTE_PID=
+    R3_ROUTE_PID=
+    R4_ROUTE_PID=
+    R5_ROUTE_PID=
 }
 
 cleanup() {
@@ -127,6 +148,11 @@ resolve_lab() {
     NODES_JSON=$(api_get "/projects/$PROJECT_ID/nodes")
     CLIENT_ID=$(node_field "$NODES_JSON" cliente 'properties.container_id')
     SERVER_ID=$(node_field "$NODES_JSON" servidor 'properties.container_id')
+    R1_CONSOLE_PORT=$(node_field "$NODES_JSON" R1 'console')
+    R2_CONSOLE_PORT=$(node_field "$NODES_JSON" R2 'console')
+    R3_CONSOLE_PORT=$(node_field "$NODES_JSON" R3 'console')
+    R4_CONSOLE_PORT=$(node_field "$NODES_JSON" R4 'console')
+    R5_CONSOLE_PORT=$(node_field "$NODES_JSON" R5 'console')
     printf '%s' "$NODES_JSON" | python3 -c '
 import json
 import sys
@@ -214,7 +240,7 @@ event() {
 }
 
 run_one() {
-    local run_id=$1 scheme duration raw_dir capture_dir ping_path http_path events_path r2_r4_path r5_r4_path ping_tmp http_tmp events_tmp r2_r4_response r5_r4_response r2_r4_source r5_r4_source remaining timestamp
+    local run_id=$1 scheme duration raw_dir capture_dir ping_path http_path events_path r1_route_path r2_route_path r3_route_path r4_route_path r5_route_path r2_r4_path r5_r4_path ping_tmp http_tmp events_tmp r1_route_tmp r2_route_tmp r3_route_tmp r4_route_tmp r5_route_tmp r2_r4_response r5_r4_response r2_r4_source r5_r4_source remaining timestamp
     read -r scheme duration < <(matrix_run_data "$run_id")
     (( duration > FALLA_DESDE_S + FALLA_DURACION_S )) || {
         printf 'Duracion insuficiente para la falla de %s.\n' "$run_id" >&2
@@ -225,12 +251,22 @@ run_one() {
     ping_path="$raw_dir/$run_id-ping.log"
     http_path="$raw_dir/$run_id-http.txt"
     events_path="$raw_dir/$run_id-eventos.log"
+    r1_route_path="$raw_dir/$run_id-R1-ruta.log"
+    r2_route_path="$raw_dir/$run_id-R2-ruta.log"
+    r3_route_path="$raw_dir/$run_id-R3-ruta.log"
+    r4_route_path="$raw_dir/$run_id-R4-ruta.log"
+    r5_route_path="$raw_dir/$run_id-R5-ruta.log"
     r2_r4_path="$capture_dir/$run_id-R2-R4.pcap"
     r5_r4_path="$capture_dir/$run_id-R5-R4.pcap"
     ping_tmp="$ping_path.tmp"
     http_tmp="$http_path.tmp"
     events_tmp="$events_path.tmp"
-    [[ ! -e $ping_path && ! -e $http_path && ! -e $events_path && ! -e $ping_tmp && ! -e $http_tmp && ! -e $events_tmp && ! -e $r2_r4_path && ! -e $r5_r4_path ]] || {
+    r1_route_tmp="$r1_route_path.tmp"
+    r2_route_tmp="$r2_route_path.tmp"
+    r3_route_tmp="$r3_route_path.tmp"
+    r4_route_tmp="$r4_route_path.tmp"
+    r5_route_tmp="$r5_route_path.tmp"
+    [[ ! -e $ping_path && ! -e $http_path && ! -e $events_path && ! -e $r1_route_path && ! -e $r2_route_path && ! -e $r3_route_path && ! -e $r4_route_path && ! -e $r5_route_path && ! -e $ping_tmp && ! -e $http_tmp && ! -e $events_tmp && ! -e $r1_route_tmp && ! -e $r2_route_tmp && ! -e $r3_route_tmp && ! -e $r4_route_tmp && ! -e $r5_route_tmp && ! -e $r2_r4_path && ! -e $r5_r4_path ]] || {
         printf 'Ya existe un artefacto para %s; no se sobrescribe.\n' "$run_id" >&2
         return 1
     }
@@ -253,6 +289,16 @@ run_one() {
 
     EVENTS_TMP=$events_tmp
     event normal-inicio
+    python3 "$ROUTE_MONITOR" --port "$R1_CONSOLE_PORT" --node R1 --destination 10.10.4.0/24 --duration-s "$duration" --output "$r1_route_tmp" &
+    R1_ROUTE_PID=$!
+    python3 "$ROUTE_MONITOR" --port "$R2_CONSOLE_PORT" --node R2 --destination 10.10.4.0/24 --duration-s "$duration" --output "$r2_route_tmp" &
+    R2_ROUTE_PID=$!
+    python3 "$ROUTE_MONITOR" --port "$R3_CONSOLE_PORT" --node R3 --destination 10.10.4.0/24 --duration-s "$duration" --output "$r3_route_tmp" &
+    R3_ROUTE_PID=$!
+    python3 "$ROUTE_MONITOR" --port "$R4_CONSOLE_PORT" --node R4 --destination 10.10.1.0/24 --duration-s "$duration" --output "$r4_route_tmp" &
+    R4_ROUTE_PID=$!
+    python3 "$ROUTE_MONITOR" --port "$R5_CONSOLE_PORT" --node R5 --destination 10.10.1.0/24 --duration-s "$duration" --output "$r5_route_tmp" &
+    R5_ROUTE_PID=$!
     docker exec "$CLIENT_ID" ping -D -i 0.2 "$SERVER_IP" > "$ping_tmp" &
     PING_PID=$!
     docker exec "$CLIENT_ID" wrk -t1 -c1 -d"${duration}s" --timeout 30s "http://$SERVER_IP:80/archivo-256k.bin" > "$http_tmp" &
@@ -273,7 +319,7 @@ run_one() {
     stop_processes
     stop_captures
 
-    [[ -s $ping_tmp && -s $http_tmp && -s $events_tmp && -s $r2_r4_source && -s $r5_r4_source ]] || {
+    [[ -s $ping_tmp && -s $http_tmp && -s $events_tmp && -s $r1_route_tmp && -s $r2_route_tmp && -s $r3_route_tmp && -s $r4_route_tmp && -s $r5_route_tmp && -s $r2_r4_source && -s $r5_r4_source ]] || {
         printf 'Faltan artefactos validos para %s.\n' "$run_id" >&2
         return 1
     }
@@ -284,8 +330,13 @@ run_one() {
     mv "$ping_tmp" "$ping_path"
     mv "$http_tmp" "$http_path"
     mv "$events_tmp" "$events_path"
+    mv "$r1_route_tmp" "$r1_route_path"
+    mv "$r2_route_tmp" "$r2_route_path"
+    mv "$r3_route_tmp" "$r3_route_path"
+    mv "$r4_route_tmp" "$r4_route_path"
+    mv "$r5_route_tmp" "$r5_route_path"
     timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id-ping.log;resultados/raw/$run_id-http.txt;resultados/raw/$run_id-eventos.log;capturas/$run_id-R2-R4.pcap;capturas/$run_id-R5-R4.pcap"
+    mark_complete "$run_id" "$timestamp" "resultados/raw/$run_id-ping.log;resultados/raw/$run_id-http.txt;resultados/raw/$run_id-eventos.log;resultados/raw/$run_id-R1-ruta.log;resultados/raw/$run_id-R2-ruta.log;resultados/raw/$run_id-R3-ruta.log;resultados/raw/$run_id-R4-ruta.log;resultados/raw/$run_id-R5-ruta.log;capturas/$run_id-R2-R4.pcap;capturas/$run_id-R5-R4.pcap"
     printf 'Completada %s (%s, convergencia automatizada).\n' "$run_id" "$scheme"
 }
 
